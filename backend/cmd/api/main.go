@@ -61,6 +61,16 @@ func run() error {
 
 	log.Info("conectado ao banco de dados")
 
+	// O schema e aplicado no boot porque plataformas gerenciadas nao oferecem
+	// uma etapa de deploy onde rodar o migrate. Falhar aqui e proposital: e
+	// melhor o servico nao subir do que atender requisicoes contra um banco
+	// desatualizado.
+	if err := postgres.Migrate(cfg.DatabaseURL); err != nil {
+		return err
+	}
+
+	log.Info("migrations aplicadas")
+
 	// --- Infraestrutura ---
 	users := postgres.NewUserRepository(pool)
 	accounts := postgres.NewAccountRepository(pool)
