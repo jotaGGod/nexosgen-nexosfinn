@@ -1,0 +1,1236 @@
+openapi: 3.0.3
+
+info:
+  title: FinApp API
+  version: 1.0.0
+  description: |
+    API do FinApp, gerenciador financeiro pessoal.
+
+    A API tem duas superficies com autenticacao independente:
+
+    * **`/api/v1/*`** — consumida pela interface web, autenticada com o access
+      token JWT emitido no login (`Authorization: Bearer <jwt>`).
+    * **`/api/v1/external/*`** — consumida por automacoes, autenticada por
+      **API Key** (`Authorization: Bearer <api_key>` ou `X-API-Key`), com
+      controle por escopo.
+
+    ## Sobre a superficie externa e a integracao com WhatsApp via n8n
+
+    Os endpoints em `/api/v1/external` foram desenhados para serem consumidos
+    por um workflow **n8n** que atendera o usuario pelo **WhatsApp**: o usuario
+    manda uma mensagem de texto ou um audio ("gastei 45 reais no mercado",
+    "qual meu saldo?"), o n8n transcreve o audio, interpreta a intencao e chama
+    esta API para lancar, alterar ou consultar transacoes.
+
+    **A automacao em si nao faz parte deste projeto.** Transcricao de audio,
+    parsing de linguagem natural, webhook do WhatsApp e o workflow n8n estao
+    fora de escopo. O que a API entrega e a infraestrutura que essa automacao
+    vai consumir:
+
+    * geracao, listagem e revogacao de API Keys em Configuracoes > Integracoes;
+    * autenticacao por API Key com escopos (`read:transactions`,
+      `write:transactions`, `read:balance`, `read:categories`);
+    * endpoints versionados e estaveis para lancar, alterar e consultar.
+
+    Para mapear texto livre em identificadores, o workflow deve consultar
+    `GET /api/v1/external/categories` e `GET /api/v1/external/accounts` e
+    resolver o nome ("mercado" -> categoria "Alimentacao") antes de criar o
+    lancamento.
+
+    ## Valores monetarios
+
+    Valores de entrada sao decimais em reais (`356.80`). Nas respostas, todo
+    valor vem como objeto com `amount` (numero) e `formatted` (string ja em
+    pt-BR, `R$ 356,80`) — o segundo existe para que uma resposta possa ser
+    enviada direto em uma mensagem de chat.
+
+servers:
+  - url: http://localhost:8080
+    description: Ambiente local (Docker Compose)
+
+tags:
+  - name: Autenticacao
+  - name: Transacoes
+  - name: Categorias
+  - name: Contas
+  - name: Metas
+  - name: Orcamentos
+  - name: Dashboard
+  - name: Relatorios
+  - name: Integracoes
+  - name: Externo (n8n / WhatsApp)
+
+paths:
+  /health/live:
+    get:
+      tags: [Autenticacao]
+      summary: Sonda de vida do processo
+      security: []
+      responses:
+        "200":
+          description: Processo no ar
+
+  /health/ready:
+    get:
+      tags: [Autenticacao]
+      summary: Sonda de prontidao (inclui o banco)
+      security: []
+      responses:
+        "200":
+          description: Aplicacao pronta
+        "503":
+          description: Banco de dados indisponivel
+
+  /api/v1/auth/register:
+    post:
+      tags: [Autenticacao]
+      summary: Cria uma conta e abre a sessao
+      description: |
+        Alem de criar o usuario, semeia o espaco de trabalho inicial com as
+        categorias padrao e uma conta corrente, para que o primeiro lancamento
+        seja possivel sem configuracao previa.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string, example: "Joao Silva" }
+                email: { type: string, format: email, example: "joao@email.com" }
+                password: { type: string, format: password, minLength: 8 }
+      responses:
+        "201":
+          description: Conta criada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthOutput" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+
+  /api/v1/auth/login:
+    post:
+      tags: [Autenticacao]
+      summary: Autentica por e-mail e senha
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        "200":
+          description: Sessao aberta
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthOutput" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/auth/refresh:
+    post:
+      tags: [Autenticacao]
+      summary: Renova a sessao
+      description: O refresh token apresentado e revogado e substituido por um novo (rotacao).
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+      responses:
+        "200":
+          description: Sessao renovada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthOutput" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/auth/logout:
+    post:
+      tags: [Autenticacao]
+      summary: Encerra a sessao
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token: { type: string }
+      responses:
+        "204": { description: Sessao encerrada }
+
+  /api/v1/me:
+    get:
+      tags: [Autenticacao]
+      summary: Perfil do usuario autenticado
+      responses:
+        "200":
+          description: Perfil
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    put:
+      tags: [Autenticacao]
+      summary: Atualiza nome e e-mail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email]
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+      responses:
+        "200":
+          description: Perfil atualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /api/v1/me/password:
+    put:
+      tags: [Autenticacao]
+      summary: Troca a senha
+      description: Encerra todas as demais sessoes do usuario.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password, new_password]
+              properties:
+                current_password: { type: string, format: password }
+                new_password: { type: string, format: password, minLength: 8 }
+      responses:
+        "204": { description: Senha alterada }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/transactions:
+    get:
+      tags: [Transacoes]
+      summary: Lista lancamentos com filtros e paginacao
+      parameters:
+        - { in: query, name: search, schema: { type: string }, description: Busca em descricao e observacoes }
+        - { in: query, name: type, schema: { type: string, enum: [income, expense] } }
+        - { in: query, name: category_id, schema: { type: string }, description: "Aceita repeticao ou lista separada por virgula" }
+        - { in: query, name: account_id, schema: { type: string } }
+        - { in: query, name: start_date, schema: { type: string, format: date } }
+        - { in: query, name: end_date, schema: { type: string, format: date } }
+        - { in: query, name: page, schema: { type: integer, default: 1 } }
+        - { in: query, name: page_size, schema: { type: integer, default: 10, maximum: 100 } }
+        - { in: query, name: sort_by, schema: { type: string, enum: [occurred_on, amount, description] } }
+        - { in: query, name: sort_dir, schema: { type: string, enum: [asc, desc] } }
+      responses:
+        "200":
+          description: Pagina de lancamentos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TransactionList" }
+    post:
+      tags: [Transacoes]
+      summary: Cria um lancamento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransactionInput" }
+      responses:
+        "201":
+          description: Lancamento criado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+
+  /api/v1/transactions/{id}:
+    parameters:
+      - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+    get:
+      tags: [Transacoes]
+      summary: Detalha um lancamento
+      responses:
+        "200":
+          description: Lancamento
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Transacoes]
+      summary: Altera um lancamento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransactionInput" }
+      responses:
+        "200":
+          description: Lancamento atualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [Transacoes]
+      summary: Remove um lancamento
+      responses:
+        "204": { description: Removido }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/categories:
+    get:
+      tags: [Categorias]
+      summary: Lista categorias
+      parameters:
+        - { in: query, name: type, schema: { type: string, enum: [income, expense] } }
+        - { in: query, name: include_archived, schema: { type: boolean } }
+      responses:
+        "200":
+          description: Categorias
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Category" }
+    post:
+      tags: [Categorias]
+      summary: Cria uma categoria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "201":
+          description: Categoria criada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /api/v1/categories/{id}:
+    parameters:
+      - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+    put:
+      tags: [Categorias]
+      summary: Altera uma categoria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CategoryInput" }
+      responses:
+        "200":
+          description: Categoria atualizada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Category" }
+        "409":
+          description: |
+            Conflito. Ocorre ao tentar trocar o tipo de uma categoria que ja
+            possui lancamentos, ou ao repetir nome e tipo de outra categoria.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+    delete:
+      tags: [Categorias]
+      summary: Remove uma categoria sem uso
+      responses:
+        "204": { description: Removida }
+        "409":
+          description: A categoria possui lancamentos; arquive-a em vez de excluir
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  /api/v1/accounts:
+    get:
+      tags: [Contas]
+      summary: Lista contas com saldo derivado
+      parameters:
+        - { in: query, name: include_archived, schema: { type: boolean } }
+      responses:
+        "200":
+          description: Contas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Account" }
+    post:
+      tags: [Contas]
+      summary: Cria uma conta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AccountInput" }
+      responses:
+        "201":
+          description: Conta criada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Account" }
+
+  /api/v1/accounts/{id}:
+    parameters:
+      - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+    put:
+      tags: [Contas]
+      summary: Altera uma conta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AccountInput" }
+      responses:
+        "200":
+          description: Conta atualizada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Account" }
+    delete:
+      tags: [Contas]
+      summary: Remove uma conta sem movimento
+      responses:
+        "204": { description: Removida }
+        "409":
+          description: A conta possui lancamentos; arquive-a em vez de excluir
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  /api/v1/goals:
+    get:
+      tags: [Metas]
+      summary: Lista metas com progresso calculado
+      parameters:
+        - { in: query, name: filter, schema: { type: string, enum: [all, in_progress, completed] } }
+        - { in: query, name: include_archived, schema: { type: boolean } }
+      responses:
+        "200":
+          description: Metas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Goal" }
+    post:
+      tags: [Metas]
+      summary: Cria uma meta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GoalInput" }
+      responses:
+        "201":
+          description: Meta criada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Goal" }
+
+  /api/v1/goals/{id}:
+    parameters:
+      - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+    put:
+      tags: [Metas]
+      summary: Altera uma meta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GoalInput" }
+      responses:
+        "200":
+          description: Meta atualizada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Goal" }
+    delete:
+      tags: [Metas]
+      summary: Remove uma meta
+      responses:
+        "204": { description: Removida }
+
+  /api/v1/goals/{id}/contributions:
+    post:
+      tags: [Metas]
+      summary: Registra um aporte na meta
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount:
+                  type: number
+                  description: Positivo para aportar; negativo corrige um aporte lancado errado
+                  example: 500.00
+      responses:
+        "200":
+          description: Meta atualizada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Goal" }
+
+  /api/v1/budgets:
+    get:
+      tags: [Orcamentos]
+      summary: Lista orcamentos do mes com consumo apurado
+      parameters:
+        - { in: query, name: month, schema: { type: string, format: date }, description: "Qualquer dia do mes de referencia" }
+      responses:
+        "200":
+          description: Orcamentos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BudgetList" }
+    put:
+      tags: [Orcamentos]
+      summary: Define ou atualiza o limite de uma categoria no mes
+      description: Idempotente por (categoria, mes).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [category_id, limit_amount]
+              properties:
+                category_id: { type: string, format: uuid }
+                month: { type: string, format: date }
+                limit_amount: { type: number, example: 1200.00 }
+      responses:
+        "200":
+          description: Orcamento definido
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Budget" }
+        "422":
+          description: Categoria inexistente ou de receita
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  /api/v1/budgets/{id}:
+    delete:
+      tags: [Orcamentos]
+      summary: Remove um orcamento
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "204": { description: Removido }
+
+  /api/v1/dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Monta a tela inicial inteira
+      parameters:
+        - { in: query, name: start_date, schema: { type: string, format: date } }
+        - { in: query, name: end_date, schema: { type: string, format: date } }
+        - { in: query, name: cashflow_months, schema: { type: integer, default: 5, maximum: 24 } }
+        - { in: query, name: recent_limit, schema: { type: integer, default: 5 } }
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Dashboard" }
+
+  /api/v1/reports:
+    get:
+      tags: [Relatorios]
+      summary: Monta a tela de relatorios
+      parameters:
+        - { in: query, name: start_date, schema: { type: string, format: date } }
+        - { in: query, name: end_date, schema: { type: string, format: date } }
+        - { in: query, name: trend_months, schema: { type: integer, default: 6 } }
+      responses:
+        "200":
+          description: Relatorio
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Report" }
+
+  /api/v1/api-keys:
+    get:
+      tags: [Integracoes]
+      summary: Lista as chaves de integracao
+      description: Nunca devolve o segredo, apenas o prefixo identificador.
+      responses:
+        "200":
+          description: Chaves
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/APIKey" }
+    post:
+      tags: [Integracoes]
+      summary: Gera uma nova chave de integracao
+      description: |
+        **Unica resposta da API que contem o segredo em texto puro.** O valor
+        nao e persistido e nao pode ser recuperado depois — a interface avisa o
+        usuario para copiar a chave no ato. Perdida a chave, a saida e gerar
+        outra e revogar a anterior.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: "Assistente WhatsApp (n8n)" }
+                scopes:
+                  type: array
+                  description: Vazio concede todos os escopos
+                  items:
+                    type: string
+                    enum: [read:transactions, write:transactions, read:balance, read:categories]
+                expires_at:
+                  type: string
+                  format: date
+                  description: Opcional; a chave vale ate o fim do dia informado
+      responses:
+        "201":
+          description: Chave criada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_key: { $ref: "#/components/schemas/APIKey" }
+                  plain_key:
+                    type: string
+                    description: Segredo completo, exibido uma unica vez
+                    example: "fin_live_9Xk2mQ7pR4tYvB1nZ8sL3dF6gH0jK5wE2aC7uI9oP1x"
+
+  /api/v1/api-keys/{id}:
+    delete:
+      tags: [Integracoes]
+      summary: Revoga uma chave
+      description: A revogacao e imediata e definitiva.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "204": { description: Chave revogada }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/external/transactions:
+    get:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Consulta lancamentos
+      description: |
+        Mesmos filtros da listagem web. Pensado para responder perguntas como
+        "quanto gastei com mercado esse mes?" vindas de uma conversa.
+
+        Escopo exigido: `read:transactions`.
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: query, name: search, schema: { type: string } }
+        - { in: query, name: type, schema: { type: string, enum: [income, expense] } }
+        - { in: query, name: category_id, schema: { type: string } }
+        - { in: query, name: start_date, schema: { type: string, format: date } }
+        - { in: query, name: end_date, schema: { type: string, format: date } }
+        - { in: query, name: page, schema: { type: integer, default: 1 } }
+        - { in: query, name: page_size, schema: { type: integer, default: 10 } }
+      responses:
+        "200":
+          description: Pagina de lancamentos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TransactionList" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/InsufficientScope" }
+    post:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Cria um lancamento
+      description: |
+        Endpoint que o workflow chama depois de interpretar a mensagem do
+        usuario. `date` pode ser omitido: sem data, o lancamento e do dia — o
+        caso mais comum em "gastei 50 no uber".
+
+        `type` aceita tanto `income`/`expense` quanto `receita`/`despesa`.
+
+        Escopo exigido: `write:transactions`.
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransactionInput" }
+            example:
+              type: despesa
+              amount: 45.90
+              description: Mercado
+              category_id: 6f1c2b4e-9a3d-4c8f-9b2e-1d5a7c3e8f04
+              account_id: 2a9d7e1c-5b3f-4a8e-9c1d-7f2b4e6a8c05
+              notes: "lancado via WhatsApp"
+      responses:
+        "201":
+          description: Lancamento criado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/InsufficientScope" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+
+  /api/v1/external/transactions/{id}:
+    put:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Altera um lancamento
+      description: |
+        Atende correcoes ditas em conversa ("na verdade foram 60 reais").
+
+        Escopo exigido: `write:transactions`.
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TransactionInput" }
+      responses:
+        "200":
+          description: Lancamento atualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Transaction" }
+        "403": { $ref: "#/components/responses/InsufficientScope" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/external/balance:
+    get:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Consulta o saldo atual e os totais do periodo
+      description: |
+        Sem parametros, considera o mes corrente. Todos os valores vem tambem
+        formatados em pt-BR (`formatted`), prontos para compor a resposta
+        enviada ao usuario no chat.
+
+        Escopo exigido: `read:balance`.
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: query, name: start_date, schema: { type: string, format: date } }
+        - { in: query, name: end_date, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Saldo e totais
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DashboardSummary" }
+        "403": { $ref: "#/components/responses/InsufficientScope" }
+
+  /api/v1/external/categories:
+    get:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Lista categorias
+      description: |
+        Usado pelo workflow para mapear texto livre em `category_id` antes de
+        criar um lancamento ("mercado" -> "Alimentacao").
+
+        Escopo exigido: `read:categories`.
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: query, name: type, schema: { type: string, enum: [income, expense] } }
+      responses:
+        "200":
+          description: Categorias
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Category" }
+        "403": { $ref: "#/components/responses/InsufficientScope" }
+
+  /api/v1/external/accounts:
+    get:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Lista contas
+      description: |
+        Mesma finalidade de mapeamento das categorias, para o campo
+        `account_id`.
+
+        Escopo exigido: `read:balance`.
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      responses:
+        "200":
+          description: Contas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Account" }
+        "403": { $ref: "#/components/responses/InsufficientScope" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token da sessao web
+    apiKeyBearer:
+      type: http
+      scheme: bearer
+      description: "API Key da integracao: Authorization: Bearer <api_key>"
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Alternativa ao cabecalho Authorization
+
+  responses:
+    Unauthorized:
+      description: Credencial ausente ou invalida
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    InsufficientScope:
+      description: A chave de API nao possui o escopo exigido pela rota
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+          example:
+            error:
+              code: insufficient_scope
+              message: "esta chave de API nao possui o escopo 'write:transactions'"
+    NotFound:
+      description: Recurso nao encontrado
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    Conflict:
+      description: Conflito de estado ou unicidade
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    ValidationError:
+      description: Dados invalidos
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+          example:
+            error:
+              code: validation_failed
+              message: dados invalidos
+              fields:
+                amount: valor deve ser maior que zero
+                description: descricao e obrigatorio
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Identificador estavel da falha
+            message:
+              type: string
+            fields:
+              type: object
+              additionalProperties: { type: string }
+              description: Erros por campo, presente apenas em falhas de validacao
+
+    Money:
+      type: object
+      properties:
+        amount: { type: number, example: 356.80 }
+        formatted: { type: string, example: "R$ 356,80" }
+
+    Metric:
+      type: object
+      properties:
+        value: { type: number }
+        formatted: { type: string }
+        variation:
+          type: number
+          description: Variacao percentual contra o periodo anterior
+
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        email: { type: string, format: email }
+        created_at: { type: string, format: date-time }
+
+    AuthOutput:
+      type: object
+      properties:
+        access_token: { type: string }
+        refresh_token: { type: string }
+        expires_in: { type: integer, description: Validade do access token em segundos }
+        refresh_token_expires_in: { type: integer }
+        user: { $ref: "#/components/schemas/User" }
+
+    CategoryRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        color: { type: string, example: "#7C3AED" }
+        icon: { type: string }
+        type: { type: string, enum: [income, expense] }
+
+    Category:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        type: { type: string, enum: [income, expense] }
+        color: { type: string }
+        icon: { type: string }
+        archived: { type: boolean }
+
+    CategoryInput:
+      type: object
+      required: [name, type]
+      properties:
+        name: { type: string, example: Alimentacao }
+        type: { type: string, enum: [income, expense] }
+        color: { type: string, example: "#10B981" }
+        icon: { type: string, example: utensils }
+        archived: { type: boolean }
+
+    AccountRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        type: { type: string }
+        icon: { type: string }
+
+    Account:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        type:
+          type: string
+          enum: [checking, savings, credit_card, cash, investment]
+        initial_balance: { $ref: "#/components/schemas/Money" }
+        balance:
+          allOf: [{ $ref: "#/components/schemas/Money" }]
+          description: Saldo derivado do saldo inicial mais os lancamentos da conta
+        color: { type: string }
+        icon: { type: string }
+        archived: { type: boolean }
+
+    AccountInput:
+      type: object
+      required: [name, type]
+      properties:
+        name: { type: string }
+        type:
+          type: string
+          enum: [checking, savings, credit_card, cash, investment]
+        initial_balance: { type: number }
+        color: { type: string }
+        icon: { type: string }
+        archived: { type: boolean }
+
+    Transaction:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        type: { type: string, enum: [income, expense] }
+        amount: { $ref: "#/components/schemas/Money" }
+        description: { type: string }
+        notes: { type: string }
+        date: { type: string, format: date }
+        category: { $ref: "#/components/schemas/CategoryRef" }
+        account: { $ref: "#/components/schemas/AccountRef" }
+        created_at: { type: string, format: date-time }
+
+    TransactionInput:
+      type: object
+      required: [type, amount, description, category_id, account_id]
+      properties:
+        type:
+          type: string
+          description: "income/expense ou receita/despesa"
+          example: expense
+        amount: { type: number, example: 356.80 }
+        description: { type: string, example: Supermercado }
+        category_id: { type: string, format: uuid }
+        account_id: { type: string, format: uuid }
+        date:
+          type: string
+          format: date
+          description: "Opcional na criacao; ausente significa hoje"
+        notes: { type: string }
+
+    TransactionList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Transaction" }
+        pagination:
+          type: object
+          properties:
+            page: { type: integer }
+            page_size: { type: integer }
+            total: { type: integer }
+            total_pages: { type: integer }
+        totals:
+          type: object
+          description: Totais de todo o conjunto filtrado, nao apenas da pagina
+          properties:
+            income: { $ref: "#/components/schemas/Money" }
+            expense: { $ref: "#/components/schemas/Money" }
+            net: { $ref: "#/components/schemas/Money" }
+
+    Goal:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        target_amount: { $ref: "#/components/schemas/Money" }
+        current_amount: { $ref: "#/components/schemas/Money" }
+        remaining: { $ref: "#/components/schemas/Money" }
+        suggested_monthly:
+          allOf: [{ $ref: "#/components/schemas/Money" }]
+          description: Quanto aportar por mes para cumprir o prazo
+        percentage: { type: number }
+        months_remaining: { type: integer }
+        completed: { type: boolean }
+        overdue: { type: boolean }
+        deadline: { type: string, format: date }
+        image_url: { type: string }
+        icon: { type: string }
+        color: { type: string }
+        archived: { type: boolean }
+
+    GoalInput:
+      type: object
+      required: [name, target_amount]
+      properties:
+        name: { type: string, example: Viagem Europa }
+        target_amount: { type: number, example: 10000.00 }
+        current_amount: { type: number, example: 5430.00 }
+        deadline: { type: string, format: date }
+        image_url: { type: string }
+        icon: { type: string }
+        color: { type: string }
+        archived: { type: boolean }
+
+    Budget:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        category: { $ref: "#/components/schemas/CategoryRef" }
+        month: { type: string, format: date }
+        limit: { $ref: "#/components/schemas/Money" }
+        spent: { $ref: "#/components/schemas/Money" }
+        remaining: { $ref: "#/components/schemas/Money" }
+        percentage: { type: number }
+        status: { type: string, enum: [ok, warning, exceeded] }
+
+    BudgetList:
+      type: object
+      properties:
+        month: { type: string, format: date }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Budget" }
+        total_limit: { $ref: "#/components/schemas/Money" }
+        total_spent: { $ref: "#/components/schemas/Money" }
+        percentage: { type: number }
+
+    DashboardSummary:
+      type: object
+      properties:
+        total_balance: { $ref: "#/components/schemas/Metric" }
+        income: { $ref: "#/components/schemas/Metric" }
+        expense: { $ref: "#/components/schemas/Metric" }
+        savings: { $ref: "#/components/schemas/Metric" }
+        savings_rate: { type: number }
+        period:
+          type: object
+          properties:
+            start_date: { type: string, format: date }
+            end_date: { type: string, format: date }
+
+    CashflowPoint:
+      type: object
+      properties:
+        month: { type: string, example: "2024-05" }
+        label: { type: string, example: Mai }
+        income: { type: number }
+        expense: { type: number }
+        net: { type: number }
+
+    CategoryDistribution:
+      type: object
+      properties:
+        total: { $ref: "#/components/schemas/Money" }
+        slices:
+          type: array
+          items:
+            type: object
+            properties:
+              category_id: { type: string, format: uuid }
+              name: { type: string }
+              color: { type: string }
+              icon: { type: string }
+              total: { $ref: "#/components/schemas/Money" }
+              percentage: { type: number }
+              count: { type: integer }
+
+    Dashboard:
+      type: object
+      properties:
+        summary: { $ref: "#/components/schemas/DashboardSummary" }
+        cashflow:
+          type: array
+          items: { $ref: "#/components/schemas/CashflowPoint" }
+        category_expenses: { $ref: "#/components/schemas/CategoryDistribution" }
+        recent_transactions:
+          type: array
+          items: { $ref: "#/components/schemas/Transaction" }
+        goals:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              name: { type: string }
+              current_amount: { $ref: "#/components/schemas/Money" }
+              target_amount: { $ref: "#/components/schemas/Money" }
+              percentage: { type: number }
+              color: { type: string }
+
+    Report:
+      type: object
+      properties:
+        period:
+          type: object
+          properties:
+            start_date: { type: string, format: date }
+            end_date: { type: string, format: date }
+        overview:
+          type: object
+          properties:
+            total_income: { $ref: "#/components/schemas/Metric" }
+            total_expense: { $ref: "#/components/schemas/Metric" }
+            average_ticket: { $ref: "#/components/schemas/Metric" }
+            transaction_count: { $ref: "#/components/schemas/Metric" }
+        cashflow:
+          type: array
+          items: { $ref: "#/components/schemas/CashflowPoint" }
+        category_expenses: { $ref: "#/components/schemas/CategoryDistribution" }
+        category_incomes: { $ref: "#/components/schemas/CategoryDistribution" }
+        trends:
+          type: array
+          items:
+            type: object
+            properties:
+              month: { type: string }
+              label: { type: string }
+              income: { type: number }
+              expense: { type: number }
+              net: { type: number }
+              savings_rate: { type: number }
+        insights:
+          type: object
+          description: Todos os campos sao opcionais; um periodo sem movimento devolve nulos
+          properties:
+            biggest_expense: { $ref: "#/components/schemas/TransactionHighlight" }
+            smallest_expense: { $ref: "#/components/schemas/TransactionHighlight" }
+            trending_category:
+              type: object
+              nullable: true
+              properties:
+                category: { $ref: "#/components/schemas/CategoryRef" }
+                current: { $ref: "#/components/schemas/Money" }
+                previous: { $ref: "#/components/schemas/Money" }
+                variation: { type: number }
+            best_day:
+              type: object
+              nullable: true
+              properties:
+                date: { type: string, format: date }
+                net: { $ref: "#/components/schemas/Money" }
+        comparison_period:
+          type: object
+          properties:
+            start_date: { type: string, format: date }
+            end_date: { type: string, format: date }
+
+    TransactionHighlight:
+      type: object
+      nullable: true
+      properties:
+        description: { type: string }
+        amount: { $ref: "#/components/schemas/Money" }
+        date: { type: string, format: date }
+        category: { $ref: "#/components/schemas/CategoryRef" }
+
+    APIKey:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        prefix:
+          type: string
+          description: Parte visivel da chave, para identificacao na listagem
+          example: "fin_live_9Xk2mQ7p..."
+        scopes:
+          type: array
+          items: { type: string }
+        status: { type: string, enum: [active, revoked, expired] }
+        expires_at: { type: string, format: date-time }
+        last_used_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+
+security:
+  - bearerAuth: []

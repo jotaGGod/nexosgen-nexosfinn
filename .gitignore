@@ -1,0 +1,27 @@
+# Dependências
+node_modules/
+
+# Build
+.next/
+out/
+dist/
+backend/tmp/
+backend/bin/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Editores
+.idea/
+.vscode/
+*.swp
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
