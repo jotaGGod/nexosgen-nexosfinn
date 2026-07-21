@@ -40,8 +40,12 @@ func Load() (*Config, error) {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		Env:             getEnv("APP_ENV", "development"),
-		HTTPPort:        getEnv("HTTP_PORT", "8080"),
+		Env: getEnv("APP_ENV", "development"),
+		// PORT tem precedencia porque e a variavel que a Vercel injeta no
+		// servico: o processo precisa escutar exatamente nela, senao o
+		// healthcheck da plataforma nao encontra o servidor. Fora da Vercel
+		// (Docker Compose, execucao local) vale HTTP_PORT.
+		HTTPPort:        getEnv("PORT", getEnv("HTTP_PORT", "8080")),
 		DatabaseURL:     os.Getenv("DATABASE_URL"),
 		JWTSecret:       os.Getenv("JWT_SECRET"),
 		AccessTokenTTL:  getDuration("ACCESS_TOKEN_TTL", 15*time.Minute),
