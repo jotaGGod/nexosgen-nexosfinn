@@ -50,8 +50,8 @@ export function LoginForm() {
       return;
     }
 
-    // refresh sincroniza o middleware com o cookie recém-criado antes da
-    // navegação, evitando um redirecionamento de volta para o login.
+    // refresh descarta o cache do roteador para que o layout autenticado
+    // enxergue o cookie recém-criado, evitando um retorno ao login.
     router.replace(searchParams.get("redirect") ?? "/dashboard");
     router.refresh();
   }

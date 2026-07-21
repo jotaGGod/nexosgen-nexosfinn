@@ -1,12 +1,24 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { Logo } from "@/components/layout/logo";
+import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
 
 /**
  * Casca das telas públicas.
  *
  * O painel escuro à esquerda repete a identidade da sidebar; no mobile ele
  * some e sobra apenas o formulário.
+ *
+ * Quem já tem sessão não deve ver login nem cadastro — a redireção acontece
+ * aqui pelo mesmo motivo do grupo autenticado: sem middleware, sem Edge.
  */
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const store = await cookies();
+  if (store.get(REFRESH_TOKEN_COOKIE)?.value) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="flex min-h-screen">
       <aside className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-sidebar p-12 lg:flex">

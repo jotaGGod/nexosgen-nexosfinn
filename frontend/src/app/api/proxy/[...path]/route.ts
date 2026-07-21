@@ -81,8 +81,8 @@ async function forward(request: NextRequest, context: { params: Promise<{ path: 
   if (renewed) {
     applySessionCookies(response, renewed);
   } else if (upstream.status === 401) {
-    // A sessão acabou de vez: limpar os cookies faz o middleware mandar o
-    // usuário para o login na próxima navegação.
+    // A sessão acabou de vez: limpar os cookies faz o layout autenticado
+    // mandar o usuário para o login na próxima navegação.
     clearSessionCookies(response);
   }
 
