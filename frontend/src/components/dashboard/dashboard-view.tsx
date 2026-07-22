@@ -4,8 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { PeriodPicker, monthPeriod, type PeriodValue } from "@/components/common/period-picker";
-import { CashflowChart, CashflowLegend } from "@/components/dashboard/cashflow-chart";
-import { CategoryDonut } from "@/components/dashboard/category-donut";
+import {
+  CashflowChart,
+  CashflowLegend,
+  CategoryDonut,
+  useChartPreload,
+} from "@/components/dashboard/lazy-charts";
 import { GoalsSummary } from "@/components/dashboard/goals-summary";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { SummaryCards, SummaryCardsSkeleton } from "@/components/dashboard/summary-cards";
@@ -24,6 +28,8 @@ import { todayISO } from "@/lib/format";
  * metas chegam juntos, o que evita cinco estados de carregamento na mesma tela.
  */
 export function DashboardView() {
+  useChartPreload();
+
   const [period, setPeriod] = useState<PeriodValue>(() => monthPeriod(todayISO()));
 
   const { data, isPending, isError, refetch } = useDashboard({

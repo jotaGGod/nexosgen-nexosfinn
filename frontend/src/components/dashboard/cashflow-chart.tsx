@@ -1,5 +1,7 @@
 "use client";
 
+import { memo } from "react";
+
 import {
   CartesianGrid,
   Line,
@@ -46,7 +48,7 @@ function CashflowTooltip({ active, payload, label }: any) {
  * A série já vem do backend com os meses sem movimento zerados, então a linha
  * nunca aparece com buracos.
  */
-export function CashflowChart({ data }: { data: CashflowPoint[] }) {
+export const CashflowChart = memo(function CashflowChart({ data }: { data: CashflowPoint[] }) {
   const hasMovement = data.some((point) => point.income > 0 || point.expense > 0);
 
   if (!hasMovement) {
@@ -78,6 +80,12 @@ export function CashflowChart({ data }: { data: CashflowPoint[] }) {
             width={70}
           />
           <Tooltip content={<CashflowTooltip />} cursor={{ stroke: CURSOR_COLOR, strokeDasharray: "4 4" }} />
+          {/*
+            isAnimationActive={false} pelo mesmo motivo do donut: a animação de
+            montagem do Recharts termina com o traço invisível nesta combinação
+            de versões. O gráfico agora é carregado sob demanda, então ele monta
+            depois da tela já estar de pé e o problema aparece sempre.
+          */}
           <Line
             type="monotone"
             dataKey="income"
@@ -86,6 +94,7 @@ export function CashflowChart({ data }: { data: CashflowPoint[] }) {
             strokeWidth={2.5}
             dot={false}
             activeDot={{ r: 5, strokeWidth: 0 }}
+            isAnimationActive={false}
           />
           <Line
             type="monotone"
@@ -95,25 +104,10 @@ export function CashflowChart({ data }: { data: CashflowPoint[] }) {
             strokeWidth={2.5}
             dot={false}
             activeDot={{ r: 5, strokeWidth: 0 }}
+            isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>
     </div>
   );
-}
-
-/** Legenda do gráfico, exibida no cabeçalho do card. */
-export function CashflowLegend() {
-  return (
-    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-      <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full" style={{ backgroundColor: INCOME_COLOR }} />
-        Receitas
-      </span>
-      <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full" style={{ backgroundColor: EXPENSE_COLOR }} />
-        Despesas
-      </span>
-    </div>
-  );
-}
+});

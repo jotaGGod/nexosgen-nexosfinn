@@ -9,6 +9,14 @@ const nextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
 
+  experimental: {
+    // O lucide-react publica um índice que reexporta mais de mil ícones. Sem
+    // isto, importar meia dúzia deles arrasta o barril inteiro para a análise
+    // do bundler e infla o pacote compartilhado. A opção reescreve cada import
+    // para o arquivo do ícone específico.
+    optimizePackageImports: ["lucide-react", "recharts", "date-fns"],
+  },
+
   async headers() {
     return [
       {

@@ -1,5 +1,7 @@
 "use client";
 
+import { memo } from "react";
+
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import { EmptyState } from "@/components/ui/states";
@@ -35,7 +37,7 @@ interface CategoryDonutProps {
  * A legenda repete valor e percentual porque, em um donut com muitas fatias,
  * a leitura pelo ângulo sozinha é imprecisa.
  */
-export function CategoryDonut({ distribution, centerLabel = "Total", legendLimit = 6 }: CategoryDonutProps) {
+export const CategoryDonut = memo(function CategoryDonut({ distribution, centerLabel = "Total", legendLimit = 6 }: CategoryDonutProps) {
   if (distribution.slices.length === 0) {
     return (
       <EmptyState
@@ -99,4 +101,4 @@ export function CategoryDonut({ distribution, centerLabel = "Total", legendLimit
       </ul>
     </div>
   );
-}
+});

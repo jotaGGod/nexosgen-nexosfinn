@@ -10,20 +10,16 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 import { PeriodPicker, monthPeriod, type PeriodValue } from "@/components/common/period-picker";
 import { Variation } from "@/components/common/variation";
-import { CashflowChart, CashflowLegend } from "@/components/dashboard/cashflow-chart";
-import { CategoryDonut } from "@/components/dashboard/category-donut";
+import {
+  CashflowChart,
+  CashflowLegend,
+  CategoryDonut,
+  IncomeBarChart,
+  useChartPreload,
+} from "@/components/dashboard/lazy-charts";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -79,22 +75,6 @@ function InsightCard({
         <p className="truncate text-xs text-muted-foreground">{detail}</p>
       </div>
     </Card>
-  );
-}
-
-/** Tooltip do gráfico de barras da evolução de receitas. */
-function TrendTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null;
-
-  return (
-    <div className="rounded-xl border border-border bg-card px-3 py-2 shadow-lg">
-      <p className="mb-1 text-xs font-semibold">{label}</p>
-      {payload.map((entry: any) => (
-        <p key={entry.dataKey} className="text-xs text-muted-foreground">
-          {entry.name}: <span className="font-medium text-foreground">{formatCurrency(entry.value)}</span>
-        </p>
-      ))}
-    </div>
   );
 }
 
@@ -160,6 +140,8 @@ function Insights({ insights }: { insights: Report["insights"] }) {
 
 /** Tela de relatórios, com as quatro abas do layout de referência. */
 export function ReportsView() {
+  useChartPreload();
+
   const [period, setPeriod] = useState<PeriodValue>(() => monthPeriod(todayISO()));
 
   const { data, isPending, isError, refetch } = useReport({
@@ -240,33 +222,7 @@ export function ReportsView() {
                   <CardTitle>Evolução das Receitas</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-[260px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={data.trends} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
-                        <CartesianGrid
-                          strokeDasharray="4 4"
-                          stroke="var(--chart-grid)"
-                          vertical={false}
-                        />
-                        <XAxis
-                          dataKey="label"
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: "var(--chart-muted)", fontSize: 12 }}
-                          dy={8}
-                        />
-                        <YAxis
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: "var(--chart-muted)", fontSize: 12 }}
-                          tickFormatter={formatCompactCurrency}
-                          width={70}
-                        />
-                        <Tooltip content={<TrendTooltip />} cursor={{ fill: "var(--chart-hover)" }} />
-                        <Bar dataKey="income" name="Receitas" fill="var(--chart-income)" radius={[6, 6, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
+                  <IncomeBarChart data={data.trends} />
                 </CardContent>
               </Card>
 
