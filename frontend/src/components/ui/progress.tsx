@@ -38,7 +38,7 @@ function Progress({ value, color, size = "md", className, ...props }: ProgressPr
         className="h-full rounded-full transition-[width] duration-500 ease-out"
         style={{
           width: `${clamped}%`,
-          background: color ?? "linear-gradient(90deg, #7C3AED 0%, #C026D3 100%)",
+          background: color ?? "hsl(var(--primary))",
         }}
       />
     </div>

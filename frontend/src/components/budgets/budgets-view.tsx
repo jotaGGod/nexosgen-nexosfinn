@@ -29,9 +29,9 @@ import type { BudgetStatus } from "@/types/api";
 
 /** Cores da barra conforme o estado do orçamento. */
 const statusColor: Record<BudgetStatus, string> = {
-  ok: "linear-gradient(90deg, #10B981 0%, #34D399 100%)",
-  warning: "linear-gradient(90deg, #F59E0B 0%, #FBBF24 100%)",
-  exceeded: "linear-gradient(90deg, #EF4444 0%, #F87171 100%)",
+  ok: "hsl(var(--positive))",
+  warning: "hsl(38 92% 55%)",
+  exceeded: "hsl(var(--negative))",
 };
 
 const statusLabel: Record<BudgetStatus, string> = {

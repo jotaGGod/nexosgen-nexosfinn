@@ -1,8 +1,8 @@
 export const THEME_STORAGE_KEY = "finapp:theme";
 
 export const THEME_COLORS = {
-  light: "#F8FAFC",
-  dark: "#070C17",
+  light: "#FCFCFD",
+  dark: "#050505",
 } as const;
 
 export type Theme = keyof typeof THEME_COLORS;

@@ -2,83 +2,144 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Design system Vanta — fonte única da verdade.
+ *
+ * Nenhum componente declara cor, raio ou sombra própria: tudo sai daqui, via
+ * os utilitários do Tailwind mapeados em tailwind.config.ts. Trocar a
+ * identidade do produto é trocar este arquivo.
+ *
+ * O tema escuro é a identidade primária (as referências da marca são escuras).
+ * O claro é derivado dele, preservando a preferência do usuário.
+ *
+ * As cores estão em tripla HSL sem função, e não em hexadecimal, porque é esse
+ * formato que permite ao Tailwind aplicar os modificadores de opacidade
+ * (bg-primary/10, border-border/70) usados em toda a interface.
+ */
+
 @layer base {
   :root {
-    --sidebar-background: #0b1120;
-    --chart-grid: #e2e8f0;
-    --chart-muted: #94a3b8;
-    --chart-cursor: #cbd5e1;
-    --chart-hover: #f1f5f9;
+    color-scheme: light;
 
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-
+    /* --- Superfícies --- */
+    --background: 240 20% 99%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-
+    --card-foreground: 240 6% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 240 6% 10%;
 
-    /* Violeta primário do layout de referência (#7C3AED). */
-    --primary: 258 90% 66%;
-    --primary-foreground: 0 0% 100%;
+    /* --- Texto --- */
+    --foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    /*
+     * Verde-limão de assinatura (#C6FF3D). Usado só em CTA, no gráfico
+     * principal e em um ou dois detalhes por seção — nunca em área grande.
+     * O texto sobre ele é quase preto: limão com texto branco é ilegível.
+     */
+    --primary: 78 100% 62%;
+    --primary-foreground: 240 10% 4%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    /* Roxo secundário (#7C5CFC), para gradientes e destaques de apoio. */
+    --accent: 252 96% 67%;
+    --accent-foreground: 0 0% 100%;
 
-    --accent: 258 90% 96%;
-    --accent-foreground: 258 90% 40%;
-
-    --destructive: 0 84% 60%;
+    /* --- Semântica financeira --- */
+    --positive: 158 64% 40%;
+    --negative: 0 72% 51%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 258 90% 66%;
+    /* --- Traços --- */
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 78 100% 45%;
 
-    --radius: 0.875rem;
+    /* Painel de marca: escuro nos dois temas, é a assinatura da Vanta. */
+    --sidebar: 0 0% 2%;
+    --sidebar-foreground: 240 6% 64%;
+    --sidebar-border: 0 0% 14%;
+
+    /*
+     * Gráficos.
+     *
+     * Aqui as variáveis guardam a cor completa, e não a tripla HSL, porque o
+     * Recharts as injeta como atributo de apresentação do SVG — onde uma
+     * tripla solta não seria interpretada.
+     */
+    --chart-grid: hsl(240 6% 90%);
+    --chart-muted: hsl(240 4% 46%);
+    --chart-cursor: hsl(240 5% 84%);
+    --chart-hover: hsl(240 5% 96%);
+    --chart-income: hsl(78 70% 40%);
+    --chart-expense: hsl(0 72% 51%);
+    --chart-accent: hsl(252 96% 67%);
+
+    /* --- Forma --- */
+    --radius-lg: 28px;
+    --radius-md: 20px;
+    --radius-sm: 12px;
+    --radius: var(--radius-md);
+
+    /* --- Profundidade --- */
+    --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.1);
+    --shadow-glow: 0 0 40px rgb(198 255 61 / 0.15);
+
+    /* --- Movimento --- */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .dark {
     color-scheme: dark;
 
-    --sidebar-background: #080e1b;
+    /* --- Superfícies (#050505 / #111113 / #1a1a1d) --- */
+    --background: 0 0% 2%;
+    --card: 240 6% 7%;
+    --card-foreground: 240 11% 96%;
+    --popover: 240 6% 7%;
+    --popover-foreground: 240 11% 96%;
 
-    --chart-grid: #233044;
-    --chart-muted: #94a3b8;
-    --chart-cursor: #233044;
-    --chart-hover: #172033;
+    /* --- Texto (#f5f5f7 e sua versão a 60%) --- */
+    --foreground: 240 11% 96%;
+    --muted: 240 5% 11%;
+    --muted-foreground: 240 6% 64%;
+    --secondary: 240 5% 11%;
+    --secondary-foreground: 240 11% 96%;
 
-    --background: 222 52% 6%;
-    --foreground: 210 40% 98%;
+    --primary: 78 100% 62%;
+    --primary-foreground: 240 10% 4%;
 
-    --card: 221 39% 10%;
-    --card-foreground: 210 40% 98%;
+    --accent: 252 96% 67%;
+    --accent-foreground: 0 0% 100%;
 
-    --popover: 221 39% 10%;
-    --popover-foreground: 210 40% 98%;
+    /* #34D399 e #FF5C5C */
+    --positive: 158 64% 52%;
+    --negative: 0 100% 68%;
+    --destructive: 0 100% 68%;
+    --destructive-foreground: 240 10% 4%;
 
-    --primary: 266 91% 67%;
-    --primary-foreground: 0 0% 100%;
+    /* Equivalente a branco a 8% sobre o fundo quase preto. */
+    --border: 0 0% 14%;
+    --input: 0 0% 16%;
+    --ring: 78 100% 62%;
 
-    --secondary: 222 32% 14%;
-    --secondary-foreground: 210 40% 96%;
+    --sidebar: 0 0% 2%;
+    --sidebar-foreground: 240 6% 64%;
+    --sidebar-border: 0 0% 14%;
 
-    --muted: 222 32% 14%;
-    --muted-foreground: 215 20% 65%;
+    /* No escuro o limão aparece cheio: é o gráfico principal da marca. */
+    --chart-grid: hsl(0 0% 14%);
+    --chart-muted: hsl(240 6% 64%);
+    --chart-cursor: hsl(0 0% 20%);
+    --chart-hover: hsl(240 5% 11%);
+    --chart-income: hsl(78 100% 62%);
+    --chart-expense: hsl(0 100% 68%);
+    --chart-accent: hsl(252 96% 67%);
 
-    --accent: 260 55% 22%;
-    --accent-foreground: 267 95% 79%;
-
-    --destructive: 0 72% 55%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 217 27% 19%;
-    --input: 217 27% 22%;
-    --ring: 266 91% 67%;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 18px 48px -24px rgb(0 0 0 / 0.8);
   }
 }
 
@@ -97,6 +158,28 @@
     min-height: 100dvh;
     font-feature-settings: "cv11", "ss01";
   }
+
+  /* Todo número financeiro alinha na vertical entre linhas de uma lista. */
+  .tabular,
+  [class*="tabular-nums"] {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /*
+   * Cartão padrão: canto bem arredondado, borda de 1px quase invisível e
+   * sombra discreta. É a única fonte de elevação da interface.
+   */
+  .surface {
+    @apply rounded-2xl border border-border bg-card;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Brilho do accent, reservado ao CTA principal e ao gráfico em destaque. */
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
 }
 
 @layer utilities {
@@ -105,9 +188,9 @@
    * afastado do recorte, do indicador de início e dos controles flutuantes.
    */
   .safe-area-page {
-    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
+    padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
     padding-right: max(1rem, env(safe-area-inset-right, 0px));
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
     padding-left: max(1rem, env(safe-area-inset-left, 0px));
   }
 
@@ -118,12 +201,13 @@
     padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
   }
 
-  .safe-area-sidebar-top {
-    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
+  /* Espaço reservado para a barra de navegação inferior fixa. */
+  .pb-nav {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .safe-area-sidebar-bottom {
-    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  .safe-area-nav {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   @media (min-width: 640px) {
@@ -142,36 +226,9 @@
       padding: 3rem 1.25rem;
     }
 
-    .safe-area-sidebar-top {
-      padding-top: 1.5rem;
+    .pb-nav {
+      padding-bottom: 2rem;
     }
-
-    .safe-area-sidebar-bottom {
-      padding-bottom: 0.75rem;
-    }
-  }
-}
-
-@layer components {
-  /* Cartão padrão do layout: cantos arredondados e sombra suave. */
-  .surface {
-    @apply rounded-2xl border border-border/70 bg-card shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.10)];
-  }
-
-  .dark .surface {
-    border-color: hsl(var(--border) / 0.8);
-    box-shadow:
-      0 1px 2px rgb(0 0 0 / 0.35),
-      0 18px 48px -24px rgb(0 0 0 / 0.8),
-      inset 0 1px 0 rgb(255 255 255 / 0.015);
-  }
-
-  .sidebar-scroll::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-slate-700;
   }
 }
 
@@ -184,4 +241,16 @@ input[type="number"]::-webkit-inner-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* Respeita quem pediu menos movimento no sistema operacional. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

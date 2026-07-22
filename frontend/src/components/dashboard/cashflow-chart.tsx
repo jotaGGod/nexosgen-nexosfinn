@@ -14,8 +14,8 @@ import { EmptyState } from "@/components/ui/states";
 import { formatCompactCurrency, formatCurrency } from "@/lib/format";
 import type { CashflowPoint } from "@/types/api";
 
-const INCOME_COLOR = "#7C3AED";
-const EXPENSE_COLOR = "#EC4899";
+const INCOME_COLOR = "var(--chart-income)";
+const EXPENSE_COLOR = "var(--chart-expense)";
 const GRID_COLOR = "var(--chart-grid)";
 const MUTED_COLOR = "var(--chart-muted)";
 const CURSOR_COLOR = "var(--chart-cursor)";

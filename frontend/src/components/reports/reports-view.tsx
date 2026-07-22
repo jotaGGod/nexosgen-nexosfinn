@@ -263,7 +263,7 @@ export function ReportsView() {
                           width={70}
                         />
                         <Tooltip content={<TrendTooltip />} cursor={{ fill: "var(--chart-hover)" }} />
-                        <Bar dataKey="income" name="Receitas" fill="#7C3AED" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="income" name="Receitas" fill="var(--chart-income)" radius={[6, 6, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
