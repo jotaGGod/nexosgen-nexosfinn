@@ -52,7 +52,7 @@ export function LoginForm() {
 
     // refresh descarta o cache do roteador para que o layout autenticado
     // enxergue o cookie recém-criado, evitando um retorno ao login.
-    router.replace(searchParams.get("redirect") ?? "/dashboard");
+    router.replace(searchParams.get("redirect") ?? "/app/dashboard");
     router.refresh();
   }
 

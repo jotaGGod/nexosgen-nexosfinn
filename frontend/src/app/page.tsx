@@ -13,5 +13,5 @@ import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
  */
 export default async function RootPage() {
   const store = await cookies();
-  redirect(store.get(REFRESH_TOKEN_COOKIE)?.value ? "/dashboard" : "/login");
+  redirect(store.get(REFRESH_TOKEN_COOKIE)?.value ? "/app/dashboard" : "/login");
 }

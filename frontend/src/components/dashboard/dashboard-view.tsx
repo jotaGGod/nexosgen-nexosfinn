@@ -80,7 +80,7 @@ export function DashboardView() {
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Transações Recentes</CardTitle>
             <Button asChild variant="link" size="sm" className="h-auto p-0">
-              <Link href="/transacoes">Ver todas</Link>
+              <Link href="/app/transacoes">Ver todas</Link>
             </Button>
           </CardHeader>
           <CardContent>
@@ -93,7 +93,7 @@ export function DashboardView() {
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Metas</CardTitle>
             <Button asChild variant="link" size="sm" className="h-auto p-0">
-              <Link href="/metas">Ver todas</Link>
+              <Link href="/app/metas">Ver todas</Link>
             </Button>
           </CardHeader>
           <CardContent>

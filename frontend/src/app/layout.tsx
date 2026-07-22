@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
+import { DomGuard } from "@/components/common/dom-guard";
 import { ThemeProvider } from "@/components/common/theme-provider";
 import { QueryProvider } from "@/lib/query-provider";
 import { THEME_COLORS, THEME_STORAGE_KEY } from "@/lib/theme";
@@ -14,11 +15,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gerenciador-financeiro-u2de.vercel.app"),
   title: {
-    default: "FinApp — Gestão financeira pessoal",
-    template: "%s · FinApp",
+    default: "Vanta — Suas finanças sob controle",
+    template: "%s · Vanta",
   },
-  description: "Controle suas receitas, despesas, metas e orçamentos em um só lugar.",
+  description:
+    "Acompanhe receitas e despesas, defina limites por categoria e alcance suas metas com um assistente que entende o seu dinheiro.",
   other: {
     // Impede que o Google Tradutor reescreva o conteúdo.
     //
@@ -67,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </head>
       <body className="min-h-dvh bg-background font-sans">
+        <DomGuard />
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>

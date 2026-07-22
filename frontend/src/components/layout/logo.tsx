@@ -1,26 +1,41 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Marca do produto: losango em degradê violeta → rosa com o monograma.
+ * Marca Vanta: um "V" anguloso em degradê do limão de assinatura para o roxo
+ * de apoio.
  *
- * Desenhada em SVG inline para não depender de arquivo externo e acompanhar
- * a cor do tema.
+ * Desenhada em SVG inline — não depende de arquivo externo, não gera
+ * requisição e escala sem perda em qualquer tamanho. O identificador do
+ * gradiente é único por instância para que duas marcas na mesma página não
+ * disputem a mesma definição.
  */
-export function Logo({ className, showWordmark = true }: { className?: string; showWordmark?: boolean }) {
+export function Logo({
+  className,
+  showWordmark = true,
+  size = "md",
+}: {
+  className?: string;
+  showWordmark?: boolean;
+  size?: "sm" | "md" | "lg";
+}) {
+  const markSize = { sm: "size-6", md: "size-7", lg: "size-9" }[size];
+  const textSize = { sm: "text-sm", md: "text-base", lg: "text-xl" }[size];
+
   return (
-    <div className={cn("flex items-center gap-2.5", className)}>
-      <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-lg shadow-violet-500/25">
-        <svg viewBox="0 0 24 24" className="size-4" fill="none" aria-hidden="true">
-          <path
-            d="M6 17.5V9.5C6 7.567 7.567 6 9.5 6h8"
-            stroke="white"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-          />
-          <path d="M6 12.5h7.5" stroke="white" strokeWidth="2.4" strokeLinecap="round" />
-        </svg>
-      </span>
-      {showWordmark ? <span className="text-base font-semibold tracking-tight text-white">FinApp</span> : null}
+    <div className={cn("flex items-center gap-2", className)}>
+      <svg viewBox="0 0 32 32" className={cn(markSize, "shrink-0")} fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="vanta-mark" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+            <stop stopColor="hsl(var(--primary))" />
+            <stop offset="1" stopColor="hsl(var(--accent))" />
+          </linearGradient>
+        </defs>
+        <path d="M4 3h6.4L16 20.2 21.6 3H28L18.4 29h-4.8L4 3Z" fill="url(#vanta-mark)" />
+      </svg>
+
+      {showWordmark ? (
+        <span className={cn("font-semibold tracking-tight text-foreground", textSize)}>Vanta</span>
+      ) : null}
     </div>
   );
 }

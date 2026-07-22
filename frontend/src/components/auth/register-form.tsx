@@ -62,7 +62,7 @@ export function RegisterForm() {
       return;
     }
 
-    router.replace("/dashboard");
+    router.replace("/app/dashboard");
     router.refresh();
   }
 
