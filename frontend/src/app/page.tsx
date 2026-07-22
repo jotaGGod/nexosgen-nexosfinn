@@ -1,17 +1,59 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 
-import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
+import { FAQ } from "@/components/landing/faq";
+import { LandingHeader } from "@/components/landing/header";
+import { Hero } from "@/components/landing/hero";
+import { Pricing } from "@/components/landing/pricing";
+import {
+  FeaturesGrid,
+  FinalCTA,
+  LandingFooter,
+  Security,
+  Showcase,
+  StatsBar,
+} from "@/components/landing/sections";
+
+export const metadata: Metadata = {
+  title: "Vanta — Suas finanças sob controle",
+  description:
+    "A Vanta organiza seus gastos sozinha, mostra para onde seu dinheiro vai e responde às suas perguntas sobre ele. Comece grátis, sem cartão de crédito.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Vanta — Suas finanças sob controle",
+    description:
+      "Categorização automática, orçamento por categoria e metas com aporte calculado. Comece grátis.",
+    type: "website",
+    locale: "pt_BR",
+  },
+};
 
 /**
- * Raiz do site.
+ * Página de vendas.
  *
- * Encaminha para o dashboard ou para o login conforme exista sessão. Este
- * desvio era feito pelo middleware; como middleware roda no Edge Runtime e o
- * modo de múltiplos serviços da Vercel não o suporta, ele passou a ser uma
- * página de servidor.
+ * Totalmente estática: nada aqui lê cookie ou consulta a API, então o Next a
+ * prerenderiza no build e a entrega direto da borda. É o que permite o alvo
+ * de performance — o custo de JavaScript se resume aos três trechos
+ * interativos (cabeçalho, planos e perguntas).
+ *
+ * O aplicativo autenticado vive em /app/*; a raiz é o território público.
  */
-export default async function RootPage() {
-  const store = await cookies();
-  redirect(store.get(REFRESH_TOKEN_COOKIE)?.value ? "/app/dashboard" : "/login");
+export default function LandingPage() {
+  return (
+    <div className="min-h-dvh bg-background">
+      <LandingHeader />
+
+      <main>
+        <Hero />
+        <StatsBar />
+        <FeaturesGrid />
+        <Showcase />
+        <Security />
+        <Pricing />
+        <FAQ />
+        <FinalCTA />
+      </main>
+
+      <LandingFooter />
+    </div>
+  );
 }
