@@ -178,7 +178,7 @@ export function AccountsView() {
               <div className="flex items-start justify-between gap-3">
                 <IconBadge icon={account.icon} color={account.color} size="lg" />
 
-                <div className="flex shrink-0 gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+                <div className="hover-reveal flex shrink-0 gap-1">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -206,9 +206,15 @@ export function AccountsView() {
               <p className="mt-4 truncate text-sm font-medium">{account.name}</p>
               <p className="text-xs text-muted-foreground">{accountTypeLabels[account.type]}</p>
 
+              {/*
+                Em duas colunas o cartão tem cerca de 166px, e um saldo na casa
+                dos milhares não cabe em text-xl: o "R$" ficava sozinho numa
+                linha e o número na seguinte. O corpo menor mantém o valor
+                inteiro numa linha só, e nada de dinheiro pode quebrar no meio.
+              */}
               <p
                 className={cn(
-                  "mt-3 text-xl font-semibold tabular-nums",
+                  "mt-3 whitespace-nowrap text-base font-semibold tabular-nums",
                   account.balance.amount < 0
                     ? "text-negative"
                     : "text-foreground",

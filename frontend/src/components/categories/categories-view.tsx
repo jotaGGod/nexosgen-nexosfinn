@@ -146,38 +146,43 @@ export function CategoriesView() {
       {visible.length > 0 ? (
         <div className="grid grid-cols-2 gap-3">
           {visible.map((category) => (
-            <Card key={category.id} className="group flex items-center gap-3 p-4">
-              <IconBadge icon={category.icon} color={category.color} />
+            // O cartão empilha em vez de alinhar em linha: em duas colunas ele
+            // tem cerca de 166px, e ícone + ações + nome lado a lado não cabem
+            // — o nome era espremido até zero e sumia da tela.
+            <Card key={category.id} className="group flex flex-col gap-3 p-4">
+              <div className="flex items-start justify-between gap-2">
+                <IconBadge icon={category.icon} color={category.color} />
 
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{category.name}</p>
-                <Badge variant={category.type === "income" ? "income" : "expense"} className="mt-1">
-                  {category.type === "income" ? "Receita" : "Despesa"}
-                </Badge>
+                <div className="hover-reveal -mr-1 -mt-1 flex shrink-0 gap-0.5">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8"
+                    onClick={() => {
+                      setEditing(category);
+                      setFormOpen(true);
+                    }}
+                    aria-label={`Editar ${category.name}`}
+                  >
+                    <Pencil />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 text-destructive hover:bg-destructive/10"
+                    onClick={() => setPendingDelete(category)}
+                    aria-label={`Excluir ${category.name}`}
+                  >
+                    <Trash2 />
+                  </Button>
+                </div>
               </div>
 
-              <div className="flex shrink-0 gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  onClick={() => {
-                    setEditing(category);
-                    setFormOpen(true);
-                  }}
-                  aria-label={`Editar ${category.name}`}
-                >
-                  <Pencil />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8 text-destructive hover:bg-destructive/10"
-                  onClick={() => setPendingDelete(category)}
-                  aria-label={`Excluir ${category.name}`}
-                >
-                  <Trash2 />
-                </Button>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{category.name}</p>
+                <Badge variant={category.type === "income" ? "income" : "expense"} className="mt-1.5">
+                  {category.type === "income" ? "Receita" : "Despesa"}
+                </Badge>
               </div>
             </Card>
           ))}

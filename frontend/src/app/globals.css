@@ -210,6 +210,31 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
+  /*
+   * Ações secundárias de um item de lista (editar, excluir).
+   *
+   * Escondê-las até o hover deixa o cartão limpo no desktop, mas em uma tela de
+   * toque não existe hover: as ações simplesmente nunca apareceriam e não
+   * haveria como editar nem excluir nada. Por isso o padrão é visível, e o
+   * comportamento de revelar só entra onde há um apontador de fato.
+   */
+  .hover-reveal {
+    opacity: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hover-reveal {
+      opacity: 0;
+      transition: opacity 150ms var(--ease-out-expo);
+    }
+
+    .group:hover .hover-reveal,
+    .hover-reveal:focus-within,
+    .hover-reveal:focus {
+      opacity: 1;
+    }
+  }
+
   @media (min-width: 640px) {
     .safe-area-page {
       padding-right: max(1.5rem, env(safe-area-inset-right, 0px));

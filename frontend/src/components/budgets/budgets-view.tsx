@@ -179,7 +179,7 @@ export function BudgetsView() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-8 shrink-0 text-destructive opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
+                  className="hover-reveal size-8 shrink-0 text-destructive"
                   onClick={() => void runMutation(deleteBudget, budget.id)}
                   aria-label={`Remover orçamento de ${budget.category.name}`}
                 >
