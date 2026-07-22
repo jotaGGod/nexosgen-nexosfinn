@@ -10,6 +10,7 @@ import (
 	"context"
 	"errors"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -52,6 +53,18 @@ func run() error {
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+
+	// Abre a porta antes de conectar ao banco e aplicar migrations. Plataformas
+	// gerenciadas esperam que o processo passe a escutar rapidamente e podem
+	// encerra-lo durante o startup caso o banco remoto demore. As conexoes ficam
+	// na fila do sistema operacional ate o handler estar pronto logo abaixo.
+	listener, err := net.Listen("tcp", ":"+cfg.HTTPPort)
+	if err != nil {
+		return err
+	}
+	defer listener.Close()
+
+	log.Info("porta HTTP aberta", slog.String("port", cfg.HTTPPort), slog.String("env", cfg.Env))
 
 	pool, err := postgres.Connect(ctx, cfg.DatabaseURL, 10)
 	if err != nil {
@@ -177,7 +190,7 @@ func run() error {
 	serverErrors := make(chan error, 1)
 	go func() {
 		log.Info("servidor HTTP no ar", slog.String("port", cfg.HTTPPort), slog.String("env", cfg.Env))
-		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			serverErrors <- err
 		}
 	}()

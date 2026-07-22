@@ -16,6 +16,12 @@ import (
 // golang-migrate. A biblioteca nao exporta essa constante.
 const migrationDriver = "pgx5"
 
+// A primeira execucao das migrations na Vercel foi interrompida enquanto a
+// versao 6 estava em andamento: o processo ainda nao havia aberto PORT e a
+// plataforma encerrou o startup. Essa migration e idempotente (CREATE TABLE e
+// CREATE INDEX usam IF NOT EXISTS), portanto pode ser reaplicada com seguranca.
+const recoverableDirtyVersion uint = 6
+
 // Migrate aplica as migrations pendentes.
 //
 // Roda na inicializacao do servidor porque em plataformas gerenciadas nao ha
@@ -43,8 +49,41 @@ func Migrate(databaseURL string) error {
 		_, _ = migrator.Close()
 	}()
 
-	if err := migrator.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+	if err := migrateUp(migrator); err != nil {
 		return fmt.Errorf("falha ao aplicar as migrations: %w", err)
+	}
+
+	return nil
+}
+
+// migrationRunner contem apenas as operacoes usadas por migrateUp e permite
+// testar a politica de recuperacao sem depender de um PostgreSQL real.
+type migrationRunner interface {
+	Version() (version uint, dirty bool, err error)
+	Force(version int) error
+	Up() error
+}
+
+func migrateUp(migrator migrationRunner) error {
+	version, dirty, err := migrator.Version()
+	if err != nil && !errors.Is(err, migrate.ErrNilVersion) {
+		return fmt.Errorf("falha ao consultar a versao das migrations: %w", err)
+	}
+
+	if dirty {
+		if version != recoverableDirtyVersion {
+			return fmt.Errorf("banco marcado como dirty na versao %d; recuperacao manual necessaria", version)
+		}
+
+		// Volta apenas o marcador. O Up abaixo reaplica efetivamente a migration
+		// 6 e depois segue para as restantes; nenhuma migration e pulada.
+		if err := migrator.Force(int(version) - 1); err != nil {
+			return fmt.Errorf("falha ao preparar a reaplicacao da migration %d: %w", version, err)
+		}
+	}
+
+	if err := migrator.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return err
 	}
 
 	return nil
