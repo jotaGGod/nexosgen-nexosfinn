@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { Toaster } from "sonner";
 
+import { ThemeProvider } from "@/components/common/theme-provider";
 import { QueryProvider } from "@/lib/query-provider";
+import { THEME_COLORS, THEME_STORAGE_KEY } from "@/lib/theme";
 
 import "./globals.css";
 
@@ -31,19 +32,39 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070B17",
   width: "device-width",
   initialScale: 1,
 };
 
+const themeInitializer = `
+  try {
+    var storedTheme = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});
+    var theme = storedTheme === "light" ? "light" : "dark";
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]').setAttribute(
+      "content",
+      theme === "dark" ? ${JSON.stringify(THEME_COLORS.dark)} : ${JSON.stringify(THEME_COLORS.light)}
+    );
+  } catch (_) {}
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" translate="no" className={`dark notranslate ${inter.variable}`}>
+    <html
+      lang="pt-BR"
+      translate="no"
+      className={`dark notranslate ${inter.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <meta name="theme-color" content={THEME_COLORS.dark} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
+      </head>
       <body className="min-h-screen bg-background font-sans">
-        <QueryProvider>
-          {children}
-          <Toaster position="top-right" theme="dark" richColors closeButton />
-        </QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

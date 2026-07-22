@@ -33,7 +33,7 @@ export function ColorIconPicker({ color, icon, onColorChange, onIconChange }: Co
               className={cn(
                 "size-8 rounded-lg transition-transform hover:scale-105",
                 color.toUpperCase() === option.toUpperCase() &&
-                  "ring-2 ring-white/70 ring-offset-2 ring-offset-background",
+                  "ring-2 ring-offset-2 ring-slate-900/20 dark:ring-white/70 dark:ring-offset-background",
               )}
               style={{ backgroundColor: option }}
             />

@@ -47,7 +47,7 @@ const config: Config = {
         // A sidebar tem paleta própria para preservar a separação sutil da
         // área principal no tema escuro.
         sidebar: {
-          DEFAULT: "#080E1B",
+          DEFAULT: "var(--sidebar-background)",
           foreground: "#94A3B8",
           active: "#1E1B4B",
           border: "#1E293B",

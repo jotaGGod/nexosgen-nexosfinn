@@ -4,6 +4,12 @@
 
 @layer base {
   :root {
+    --sidebar-background: #0b1120;
+    --chart-grid: #e2e8f0;
+    --chart-muted: #94a3b8;
+    --chart-cursor: #cbd5e1;
+    --chart-hover: #f1f5f9;
+
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
 
@@ -38,6 +44,13 @@
 
   .dark {
     color-scheme: dark;
+
+    --sidebar-background: #080e1b;
+
+    --chart-grid: #233044;
+    --chart-muted: #94a3b8;
+    --chart-cursor: #233044;
+    --chart-hover: #172033;
 
     --background: 222 52% 6%;
     --foreground: 210 40% 98%;

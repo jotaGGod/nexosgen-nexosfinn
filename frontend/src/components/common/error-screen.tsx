@@ -74,7 +74,7 @@ export function ErrorScreen({ error, reset }: ErrorScreenProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6 py-12">
       <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-8 shadow-sm">
-        <div className="flex size-12 items-center justify-center rounded-2xl bg-destructive/10">
+        <div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 dark:bg-destructive/10">
           <AlertTriangle className="size-5 text-destructive" />
         </div>
 

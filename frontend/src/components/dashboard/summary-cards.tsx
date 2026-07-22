@@ -40,21 +40,21 @@ export function SummaryCards({ summary }: { summary: DashboardSummary }) {
         value={summary.total_balance.formatted}
         variation={summary.total_balance.variation}
         icon={Users}
-        tint="bg-violet-500/15 text-violet-400"
+        tint="bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400"
       />
       <SummaryCard
         label="Receitas"
         value={summary.income.formatted}
         variation={summary.income.variation}
         icon={ArrowUpCircle}
-        tint="bg-emerald-500/15 text-emerald-400"
+        tint="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
       />
       <SummaryCard
         label="Despesas"
         value={summary.expense.formatted}
         variation={summary.expense.variation}
         icon={ArrowDownCircle}
-        tint="bg-red-500/15 text-red-400"
+        tint="bg-red-50 text-red-500 dark:bg-red-500/15 dark:text-red-400"
         invertVariation
       />
       <SummaryCard
@@ -62,7 +62,7 @@ export function SummaryCards({ summary }: { summary: DashboardSummary }) {
         value={summary.savings.formatted}
         variation={summary.savings.variation}
         icon={PiggyBank}
-        tint="bg-sky-500/15 text-sky-400"
+        tint="bg-sky-50 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400"
       />
     </div>
   );

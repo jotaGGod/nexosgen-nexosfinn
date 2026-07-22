@@ -4,18 +4,21 @@ import { useSearchParams } from "next/navigation";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { IntegrationsTab } from "@/components/settings/integrations-tab";
+import { PreferencesTab } from "@/components/settings/preferences-tab";
 import { ProfileTab } from "@/components/settings/profile-tab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 /**
- * Configurações com duas abas.
+ * Configurações com perfil, integrações e preferências visuais.
  *
- * A aba inicial pode vir por query string (?tab=integracoes), o que permite
- * linkar direto para Integrações a partir do menu do usuário.
+ * A aba inicial pode vir por query string (?tab=integracoes ou
+ * ?tab=preferencias), permitindo links diretos para essas seções.
  */
 export function SettingsView() {
   const searchParams = useSearchParams();
-  const initialTab = searchParams.get("tab") === "integracoes" ? "integracoes" : "perfil";
+  const requestedTab = searchParams.get("tab");
+  const initialTab =
+    requestedTab === "integracoes" || requestedTab === "preferencias" ? requestedTab : "perfil";
 
   return (
     <div className="space-y-6">
@@ -25,6 +28,7 @@ export function SettingsView() {
         <TabsList>
           <TabsTrigger value="perfil">Perfil</TabsTrigger>
           <TabsTrigger value="integracoes">Integrações</TabsTrigger>
+          <TabsTrigger value="preferencias">Preferências</TabsTrigger>
         </TabsList>
 
         <TabsContent value="perfil">
@@ -33,6 +37,10 @@ export function SettingsView() {
 
         <TabsContent value="integracoes">
           <IntegrationsTab />
+        </TabsContent>
+
+        <TabsContent value="preferencias">
+          <PreferencesTab />
         </TabsContent>
       </Tabs>
     </div>

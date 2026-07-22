@@ -116,7 +116,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.biggest_expense ? (
         <InsightCard
           icon={ArrowUpRight}
-          tint="bg-red-500/15 text-red-400"
+          tint="bg-red-50 text-red-500 dark:bg-red-500/15 dark:text-red-400"
           label="Maior gasto"
           title={insights.biggest_expense.description}
           detail={`${insights.biggest_expense.amount.formatted} · ${formatDate(insights.biggest_expense.date)}`}
@@ -126,7 +126,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.smallest_expense ? (
         <InsightCard
           icon={ArrowDownRight}
-          tint="bg-emerald-500/15 text-emerald-400"
+          tint="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
           label="Menor gasto"
           title={insights.smallest_expense.description}
           detail={`${insights.smallest_expense.amount.formatted} · ${formatDate(insights.smallest_expense.date)}`}
@@ -136,7 +136,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.trending_category ? (
         <InsightCard
           icon={Flame}
-          tint="bg-amber-500/15 text-amber-400"
+          tint="bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400"
           label="Categoria em alta"
           title={insights.trending_category.category.name || "Sem categoria"}
           detail={`${insights.trending_category.current.formatted} · ${formatPercentage(
@@ -148,7 +148,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.best_day ? (
         <InsightCard
           icon={CalendarCheck}
-          tint="bg-violet-500/15 text-violet-400"
+          tint="bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400"
           label="Melhor dia"
           title={formatDate(insights.best_day.date)}
           detail={`Saldo de ${insights.best_day.net.formatted}`}
@@ -245,24 +245,24 @@ export function ReportsView() {
                       <BarChart data={data.trends} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
                         <CartesianGrid
                           strokeDasharray="4 4"
-                          stroke="hsl(var(--border))"
+                          stroke="var(--chart-grid)"
                           vertical={false}
                         />
                         <XAxis
                           dataKey="label"
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                          tick={{ fill: "var(--chart-muted)", fontSize: 12 }}
                           dy={8}
                         />
                         <YAxis
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                          tick={{ fill: "var(--chart-muted)", fontSize: 12 }}
                           tickFormatter={formatCompactCurrency}
                           width={70}
                         />
-                        <Tooltip content={<TrendTooltip />} cursor={{ fill: "hsl(var(--muted))" }} />
+                        <Tooltip content={<TrendTooltip />} cursor={{ fill: "var(--chart-hover)" }} />
                         <Bar dataKey="income" name="Receitas" fill="#7C3AED" radius={[6, 6, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
@@ -339,10 +339,10 @@ export function ReportsView() {
                       {data.trends.map((point) => (
                         <tr key={point.month}>
                           <td className="py-3 pr-4 font-medium">{point.label}</td>
-                          <td className="py-3 pr-4 text-right tabular-nums text-emerald-400">
+                          <td className="py-3 pr-4 text-right tabular-nums text-emerald-600 dark:text-emerald-400">
                             {formatCurrency(point.income)}
                           </td>
-                          <td className="py-3 pr-4 text-right tabular-nums text-red-400">
+                          <td className="py-3 pr-4 text-right tabular-nums text-red-500 dark:text-red-400">
                             {formatCurrency(point.expense)}
                           </td>
                           <td className="py-3 pr-4 text-right font-medium tabular-nums">

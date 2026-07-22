@@ -16,8 +16,9 @@ import type { CashflowPoint } from "@/types/api";
 
 const INCOME_COLOR = "#7C3AED";
 const EXPENSE_COLOR = "#EC4899";
-const GRID_COLOR = "hsl(var(--border))";
-const MUTED_COLOR = "hsl(var(--muted-foreground))";
+const GRID_COLOR = "var(--chart-grid)";
+const MUTED_COLOR = "var(--chart-muted)";
+const CURSOR_COLOR = "var(--chart-cursor)";
 
 /** Tooltip com os dois valores do mês, formatados em reais. */
 function CashflowTooltip({ active, payload, label }: any) {
@@ -76,7 +77,7 @@ export function CashflowChart({ data }: { data: CashflowPoint[] }) {
             tickFormatter={formatCompactCurrency}
             width={70}
           />
-          <Tooltip content={<CashflowTooltip />} cursor={{ stroke: GRID_COLOR, strokeDasharray: "4 4" }} />
+          <Tooltip content={<CashflowTooltip />} cursor={{ stroke: CURSOR_COLOR, strokeDasharray: "4 4" }} />
           <Line
             type="monotone"
             dataKey="income"

@@ -24,7 +24,9 @@ export function Variation({ value, invert = false, label = "vs período anterior
       <span
         className={cn(
           "inline-flex items-center gap-1 font-semibold",
-          favorable ? "text-emerald-400" : "text-red-400",
+          favorable
+            ? "text-emerald-600 dark:text-emerald-400"
+            : "text-red-500 dark:text-red-400",
         )}
       >
         <Icon className="size-3.5" />

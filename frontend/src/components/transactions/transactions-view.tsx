@@ -97,21 +97,21 @@ export function TransactionsView() {
 
       {data ? (
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card className="border-emerald-500/20 bg-emerald-500/10 p-4">
-            <p className="text-xs font-medium text-emerald-400">Total Receitas</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-emerald-400">
+          <Card className="border-emerald-100 bg-emerald-50/60 p-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+            <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Total Receitas</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">
               {data.totals.income.formatted}
             </p>
           </Card>
-          <Card className="border-red-500/20 bg-red-500/10 p-4">
-            <p className="text-xs font-medium text-red-400">Total Despesas</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-red-400">
+          <Card className="border-red-100 bg-red-50/60 p-4 dark:border-red-500/20 dark:bg-red-500/10">
+            <p className="text-xs font-medium text-red-600 dark:text-red-400">Total Despesas</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-red-600 dark:text-red-400">
               {data.totals.expense.formatted}
             </p>
           </Card>
-          <Card className="border-violet-500/20 bg-violet-500/10 p-4">
-            <p className="text-xs font-medium text-violet-400">Total Líquido</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-violet-400">
+          <Card className="border-violet-100 bg-violet-50/60 p-4 dark:border-violet-500/20 dark:bg-violet-500/10">
+            <p className="text-xs font-medium text-violet-700 dark:text-violet-400">Total Líquido</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-violet-700 dark:text-violet-400">
               {data.totals.net.formatted}
             </p>
           </Card>
@@ -230,7 +230,9 @@ export function TransactionsView() {
                       <td
                         className={cn(
                           "px-5 py-3 text-right font-semibold tabular-nums",
-                          transaction.type === "income" ? "text-emerald-400" : "text-red-400",
+                          transaction.type === "income"
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-red-500 dark:text-red-400",
                         )}
                       >
                         {transaction.type === "income" ? "" : "-"}
@@ -282,7 +284,9 @@ export function TransactionsView() {
                     <span
                       className={cn(
                         "text-sm font-semibold tabular-nums",
-                        transaction.type === "income" ? "text-emerald-400" : "text-red-400",
+                        transaction.type === "income"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-500 dark:text-red-400",
                       )}
                     >
                       {transaction.type === "income" ? "" : "-"}
