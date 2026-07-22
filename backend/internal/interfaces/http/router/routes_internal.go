@@ -27,6 +27,7 @@ func mountInternalRoutes(api chi.Router, deps Dependencies) {
 			me.Get("/", deps.Auth.Me)
 			me.Put("/", deps.Auth.UpdateProfile)
 			me.Put("/password", deps.Auth.ChangePassword)
+			me.Delete("/financial-data", deps.Auth.ResetFinancialData)
 		})
 
 		protected.Route("/transactions", func(transactions chi.Router) {

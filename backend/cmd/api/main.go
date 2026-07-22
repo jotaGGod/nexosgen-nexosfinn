@@ -26,6 +26,7 @@ import (
 	"github.com/jacks/finapp/backend/internal/application/usecase/goal"
 	"github.com/jacks/finapp/backend/internal/application/usecase/report"
 	"github.com/jacks/finapp/backend/internal/application/usecase/transaction"
+	"github.com/jacks/finapp/backend/internal/application/usecase/workspace"
 	"github.com/jacks/finapp/backend/internal/config"
 	infraapikey "github.com/jacks/finapp/backend/internal/infrastructure/apikey"
 	infraauth "github.com/jacks/finapp/backend/internal/infrastructure/auth"
@@ -94,6 +95,7 @@ func run() error {
 	budgets := postgres.NewBudgetRepository(pool)
 	apiKeys := postgres.NewAPIKeyRepository(pool)
 	refreshTokens := postgres.NewRefreshTokenRepository(pool)
+	workspaces := postgres.NewWorkspaceRepository(pool)
 
 	hasher := infraauth.NewBcryptHasher(0)
 	tokens := infraauth.NewJWTProvider(cfg.JWTSecret, cfg.AccessTokenTTL, cfg.RefreshTokenTTL)
@@ -107,6 +109,7 @@ func run() error {
 	profileUC := auth.NewGetProfileUseCase(users)
 	updateProfileUC := auth.NewUpdateProfileUseCase(users)
 	changePasswordUC := auth.NewChangePasswordUseCase(users, refreshTokens, hasher)
+	resetWorkspaceUC := workspace.NewResetUseCase(workspaces)
 
 	createTransactionUC := transaction.NewCreateUseCase(transactions, categories, accounts)
 	updateTransactionUC := transaction.NewUpdateUseCase(transactions, categories, accounts)
@@ -160,7 +163,8 @@ func run() error {
 
 		Health: handler.NewHealthHandler(pool),
 		Auth: handler.NewAuthHandler(
-			registerUC, loginUC, refreshUC, logoutUC, profileUC, updateProfileUC, changePasswordUC, log),
+			registerUC, loginUC, refreshUC, logoutUC, profileUC, updateProfileUC,
+			changePasswordUC, resetWorkspaceUC, log),
 		Transaction: handler.NewTransactionHandler(
 			createTransactionUC, updateTransactionUC, deleteTransactionUC, getTransactionUC, listTransactionsUC, log),
 		Category: handler.NewCategoryHandler(

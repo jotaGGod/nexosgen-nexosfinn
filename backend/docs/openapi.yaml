@@ -223,6 +223,18 @@ paths:
         "204": { description: Senha alterada }
         "401": { $ref: "#/components/responses/Unauthorized" }
 
+  /api/v1/me/financial-data:
+    delete:
+      tags: [Autenticacao]
+      summary: Recomeca o espaco financeiro do usuario
+      description: |
+        Apaga transacoes, orcamentos, metas, categorias e contas em uma unica
+        transacao, depois recria as categorias e a conta padrao. Perfil,
+        sessoes e chaves de integracao sao preservados.
+      responses:
+        "204": { description: Dados financeiros reiniciados }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
   /api/v1/transactions:
     get:
       tags: [Transacoes]

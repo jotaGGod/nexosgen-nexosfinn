@@ -87,8 +87,12 @@
     @apply border-border;
   }
 
+  html,
   body {
     @apply bg-background text-foreground antialiased;
+  }
+
+  body {
     font-feature-settings: "cv11", "ss01";
   }
 }

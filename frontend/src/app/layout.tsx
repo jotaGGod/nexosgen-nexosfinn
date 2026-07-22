@@ -40,11 +40,14 @@ const themeInitializer = `
   try {
     var storedTheme = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});
     var theme = storedTheme === "light" ? "light" : "dark";
+    var themeColor = theme === "dark" ? ${JSON.stringify(THEME_COLORS.dark)} : ${JSON.stringify(THEME_COLORS.light)};
     document.documentElement.classList.toggle("dark", theme === "dark");
     document.documentElement.style.colorScheme = theme;
+    document.documentElement.style.backgroundColor = themeColor;
+    document.querySelector('meta[name="color-scheme"]').setAttribute("content", theme);
     document.querySelector('meta[name="theme-color"]').setAttribute(
       "content",
-      theme === "dark" ? ${JSON.stringify(THEME_COLORS.dark)} : ${JSON.stringify(THEME_COLORS.light)}
+      themeColor
     );
   } catch (_) {}
 `;
@@ -58,10 +61,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
+        <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content={THEME_COLORS.dark} />
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </head>
-      <body className="min-h-screen bg-background font-sans">
+      <body className="min-h-dvh bg-background font-sans">
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>

@@ -14,9 +14,12 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
+  const themeColor = THEME_COLORS[theme];
   root.classList.toggle("dark", theme === "dark");
   root.style.colorScheme = theme;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLORS[theme]);
+  root.style.backgroundColor = themeColor;
+  document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor);
 }
 
 /** Mantém o tema visual sincronizado com a preferência salva no navegador. */

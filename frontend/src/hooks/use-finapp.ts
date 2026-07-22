@@ -469,3 +469,18 @@ export function useChangePassword() {
     onError: (error) => notifyError(error, "Não foi possível alterar a senha."),
   });
 }
+
+export function useResetFinancialData() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => apiFetch<void>("/me/financial-data", { method: "DELETE" }),
+    onSuccess: () => {
+      for (const key of ["dashboard", "transactions", "categories", "accounts", "goals", "budgets", "report"]) {
+        queryClient.removeQueries({ queryKey: [key] });
+      }
+      toast.success("Seus dados financeiros foram apagados. Você pode recomeçar.");
+    },
+    onError: (error) => notifyError(error, "Não foi possível apagar os dados financeiros."),
+  });
+}

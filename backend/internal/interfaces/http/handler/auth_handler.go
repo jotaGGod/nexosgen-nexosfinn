@@ -6,6 +6,7 @@ import (
 
 	"github.com/jacks/finapp/backend/internal/application/dto"
 	"github.com/jacks/finapp/backend/internal/application/usecase/auth"
+	"github.com/jacks/finapp/backend/internal/application/usecase/workspace"
 	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
 )
 
@@ -18,6 +19,7 @@ type AuthHandler struct {
 	profile        *auth.GetProfileUseCase
 	updateProfile  *auth.UpdateProfileUseCase
 	changePassword *auth.ChangePasswordUseCase
+	resetWorkspace *workspace.ResetUseCase
 	logger         *slog.Logger
 }
 
@@ -30,6 +32,7 @@ func NewAuthHandler(
 	profile *auth.GetProfileUseCase,
 	updateProfile *auth.UpdateProfileUseCase,
 	changePassword *auth.ChangePasswordUseCase,
+	resetWorkspace *workspace.ResetUseCase,
 	logger *slog.Logger,
 ) *AuthHandler {
 	return &AuthHandler{
@@ -40,6 +43,7 @@ func NewAuthHandler(
 		profile:        profile,
 		updateProfile:  updateProfile,
 		changePassword: changePassword,
+		resetWorkspace: resetWorkspace,
 		logger:         logger,
 	}
 }
@@ -154,6 +158,21 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.changePassword.Execute(r.Context(), userID, input); err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	presenter.NoContent(w)
+}
+
+// ResetFinancialData apaga o espaco financeiro e recria os dados iniciais.
+func (h *AuthHandler) ResetFinancialData(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+
+	if err := h.resetWorkspace.Execute(r.Context(), userID); err != nil {
 		presenter.Error(r.Context(), w, h.logger, err)
 		return
 	}
