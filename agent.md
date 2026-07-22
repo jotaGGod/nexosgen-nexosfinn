@@ -131,8 +131,22 @@ lib/                           api-client, session, format, icons, theme
 - **Diálogos não têm animação de saída.** O Radix mantém o nó montado até o
   `animationend` do estado `closed`, que não chegava de forma confiável — o
   modal ficava preso e o `pointer-events: none` do body congelava a página.
-- **O donut usa `isAnimationActive={false}`.** A animação de montagem do
-  Recharts terminava removendo os setores.
+- **Todo gráfico usa `isAnimationActive={false}`** (donut, linhas e barras). A
+  animação de montagem do Recharts termina com o desenho invisível nesta
+  combinação de versões. Com os gráficos carregando sob demanda, eles montam
+  depois da tela e o problema passou a ser determinístico.
+- **Gráficos só entram por `dashboard/lazy-charts.tsx`.** Nunca importe
+  `cashflow-chart`, `category-donut` ou `income-bar-chart` direto: um único
+  import estático traz o Recharts de volta ao pacote inicial e anula os 108 kB
+  economizados. Foi exatamente isso que a reexportação da legenda fazia.
+- **`useChartPreload()` na tela que exibe gráfico.** Sem ele o `import()` só
+  dispara depois que os dados chegam, e as duas esperas ficam em fila.
+- **`.hover-reveal` para ações de item de lista.** Nunca use
+  `opacity-0 group-hover:opacity-100` direto: em tela de toque não existe hover
+  e a ação fica inalcançável. O utilitário está em `globals.css`.
+- **Cartão em grade de 2 colunas tem ~166px.** Layout em linha com ícone +
+  ações + texto não cabe — o texto colapsa para 0px e some. Empilhe. Valor
+  monetário nunca deve quebrar linha nem truncar.
 - **HTML com `Cache-Control: no-store`** (`next.config.mjs`), para que aba
   antiga não peça chunk que não existe mais depois de um deploy.
 
@@ -148,6 +162,25 @@ lib/                           api-client, session, format, icons, theme
 - API Keys com escopos + endpoints `/api/v1/external/*` validados
 - Deploy na Vercel com migrations automáticas
 - Tema escuro e preferências (commits `89aeca3`, `a08f302`)
+- Redesenho Vanta: landing (`bc638d0`), app mobile-first (`ec4e247`),
+  gráficos sob demanda (`dd599f7`), correções de toque em 375px (`44fa358`)
+
+### 📊 Números medidos (não estimados)
+
+| | antes | depois |
+|---|---|---|
+| `/app/dashboard` First Load JS | 254 kB | **146 kB** |
+| `/app/relatorios` First Load JS | 256 kB | **148 kB** |
+| JS antes da interatividade | — | 160 kB de 273 kB |
+| Lighthouse landing (mobile) | — | **97** / A11y 100 / SEO 100 |
+| Lighthouse landing (desktop) | — | **100** nas quatro categorias |
+| Lighthouse dashboard (mobile) | 91 | 90 |
+
+O dashboard não melhorou no Lighthouse, e vale saber por quê antes de tentar
+de novo: o LCP daquela tela é o valor do card de resumo, que só renderiza
+depois da requisição do cliente — **~3s de render delay**. O pacote nunca foi
+o gargalo ali. O próximo ganho real é buscar os dados no servidor
+(`HydrationBoundary` + `dehydrate`), não mexer mais em bundle.
 
 ### 🔴 Pendência aberta — crash por manipulação externa do DOM
 
@@ -166,11 +199,11 @@ foram testados os dois fluxos com eventos de ponteiro completos.
 **O que já foi feito:** `translate="no"` + `<meta name="google" content="notranslate">`
 no layout raiz. Não bastou.
 
-**O que ficou pela metade:** `frontend/src/components/common/dom-guard.tsx`
-existe mas **não está ligado em lugar nenhum** — falta importá-lo no layout
-raiz. Ele torna `removeChild`/`insertBefore` tolerantes quando o nó de
-referência já saiu do pai. É defesa contra ambiente hostil, não correção de
-bug próprio.
+**Estado:** `frontend/src/components/common/dom-guard.tsx` foi ligado no layout
+raiz no commit `0436428`. Ele torna `removeChild`/`insertBefore` tolerantes
+quando o nó de referência já saiu do pai. É defesa contra ambiente hostil, não
+correção de bug próprio — **e ainda não houve confirmação do usuário de que
+resolveu o caso dele em produção.**
 
 ### 🟡 Pendências menores
 
