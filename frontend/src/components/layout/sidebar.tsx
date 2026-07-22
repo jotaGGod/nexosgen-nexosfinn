@@ -41,7 +41,7 @@ export function Sidebar() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex items-center justify-between px-5 py-6">
+        <div className="safe-area-sidebar-top flex items-center justify-between px-5 pb-6">
           <Link href="/dashboard" aria-label="Ir para o dashboard">
             <Logo />
           </Link>
@@ -98,7 +98,7 @@ export function Sidebar() {
           </div>
         </div>
 
-        <div className="border-t border-sidebar-border p-3">
+        <div className="safe-area-sidebar-bottom border-t border-sidebar-border px-3 pt-3">
           <UserMenu />
         </div>
       </aside>

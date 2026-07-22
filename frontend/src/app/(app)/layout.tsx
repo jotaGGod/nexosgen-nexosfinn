@@ -23,10 +23,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <Sidebar />
       <div className="lg:pl-[264px]">
-        <main className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
+        <main className="safe-area-page mx-auto w-full max-w-[1400px]">{children}</main>
       </div>
     </div>
   );

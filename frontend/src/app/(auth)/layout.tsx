@@ -20,7 +20,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-dvh">
       <aside className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-sidebar p-12 lg:flex">
         <div
           className="pointer-events-none absolute -left-24 -top-24 size-[420px] rounded-full bg-violet-600/20 blur-3xl"
@@ -61,7 +61,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
         <p className="relative text-xs text-slate-500">© {new Date().getFullYear()} FinApp</p>
       </aside>
 
-      <main className="flex w-full flex-col items-center justify-center px-5 py-12 lg:w-1/2">
+      <main className="safe-area-auth flex w-full flex-col items-center justify-center lg:w-1/2">
         <div className="w-full max-w-sm">{children}</div>
       </main>
     </div>

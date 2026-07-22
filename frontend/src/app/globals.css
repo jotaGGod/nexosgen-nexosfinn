@@ -90,10 +90,65 @@
   html,
   body {
     @apply bg-background text-foreground antialiased;
+    min-height: 100%;
   }
 
   body {
+    min-height: 100dvh;
     font-feature-settings: "cv11", "ss01";
+  }
+}
+
+@layer utilities {
+  /*
+   * O fundo ocupa toda a tela no Safari; somente o conteúdo interativo é
+   * afastado do recorte, do indicador de início e dos controles flutuantes.
+   */
+  .safe-area-page {
+    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  }
+
+  .safe-area-auth {
+    padding-top: calc(3rem + env(safe-area-inset-top, 0px));
+    padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+    padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+  }
+
+  .safe-area-sidebar-top {
+    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
+  }
+
+  .safe-area-sidebar-bottom {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 640px) {
+    .safe-area-page {
+      padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+      padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .safe-area-page {
+      padding: 2rem;
+    }
+
+    .safe-area-auth {
+      padding: 3rem 1.25rem;
+    }
+
+    .safe-area-sidebar-top {
+      padding-top: 1.5rem;
+    }
+
+    .safe-area-sidebar-bottom {
+      padding-bottom: 0.75rem;
+    }
   }
 }
 
