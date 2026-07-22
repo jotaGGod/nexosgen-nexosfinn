@@ -31,18 +31,18 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#7C3AED",
+  themeColor: "#070B17",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" translate="no" className={`notranslate ${inter.variable}`}>
+    <html lang="pt-BR" translate="no" className={`dark notranslate ${inter.variable}`}>
       <body className="min-h-screen bg-background font-sans">
         <QueryProvider>
           {children}
-          <Toaster position="top-right" richColors closeButton />
+          <Toaster position="top-right" theme="dark" richColors closeButton />
         </QueryProvider>
       </body>
     </html>

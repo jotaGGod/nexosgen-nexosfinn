@@ -209,7 +209,7 @@ export function AccountsView() {
               <p
                 className={cn(
                   "mt-3 text-xl font-semibold tabular-nums",
-                  account.balance.amount < 0 ? "text-red-500" : "text-foreground",
+                  account.balance.amount < 0 ? "text-red-400" : "text-foreground",
                 )}
               >
                 {account.balance.formatted}

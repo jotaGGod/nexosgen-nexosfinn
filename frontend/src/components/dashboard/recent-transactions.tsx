@@ -35,7 +35,7 @@ export function RecentTransactions({ items }: { items: Transaction[] }) {
             </div>
 
             <div className="shrink-0 text-right">
-              <p className={cn("text-sm font-semibold tabular-nums", income ? "text-emerald-600" : "text-red-500")}>
+              <p className={cn("text-sm font-semibold tabular-nums", income ? "text-emerald-400" : "text-red-400")}>
                 {income ? "" : "-"}
                 {transaction.amount.formatted}
               </p>

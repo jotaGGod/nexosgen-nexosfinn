@@ -16,6 +16,8 @@ import type { CashflowPoint } from "@/types/api";
 
 const INCOME_COLOR = "#7C3AED";
 const EXPENSE_COLOR = "#EC4899";
+const GRID_COLOR = "hsl(var(--border))";
+const MUTED_COLOR = "hsl(var(--muted-foreground))";
 
 /** Tooltip com os dois valores do mês, formatados em reais. */
 function CashflowTooltip({ active, payload, label }: any) {
@@ -59,22 +61,22 @@ export function CashflowChart({ data }: { data: CashflowPoint[] }) {
     <div className="h-[260px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
-          <CartesianGrid strokeDasharray="4 4" stroke="#E2E8F0" vertical={false} />
+          <CartesianGrid strokeDasharray="4 4" stroke={GRID_COLOR} vertical={false} />
           <XAxis
             dataKey="label"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: "#94A3B8", fontSize: 12 }}
+            tick={{ fill: MUTED_COLOR, fontSize: 12 }}
             dy={8}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fill: "#94A3B8", fontSize: 12 }}
+            tick={{ fill: MUTED_COLOR, fontSize: 12 }}
             tickFormatter={formatCompactCurrency}
             width={70}
           />
-          <Tooltip content={<CashflowTooltip />} cursor={{ stroke: "#CBD5E1", strokeDasharray: "4 4" }} />
+          <Tooltip content={<CashflowTooltip />} cursor={{ stroke: GRID_COLOR, strokeDasharray: "4 4" }} />
           <Line
             type="monotone"
             dataKey="income"

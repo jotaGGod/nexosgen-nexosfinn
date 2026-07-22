@@ -44,10 +44,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        // A sidebar tem paleta própria: fundo quase preto azulado, sobre o
-        // qual o conteúdo claro da área principal contrasta.
+        // A sidebar tem paleta própria para preservar a separação sutil da
+        // área principal no tema escuro.
         sidebar: {
-          DEFAULT: "#0B1120",
+          DEFAULT: "#080E1B",
           foreground: "#94A3B8",
           active: "#1E1B4B",
           border: "#1E293B",

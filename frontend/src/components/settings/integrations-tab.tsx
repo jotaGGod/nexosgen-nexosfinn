@@ -150,7 +150,7 @@ export function IntegrationsTab() {
                   <span
                     className={cn(
                       "flex size-10 shrink-0 items-center justify-center rounded-xl",
-                      revoked ? "bg-secondary text-muted-foreground" : "bg-violet-50 text-violet-600",
+                      revoked ? "bg-secondary text-muted-foreground" : "bg-violet-500/15 text-violet-400",
                     )}
                   >
                     <KeyRound className="size-[18px]" />
@@ -217,19 +217,19 @@ export function IntegrationsTab() {
           </p>
           <ul className="space-y-1.5 font-mono text-xs">
             <li>
-              <span className="text-emerald-600">POST</span> /api/v1/external/transactions
+              <span className="text-emerald-400">POST</span> /api/v1/external/transactions
             </li>
             <li>
-              <span className="text-amber-600">PUT</span> /api/v1/external/transactions/{"{id}"}
+              <span className="text-amber-400">PUT</span> /api/v1/external/transactions/{"{id}"}
             </li>
             <li>
-              <span className="text-violet-600">GET</span> /api/v1/external/transactions
+              <span className="text-violet-400">GET</span> /api/v1/external/transactions
             </li>
             <li>
-              <span className="text-violet-600">GET</span> /api/v1/external/balance
+              <span className="text-violet-400">GET</span> /api/v1/external/balance
             </li>
             <li>
-              <span className="text-violet-600">GET</span> /api/v1/external/categories
+              <span className="text-violet-400">GET</span> /api/v1/external/categories
             </li>
           </ul>
           <p>
@@ -304,7 +304,7 @@ export function IntegrationsTab() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+          <div className="flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-sm text-amber-300">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" />
             <p>
               Guarde a chave em local seguro. Se perdê-la, será necessário revogar esta e gerar uma nova.
@@ -314,7 +314,7 @@ export function IntegrationsTab() {
           <div className="flex items-center gap-2 rounded-xl border border-border bg-secondary/60 p-3">
             <code className="min-w-0 flex-1 break-all font-mono text-xs">{createdKey}</code>
             <Button variant="outline" size="sm" className="shrink-0" onClick={handleCopy}>
-              {copied ? <Check className="text-emerald-600" /> : <Copy />}
+              {copied ? <Check className="text-emerald-400" /> : <Copy />}
               {copied ? "Copiado" : "Copiar"}
             </Button>
           </div>

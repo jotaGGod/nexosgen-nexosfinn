@@ -5,8 +5,8 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
 
 /**
- * Casca das telas autenticadas: sidebar escura fixa à esquerda e área de
- * conteúdo clara à direita, como no layout de referência.
+ * Casca das telas autenticadas: sidebar fixa à esquerda e área de conteúdo
+ * escura à direita, como no layout de referência.
  *
  * A guarda de rota vive aqui, e não em um middleware, porque middleware do
  * Next roda no Edge Runtime — que o modo de múltiplos serviços da Vercel não
