@@ -3,7 +3,7 @@
 import { ChevronRight, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useState, type CSSProperties } from "react";
 
 import { Logo } from "@/components/layout/logo";
 import { navItems } from "@/components/layout/nav";
@@ -20,6 +20,20 @@ import { cn } from "@/lib/utils";
 export function Sidebar() {
   const pathname = usePathname();
   const { sidebarOpen, setSidebarOpen } = useUIStore();
+  const [mobileTop, setMobileTop] = useState(0);
+
+  /*
+   * No Safari 26, exibir uma camada `position: fixed` faz o navegador criar
+   * novamente as faixas sólidas acima e abaixo da página. A gaveta móvel fica
+   * absoluta na posição atual do documento; no desktop ela continua fixa.
+   */
+  useLayoutEffect(() => {
+    if (sidebarOpen) setMobileTop(window.scrollY);
+  }, [sidebarOpen]);
+
+  const mobilePosition = {
+    "--sidebar-mobile-top": `${mobileTop}px`,
+  } as CSSProperties;
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -29,15 +43,17 @@ export function Sidebar() {
     <>
       {sidebarOpen ? (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden"
+          style={mobilePosition}
+          className="absolute inset-x-0 top-[var(--sidebar-mobile-top)] z-40 h-[100lvh] touch-none bg-slate-900/50 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
       ) : null}
 
       <aside
+        style={mobilePosition}
         className={cn(
-          "sidebar-scroll fixed inset-y-0 left-0 z-50 flex w-[264px] flex-col overflow-y-auto bg-sidebar transition-transform duration-300 lg:translate-x-0",
+          "sidebar-scroll absolute left-0 top-[var(--sidebar-mobile-top)] z-50 flex h-[100lvh] w-[264px] flex-col overflow-y-auto overscroll-contain bg-sidebar transition-transform duration-300 lg:fixed lg:inset-y-0 lg:h-auto lg:top-0 lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -64,6 +80,7 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setSidebarOpen(false)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
