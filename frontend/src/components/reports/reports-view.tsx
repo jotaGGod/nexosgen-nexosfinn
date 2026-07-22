@@ -112,11 +112,11 @@ function Insights({ insights }: { insights: Report["insights"] }) {
   }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3">
       {insights.biggest_expense ? (
         <InsightCard
           icon={ArrowUpRight}
-          tint="bg-red-50 text-red-500 dark:bg-red-500/15 dark:text-red-400"
+          tint="bg-negative/12 text-negative"
           label="Maior gasto"
           title={insights.biggest_expense.description}
           detail={`${insights.biggest_expense.amount.formatted} · ${formatDate(insights.biggest_expense.date)}`}
@@ -126,7 +126,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.smallest_expense ? (
         <InsightCard
           icon={ArrowDownRight}
-          tint="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
+          tint="bg-positive/12 text-positive"
           label="Menor gasto"
           title={insights.smallest_expense.description}
           detail={`${insights.smallest_expense.amount.formatted} · ${formatDate(insights.smallest_expense.date)}`}
@@ -136,7 +136,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.trending_category ? (
         <InsightCard
           icon={Flame}
-          tint="bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400"
+          tint="bg-[hsl(38_92%_55%/0.12)] text-[hsl(38_92%_55%)]"
           label="Categoria em alta"
           title={insights.trending_category.category.name || "Sem categoria"}
           detail={`${insights.trending_category.current.formatted} · ${formatPercentage(
@@ -148,7 +148,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.best_day ? (
         <InsightCard
           icon={CalendarCheck}
-          tint="bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400"
+          tint="bg-primary/12 text-primary"
           label="Melhor dia"
           title={formatDate(insights.best_day.date)}
           detail={`Saldo de ${insights.best_day.net.formatted}`}
@@ -184,7 +184,7 @@ export function ReportsView() {
 
       {isPending && !isError ? (
         <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 4 }).map((_, index) => (
               <Card key={index} className="space-y-3 p-5">
                 <Skeleton className="h-3 w-24" />
@@ -209,7 +209,7 @@ export function ReportsView() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3">
               <OverviewCard
                 label="Receitas Totais"
                 value={data.overview.total_income.formatted}
@@ -234,7 +234,7 @@ export function ReportsView() {
               />
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid gap-4">
               <Card>
                 <CardHeader>
                   <CardTitle>Evolução das Receitas</CardTitle>
@@ -298,7 +298,7 @@ export function ReportsView() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="categories" className="grid gap-4 lg:grid-cols-2">
+          <TabsContent value="categories" className="grid gap-4">
             <Card>
               <CardHeader>
                 <CardTitle>Despesas por Categoria</CardTitle>
@@ -339,10 +339,10 @@ export function ReportsView() {
                       {data.trends.map((point) => (
                         <tr key={point.month}>
                           <td className="py-3 pr-4 font-medium">{point.label}</td>
-                          <td className="py-3 pr-4 text-right tabular-nums text-emerald-600 dark:text-emerald-400">
+                          <td className="py-3 pr-4 text-right tabular-nums text-positive">
                             {formatCurrency(point.income)}
                           </td>
-                          <td className="py-3 pr-4 text-right tabular-nums text-red-500 dark:text-red-400">
+                          <td className="py-3 pr-4 text-right tabular-nums text-negative">
                             {formatCurrency(point.expense)}
                           </td>
                           <td className="py-3 pr-4 text-right font-medium tabular-nums">

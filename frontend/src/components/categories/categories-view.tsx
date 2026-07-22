@@ -37,7 +37,7 @@ import { runMutation, useCategories, useDeleteCategory, useSaveCategory } from "
 import { categorySchema, type CategoryValues } from "@/schemas/transaction";
 import type { Category } from "@/types/api";
 
-const defaults: CategoryValues = { name: "", type: "expense", color: "#7C3AED", icon: "tag" };
+const defaults: CategoryValues = { name: "", type: "expense", color: "#C6FF3D", icon: "tag" };
 
 /** Tela de categorias: grade por tipo, com criação e edição. */
 export function CategoriesView() {
@@ -144,7 +144,7 @@ export function CategoriesView() {
       ) : null}
 
       {visible.length > 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3">
           {visible.map((category) => (
             <Card key={category.id} className="group flex items-center gap-3 p-4">
               <IconBadge icon={category.icon} color={category.color} />

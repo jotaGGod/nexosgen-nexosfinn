@@ -20,7 +20,7 @@ const sizeClasses = {
  * O fundo usa a mesma cor com baixa opacidade, o que mantém contraste
  * suficiente para qualquer cor escolhida pelo usuário.
  */
-export function IconBadge({ icon, color = "#7C3AED", size = "md", className }: IconBadgeProps) {
+export function IconBadge({ icon, color = "#C6FF3D", size = "md", className }: IconBadgeProps) {
   const Icon = resolveIcon(icon);
 
   return (

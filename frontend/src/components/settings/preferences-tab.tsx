@@ -59,7 +59,7 @@ export function PreferencesTab() {
       <Card>
         <CardHeader>
           <CardTitle>Aparência</CardTitle>
-          <CardDescription>Escolha como o FinApp deve aparecer para você.</CardDescription>
+          <CardDescription>Escolha como a Vanta deve aparecer para você.</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -129,7 +129,7 @@ export function PreferencesTab() {
             </span>
             <div className="space-y-1">
               <CardTitle>Começar do zero</CardTitle>
-              <CardDescription>Apague os dados financeiros e volte ao estado inicial do FinApp.</CardDescription>
+              <CardDescription>Apague os dados financeiros e volte ao estado inicial da Vanta.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -160,7 +160,7 @@ export function PreferencesTab() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Apagar todos os dados financeiros?</AlertDialogTitle>
                 <AlertDialogDescription className="leading-relaxed">
-                  Esta ação não pode ser desfeita. O FinApp apagará seus lançamentos, contas, categorias, metas e
+                  Esta ação não pode ser desfeita. A Vanta apagará seus lançamentos, contas, categorias, metas e
                   orçamentos, e recriará apenas a conta e as categorias padrão.
                 </AlertDialogDescription>
               </AlertDialogHeader>

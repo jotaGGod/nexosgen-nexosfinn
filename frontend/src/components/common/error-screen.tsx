@@ -43,7 +43,7 @@ export function ErrorScreen({ error, reset }: ErrorScreenProps) {
   useEffect(() => {
     // Loga sempre: em produção o console do navegador é a única pista que
     // sobra para o usuário reportar o problema.
-    console.error("[FinApp] falha na interface:", error);
+    console.error("[Vanta] falha na interface:", error);
 
     if (!isStaleBundleError(error)) return;
 
@@ -97,7 +97,7 @@ export function ErrorScreen({ error, reset }: ErrorScreenProps) {
           <button
             type="button"
             onClick={reset}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-4 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
             <RotateCcw className="size-4" />
             Tentar novamente

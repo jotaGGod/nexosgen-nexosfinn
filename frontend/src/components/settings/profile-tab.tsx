@@ -77,16 +77,16 @@ export function ProfileTab() {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid gap-4">
       <Card>
         <CardHeader>
           <CardTitle>Dados pessoais</CardTitle>
-          <CardDescription>Como você aparece no FinApp.</CardDescription>
+          <CardDescription>Como você aparece na Vanta.</CardDescription>
         </CardHeader>
 
         <CardContent>
           <div className="mb-6 flex items-center gap-4">
-            <span className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-lg font-semibold text-white">
+            <span className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-lg font-semibold text-primary-foreground">
               {user ? initials(user.name) : "?"}
             </span>
             <div>

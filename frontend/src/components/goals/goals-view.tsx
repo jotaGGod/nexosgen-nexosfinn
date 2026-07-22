@@ -46,7 +46,7 @@ const defaults: GoalValues = {
   deadline: "",
   image_url: "",
   icon: "target",
-  color: "#7C3AED",
+  color: "#C6FF3D",
 };
 
 /** Tela de metas: cartões com progresso, prazo e aporte sugerido. */
@@ -155,7 +155,7 @@ export function GoalsView() {
           <EmptyState
             icon={Target}
             title="Nenhuma meta neste filtro"
-            description="Defina um objetivo com valor e prazo — o FinApp calcula quanto guardar por mês."
+            description="Defina um objetivo com valor e prazo — a Vanta calcula quanto guardar por mês."
             action={
               <Button
                 variant="gradient"

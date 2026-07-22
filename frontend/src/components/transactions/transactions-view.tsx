@@ -97,21 +97,21 @@ export function TransactionsView() {
 
       {data ? (
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card className="border-emerald-100 bg-emerald-50/60 p-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
-            <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Total Receitas</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">
+          <Card className="border-positive/25 bg-positive/8 p-4">
+            <p className="text-xs font-medium text-positive">Total Receitas</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-positive">
               {data.totals.income.formatted}
             </p>
           </Card>
-          <Card className="border-red-100 bg-red-50/60 p-4 dark:border-red-500/20 dark:bg-red-500/10">
-            <p className="text-xs font-medium text-red-600 dark:text-red-400">Total Despesas</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-red-600 dark:text-red-400">
+          <Card className="border-negative/25 bg-negative/8 p-4">
+            <p className="text-xs font-medium text-negative">Total Despesas</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-negative">
               {data.totals.expense.formatted}
             </p>
           </Card>
-          <Card className="border-violet-100 bg-violet-50/60 p-4 dark:border-violet-500/20 dark:bg-violet-500/10">
-            <p className="text-xs font-medium text-violet-700 dark:text-violet-400">Total Líquido</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-violet-700 dark:text-violet-400">
+          <Card className="border-primary/25 bg-primary/8 p-4">
+            <p className="text-xs font-medium text-primary">Total Líquido</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-primary">
               {data.totals.net.formatted}
             </p>
           </Card>
@@ -197,80 +197,8 @@ export function TransactionsView() {
 
         {items.length > 0 ? (
           <div className={cn("transition-opacity", isPlaceholderData && "opacity-60")}>
-            {/* Tabela no desktop */}
-            <div className="hidden overflow-x-auto md:block">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-y border-border/70 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    <th scope="col" className="px-5 py-3">Descrição</th>
-                    <th scope="col" className="px-5 py-3">Categoria</th>
-                    <th scope="col" className="px-5 py-3">Tipo</th>
-                    <th scope="col" className="px-5 py-3 text-right">Valor</th>
-                    <th scope="col" className="px-5 py-3">Data</th>
-                    <th scope="col" className="px-5 py-3 text-right">Ações</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/70">
-                  {items.map((transaction) => (
-                    <tr key={transaction.id} className="transition-colors hover:bg-secondary/50">
-                      <td className="px-5 py-3">
-                        <div className="flex items-center gap-3">
-                          <IconBadge
-                            size="sm"
-                            icon={transaction.category.icon}
-                            color={transaction.category.color}
-                          />
-                          <span className="font-medium text-foreground">{transaction.description}</span>
-                        </div>
-                      </td>
-                      <td className="px-5 py-3 text-muted-foreground">{transaction.category.name}</td>
-                      <td className="px-5 py-3 text-muted-foreground">
-                        {transaction.type === "income" ? "Receita" : "Despesa"}
-                      </td>
-                      <td
-                        className={cn(
-                          "px-5 py-3 text-right font-semibold tabular-nums",
-                          transaction.type === "income"
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-red-500 dark:text-red-400",
-                        )}
-                      >
-                        {transaction.type === "income" ? "" : "-"}
-                        {transaction.amount.formatted}
-                      </td>
-                      <td className="px-5 py-3 text-muted-foreground tabular-nums">
-                        {formatDate(transaction.date)}
-                      </td>
-                      <td className="px-5 py-3">
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8"
-                            onClick={() => openEdit(transaction)}
-                            aria-label={`Editar ${transaction.description}`}
-                          >
-                            <Pencil />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 text-destructive hover:bg-destructive/10"
-                            onClick={() => setPendingDelete(transaction)}
-                            aria-label={`Excluir ${transaction.description}`}
-                          >
-                            <Trash2 />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Cartões no mobile: uma tabela de seis colunas não cabe na tela */}
-            <ul className="divide-y divide-border/70 md:hidden">
+            {/* Lista de lançamentos: uma linha por transação, legível em coluna estreita. */}
+            <ul className="divide-y divide-border/70">
               {items.map((transaction) => (
                 <li key={transaction.id} className="flex items-center gap-3 px-4 py-3">
                   <IconBadge icon={transaction.category.icon} color={transaction.category.color} />
@@ -285,8 +213,8 @@ export function TransactionsView() {
                       className={cn(
                         "text-sm font-semibold tabular-nums",
                         transaction.type === "income"
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-red-500 dark:text-red-400",
+                          ? "text-positive"
+                          : "text-negative",
                       )}
                     >
                       {transaction.type === "income" ? "" : "-"}

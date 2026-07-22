@@ -39,8 +39,8 @@ export function RecentTransactions({ items }: { items: Transaction[] }) {
                 className={cn(
                   "text-sm font-semibold tabular-nums",
                   income
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-red-500 dark:text-red-400",
+                    ? "text-positive"
+                    : "text-negative",
                 )}
               >
                 {income ? "" : "-"}

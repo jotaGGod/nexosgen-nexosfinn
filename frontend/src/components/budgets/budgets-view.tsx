@@ -158,7 +158,7 @@ export function BudgetsView() {
       ) : null}
 
       {items.length > 0 ? (
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="grid gap-3">
           {items.map((budget) => (
             <Card key={budget.id} className="group p-5">
               <div className="flex items-start gap-3">

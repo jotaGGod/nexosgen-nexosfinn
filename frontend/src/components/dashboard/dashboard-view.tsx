@@ -52,7 +52,7 @@ export function DashboardView() {
       {isPending && !isError ? <SummaryCardsSkeleton /> : null}
       {data ? <SummaryCards summary={data.summary} /> : null}
 
-      <div className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-4">
         <Card className="lg:col-span-3">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Fluxo de Caixa</CardTitle>
@@ -75,7 +75,7 @@ export function DashboardView() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-4">
         <Card className="lg:col-span-3">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Transações Recentes</CardTitle>

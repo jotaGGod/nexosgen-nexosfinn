@@ -111,7 +111,7 @@ export function IntegrationsTab() {
           <div>
             <CardTitle>Chaves de API</CardTitle>
             <CardDescription className="mt-1 max-w-2xl">
-              Use esta chave para conectar seu FinApp a automações externas, como assistentes de WhatsApp via
+              Use esta chave para conectar sua Vanta a automações externas, como assistentes de WhatsApp via
               n8n. Cada chave carrega apenas os escopos que você marcar.
             </CardDescription>
           </div>
@@ -152,7 +152,7 @@ export function IntegrationsTab() {
                       "flex size-10 shrink-0 items-center justify-center rounded-xl",
                       revoked
                         ? "bg-secondary text-muted-foreground"
-                        : "bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400",
+                        : "bg-primary/12 text-primary",
                     )}
                   >
                     <KeyRound className="size-[18px]" />
@@ -219,7 +219,7 @@ export function IntegrationsTab() {
           </p>
           <ul className="space-y-1.5 font-mono text-xs">
             <li>
-              <span className="text-emerald-600 dark:text-emerald-400">POST</span>{" "}
+              <span className="text-positive">POST</span>{" "}
               /api/v1/external/transactions
             </li>
             <li>
@@ -227,15 +227,15 @@ export function IntegrationsTab() {
               /api/v1/external/transactions/{"{id}"}
             </li>
             <li>
-              <span className="text-violet-600 dark:text-violet-400">GET</span>{" "}
+              <span className="text-primary">GET</span>{" "}
               /api/v1/external/transactions
             </li>
             <li>
-              <span className="text-violet-600 dark:text-violet-400">GET</span>{" "}
+              <span className="text-primary">GET</span>{" "}
               /api/v1/external/balance
             </li>
             <li>
-              <span className="text-violet-600 dark:text-violet-400">GET</span>{" "}
+              <span className="text-primary">GET</span>{" "}
               /api/v1/external/categories
             </li>
           </ul>
@@ -277,7 +277,7 @@ export function IntegrationsTab() {
                       type="checkbox"
                       checked={scopes.includes(option.value)}
                       onChange={() => toggleScope(option.value)}
-                      className="mt-0.5 size-4 accent-violet-600"
+                      className="mt-0.5 size-4 accent-[hsl(var(--primary))]"
                     />
                     <span className="min-w-0">
                       <span className="block text-sm font-medium">{option.label}</span>
@@ -321,7 +321,7 @@ export function IntegrationsTab() {
           <div className="flex items-center gap-2 rounded-xl border border-border bg-secondary/60 p-3">
             <code className="min-w-0 flex-1 break-all font-mono text-xs">{createdKey}</code>
             <Button variant="outline" size="sm" className="shrink-0" onClick={handleCopy}>
-              {copied ? <Check className="text-emerald-600 dark:text-emerald-400" /> : <Copy />}
+              {copied ? <Check className="text-positive" /> : <Copy />}
               {copied ? "Copiado" : "Copiar"}
             </Button>
           </div>

@@ -34,27 +34,27 @@ function SummaryCard({ label, value, variation, icon: Icon, tint, invertVariatio
 
 export function SummaryCards({ summary }: { summary: DashboardSummary }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3">
       <SummaryCard
         label="Saldo Total"
         value={summary.total_balance.formatted}
         variation={summary.total_balance.variation}
         icon={Users}
-        tint="bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400"
+        tint="bg-primary/12 text-primary"
       />
       <SummaryCard
         label="Receitas"
         value={summary.income.formatted}
         variation={summary.income.variation}
         icon={ArrowUpCircle}
-        tint="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
+        tint="bg-positive/12 text-positive"
       />
       <SummaryCard
         label="Despesas"
         value={summary.expense.formatted}
         variation={summary.expense.variation}
         icon={ArrowDownCircle}
-        tint="bg-red-50 text-red-500 dark:bg-red-500/15 dark:text-red-400"
+        tint="bg-negative/12 text-negative"
         invertVariation
       />
       <SummaryCard
@@ -70,7 +70,7 @@ export function SummaryCards({ summary }: { summary: DashboardSummary }) {
 
 export function SummaryCardsSkeleton() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3">
       {Array.from({ length: 4 }).map((_, index) => (
         <Card key={index} className="space-y-3 p-5">
           <div className="flex items-start justify-between">

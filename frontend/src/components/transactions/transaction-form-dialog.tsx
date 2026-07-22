@@ -151,8 +151,8 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
                       "rounded-lg py-2 text-sm font-medium transition-colors",
                       field.value === option.value
                         ? option.value === "income"
-                          ? "bg-emerald-500 text-white shadow-sm"
-                          : "bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white shadow-sm"
+                          ? "bg-positive text-background shadow-sm"
+                          : "bg-primary text-primary-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground",
                     )}
                   >

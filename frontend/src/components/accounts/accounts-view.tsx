@@ -42,7 +42,7 @@ const defaults: AccountValues = {
   name: "",
   type: "checking",
   initial_balance: 0,
-  color: "#7C3AED",
+  color: "#C6FF3D",
   icon: "landmark",
 };
 
@@ -125,12 +125,12 @@ export function AccountsView() {
       />
 
       {accounts.length > 0 ? (
-        <Card className="bg-gradient-to-br from-violet-600 to-fuchsia-500 p-6 text-white">
-          <p className="text-sm font-medium text-white/80">Saldo consolidado</p>
+        <Card className="border-primary/30 bg-primary/8 p-6">
+          <p className="text-sm font-medium text-muted-foreground">Saldo consolidado</p>
           <p className="mt-1 text-3xl font-semibold tabular-nums">
             {total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
           </p>
-          <p className="mt-1 text-xs text-white/70">
+          <p className="mt-1 text-xs text-muted-foreground">
             Soma do saldo de {accounts.length} conta{accounts.length > 1 ? "s" : ""} ativa
             {accounts.length > 1 ? "s" : ""}
           </p>
@@ -172,7 +172,7 @@ export function AccountsView() {
       ) : null}
 
       {accounts.length > 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3">
           {accounts.map((account) => (
             <Card key={account.id} className="group p-5">
               <div className="flex items-start justify-between gap-3">
@@ -210,7 +210,7 @@ export function AccountsView() {
                 className={cn(
                   "mt-3 text-xl font-semibold tabular-nums",
                   account.balance.amount < 0
-                    ? "text-red-500 dark:text-red-400"
+                    ? "text-negative"
                     : "text-foreground",
                 )}
               >
