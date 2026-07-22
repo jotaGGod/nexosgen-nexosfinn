@@ -144,7 +144,7 @@ export function CategoriesView() {
       ) : null}
 
       {visible.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {visible.map((category) => (
             // O cartão empilha em vez de alinhar em linha: em duas colunas ele
             // tem cerca de 166px, e ícone + ações + nome lado a lado não cabem

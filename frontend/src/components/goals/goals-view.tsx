@@ -172,7 +172,12 @@ export function GoalsView() {
         </Card>
       ) : null}
 
-      <div className="space-y-3">
+      {/*
+        Cada meta é um cartão largo com barra de progresso. Empilhados, num
+        monitor eles viram uma coluna de faixas com metros de vazio à direita;
+        em duas colunas a barra ainda tem largura para ser legível.
+      */}
+      <div className="space-y-3 xl:grid xl:grid-cols-2 xl:gap-3 xl:space-y-0">
         {goals.map((goal) => {
           const Icon = resolveIcon(goal.icon);
 

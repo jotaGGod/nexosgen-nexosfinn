@@ -21,7 +21,11 @@ export function SettingsView() {
     requestedTab === "integracoes" || requestedTab === "preferencias" ? requestedTab : "perfil";
 
   return (
-    <div className="space-y-6">
+    // Configurações é a única tela sem dado tabular ou gráfico: é formulário
+    // puro. Deixá-la ocupar os 1280px do contêiner produziria campos de texto
+    // com quase mil pixels de largura, que são desconfortáveis de ler e de
+    // preencher. Aqui a largura curta é a decisão certa, e não uma limitação.
+    <div className="max-w-3xl space-y-6">
       <PageHeader title="Configurações" subtitle="Gerencie sua conta e integrações" />
 
       <Tabs defaultValue={initialTab}>

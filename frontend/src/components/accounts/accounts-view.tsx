@@ -172,7 +172,7 @@ export function AccountsView() {
       ) : null}
 
       {accounts.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {accounts.map((account) => (
             <Card key={account.id} className="group p-5">
               <div className="flex items-start justify-between gap-3">
@@ -211,10 +211,13 @@ export function AccountsView() {
                 dos milhares não cabe em text-xl: o "R$" ficava sozinho numa
                 linha e o número na seguinte. O corpo menor mantém o valor
                 inteiro numa linha só, e nada de dinheiro pode quebrar no meio.
+
+                A partir de `md` a grade dá largura de sobra ao cartão, e aí o
+                valor volta ao tamanho de destaque que ele merece.
               */}
               <p
                 className={cn(
-                  "mt-3 whitespace-nowrap text-base font-semibold tabular-nums",
+                  "mt-3 whitespace-nowrap text-base font-semibold tabular-nums md:text-xl",
                   account.balance.amount < 0
                     ? "text-negative"
                     : "text-foreground",

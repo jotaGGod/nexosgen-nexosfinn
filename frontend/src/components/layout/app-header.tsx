@@ -12,11 +12,15 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
  * Enxuto de propósito: com a navegação na barra inferior, o topo só precisa
  * carregar a marca e dois controles. Isso devolve altura vertical para o
  * conteúdo, que é o recurso escasso em tela de celular.
+ *
+ * No desktop a marca sai daqui — a barra lateral já a exibe, e repetir o mesmo
+ * logo duas vezes na mesma tela não acrescenta nada. Sobram os controles,
+ * alinhados à direita.
  */
 export function AppHeader() {
   return (
-    <header className="flex items-center justify-between gap-3">
-      <Link href="/app/dashboard" aria-label="Ir para o início">
+    <header className="flex items-center justify-between gap-3 lg:justify-end">
+      <Link href="/app/dashboard" aria-label="Ir para o início" className="lg:hidden">
         <Logo />
       </Link>
 

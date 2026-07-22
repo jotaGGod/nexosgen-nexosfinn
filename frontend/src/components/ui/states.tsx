@@ -88,7 +88,8 @@ export function ChartSkeleton({ className }: { className?: string }) {
   return (
     <div className={cn("space-y-3 p-5", className)}>
       <Skeleton className="h-3 w-32" />
-      <Skeleton className="h-52 w-full" />
+      {/* Acompanha a altura dos gráficos no desktop, senão a troca desloca a página. */}
+      <Skeleton className="h-52 w-full lg:h-64" />
     </div>
   );
 }

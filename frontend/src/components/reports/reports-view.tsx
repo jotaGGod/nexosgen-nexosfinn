@@ -92,7 +92,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
       {insights.biggest_expense ? (
         <InsightCard
           icon={ArrowUpRight}
@@ -166,7 +166,7 @@ export function ReportsView() {
 
       {isPending && !isError ? (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
             {Array.from({ length: 4 }).map((_, index) => (
               <Card key={index} className="space-y-3 p-5">
                 <Skeleton className="h-3 w-24" />
@@ -191,7 +191,7 @@ export function ReportsView() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
               <OverviewCard
                 label="Receitas Totais"
                 value={data.overview.total_income.formatted}
@@ -216,7 +216,7 @@ export function ReportsView() {
               />
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-4 xl:grid-cols-2">
               <Card>
                 <CardHeader>
                   <CardTitle>Evolução das Receitas</CardTitle>

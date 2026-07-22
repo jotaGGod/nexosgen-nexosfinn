@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownCircle, ArrowUpCircle, PiggyBank, Users } from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle, PiggyBank, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { Variation } from "@/components/common/variation";
@@ -34,12 +34,12 @@ function SummaryCard({ label, value, variation, icon: Icon, tint, invertVariatio
 
 export function SummaryCards({ summary }: { summary: DashboardSummary }) {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
       <SummaryCard
         label="Saldo Total"
         value={summary.total_balance.formatted}
         variation={summary.total_balance.variation}
-        icon={Users}
+        icon={Wallet}
         tint="bg-primary/12 text-primary"
       />
       <SummaryCard
@@ -70,7 +70,7 @@ export function SummaryCards({ summary }: { summary: DashboardSummary }) {
 
 export function SummaryCardsSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <Card key={index} className="space-y-3 p-5">
           <div className="flex items-start justify-between">

@@ -9,11 +9,12 @@ import { primaryNavItems, secondaryNavItems } from "@/components/layout/nav";
 import { cn } from "@/lib/utils";
 
 /**
- * Navegação inferior fixa.
+ * Navegação inferior fixa, exclusiva de telas até `lg`.
  *
- * Substitui a barra lateral: o alcance do polegar é o critério de layout aqui,
- * e no desktop a mesma barra flutua centralizada, o que evita manter duas
- * navegações separadas.
+ * O critério de layout aqui é o alcance do polegar. De `lg` em diante quem
+ * navega é a barra lateral, que mostra os oito destinos de uma vez — por isso
+ * esta barra e sua gaveta somem por completo nesse ponto, em vez de coexistir
+ * com a lateral.
  *
  * Quatro destinos diretos mais uma gaveta para o restante — cinco alvos é o
  * máximo que cabe confortavelmente na largura de um celular.
@@ -57,7 +58,7 @@ export function BottomNav() {
     <>
       {gavetaAberta ? (
         <div
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
           onClick={() => setGavetaAberta(false)}
           aria-hidden="true"
         />
@@ -66,7 +67,7 @@ export function BottomNav() {
       {/* Gaveta do "Mais" */}
       <div
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md px-4 pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] transition-all duration-300 ease-out-expo",
+          "fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md px-4 pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] transition-all duration-300 ease-out-expo lg:hidden",
           gavetaAberta ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
         )}
         role="dialog"
@@ -128,7 +129,7 @@ export function BottomNav() {
 
       {/* Barra fixa */}
       <nav
-        className="safe-area-nav fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md px-4 pb-4"
+        className="safe-area-nav fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md px-4 pb-4 lg:hidden"
         aria-label="Navegação principal"
       >
         <div className="surface flex items-center justify-around gap-1 rounded-3xl p-1.5">

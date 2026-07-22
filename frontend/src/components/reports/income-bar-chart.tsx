@@ -35,7 +35,7 @@ function TrendTooltip({ active, payload, label }: any) {
  */
 export const IncomeBarChart = memo(function IncomeBarChart({ data }: { data: TrendPoint[] }) {
   return (
-    <div className="h-[240px] w-full">
+    <div className="h-[240px] w-full lg:h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
           <CartesianGrid strokeDasharray="4 4" stroke="var(--chart-grid)" vertical={false} />

@@ -200,7 +200,10 @@ export function TransactionsView() {
             {/* Lista de lançamentos: uma linha por transação, legível em coluna estreita. */}
             <ul className="divide-y divide-border/70">
               {items.map((transaction) => (
-                <li key={transaction.id} className="flex items-center gap-3 px-4 py-3">
+                <li
+                  key={transaction.id}
+                  className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-secondary/40"
+                >
                   <IconBadge icon={transaction.category.icon} color={transaction.category.color} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{transaction.description}</p>
@@ -208,10 +211,18 @@ export function TransactionsView() {
                       {transaction.category.name} · {formatDate(transaction.date)}
                     </p>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
+                  {/*
+                    No celular o valor fica acima das ações porque não há
+                    largura para os dois lado a lado. No desktop sobra espaço, e
+                    empilhá-los deixaria a linha alta e desalinhada — a partir de
+                    `md` eles voltam para a mesma linha, com o valor em largura
+                    fixa para que a coluna de números fique alinhada entre as
+                    linhas em vez de dançar conforme o tamanho de cada uma.
+                  */}
+                  <div className="flex flex-col items-end gap-1 md:flex-row md:items-center md:gap-3">
                     <span
                       className={cn(
-                        "text-sm font-semibold tabular-nums",
+                        "text-sm font-semibold tabular-nums md:w-32 md:text-right",
                         transaction.type === "income"
                           ? "text-positive"
                           : "text-negative",
@@ -220,7 +231,7 @@ export function TransactionsView() {
                       {transaction.type === "income" ? "" : "-"}
                       {transaction.amount.formatted}
                     </span>
-                    <div className="flex gap-1">
+                    <div className="hover-reveal flex gap-1">
                       <Button
                         variant="ghost"
                         size="icon"
