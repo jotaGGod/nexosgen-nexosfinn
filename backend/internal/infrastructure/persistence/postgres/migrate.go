@@ -1,14 +1,19 @@
 package postgres
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/golang-migrate/migrate/v4"
 	// Importado apenas para registrar o driver "pgx5" no golang-migrate.
 	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jacks/finapp/backend/migrations"
 )
 
@@ -21,6 +26,70 @@ const migrationDriver = "pgx5"
 // plataforma encerrou o startup. Essa migration e idempotente (CREATE TABLE e
 // CREATE INDEX usam IF NOT EXISTS), portanto pode ser reaplicada com seguranca.
 const recoverableDirtyVersion uint = 6
+
+const undefinedTableCode = "42P01"
+
+// MigrateIfNeeded consulta a tabela de versao usando o pool ja aquecido e so
+// inicializa o golang-migrate quando existe trabalho real. Em funcoes
+// gerenciadas, abrir uma segunda conexao e tomar o advisory lock em todo cold
+// start adicionava segundos mesmo com o schema atualizado.
+func MigrateIfNeeded(ctx context.Context, pool *pgxpool.Pool, databaseURL string) (bool, error) {
+	latest, err := latestEmbeddedVersion()
+	if err != nil {
+		return false, err
+	}
+
+	var (
+		current uint
+		dirty   bool
+	)
+	err = pool.QueryRow(ctx, `SELECT version, dirty FROM schema_migrations LIMIT 1`).Scan(&current, &dirty)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if !errors.Is(err, pgx.ErrNoRows) && !(errors.As(err, &pgErr) && pgErr.Code == undefinedTableCode) {
+			return false, fmt.Errorf("falha ao consultar a versao das migrations: %w", err)
+		}
+		// Banco novo: a tabela de controle ainda nao existe (ou esta vazia).
+		return true, Migrate(databaseURL)
+	}
+
+	if !dirty && current >= latest {
+		return false, nil
+	}
+	return true, Migrate(databaseURL)
+}
+
+func latestEmbeddedVersion() (uint, error) {
+	entries, err := migrations.Files.ReadDir(".")
+	if err != nil {
+		return 0, fmt.Errorf("falha ao listar as migrations embutidas: %w", err)
+	}
+
+	var latest uint64
+	for _, entry := range entries {
+		name := entry.Name()
+		if entry.IsDir() || !strings.HasSuffix(name, ".up.sql") {
+			continue
+		}
+
+		prefix, _, ok := strings.Cut(name, "_")
+		if !ok {
+			return 0, fmt.Errorf("nome de migration invalido: %s", name)
+		}
+		version, parseErr := strconv.ParseUint(prefix, 10, 32)
+		if parseErr != nil {
+			return 0, fmt.Errorf("versao de migration invalida em %s: %w", name, parseErr)
+		}
+		if version > latest {
+			latest = version
+		}
+	}
+
+	if latest == 0 {
+		return 0, errors.New("nenhuma migration .up.sql foi embutida")
+	}
+	return uint(latest), nil
+}
 
 // Migrate aplica as migrations pendentes.
 //

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jacks/finapp/backend/internal/application/dto"
+	"github.com/jacks/finapp/backend/internal/application/parallel"
 	"github.com/jacks/finapp/backend/internal/domain/entity"
 	"github.com/jacks/finapp/backend/internal/domain/repository"
 	"github.com/jacks/finapp/backend/internal/domain/service"
@@ -63,27 +64,36 @@ func (uc *GetDashboardUseCase) Execute(ctx context.Context, userID uuid.UUID, in
 		return nil, err
 	}
 
-	summary, err := uc.summary.Execute(ctx, userID, period)
-	if err != nil {
-		return nil, err
-	}
+	var (
+		summary  dto.DashboardSummaryOutput
+		cashflow []dto.CashflowPointOutput
+		expenses dto.CategoryDistributionOutput
+		recent   []dto.TransactionOutput
+		goals    []dto.GoalSummaryOutput
+	)
 
-	cashflow, err := uc.cashflow.Execute(ctx, userID, period.End(), input.CashflowMonths)
-	if err != nil {
-		return nil, err
-	}
-
-	expenses, err := uc.byCategory.Execute(ctx, userID, period, vo.TransactionTypeExpense)
-	if err != nil {
-		return nil, err
-	}
-
-	recent, err := uc.recentTransactions(ctx, userID, input.RecentLimit)
-	if err != nil {
-		return nil, err
-	}
-
-	goals, err := uc.goalSummaries(ctx, userID, now)
+	err = parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			summary, taskErr = uc.summary.Execute(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			cashflow, taskErr = uc.cashflow.Execute(taskCtx, userID, period.End(), input.CashflowMonths)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			expenses, taskErr = uc.byCategory.Execute(taskCtx, userID, period, vo.TransactionTypeExpense)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			recent, taskErr = uc.recentTransactions(taskCtx, userID, input.RecentLimit)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			goals, taskErr = uc.goalSummaries(taskCtx, userID, now)
+			return taskErr
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -104,23 +114,32 @@ func (uc *GetDashboardUseCase) recentTransactions(ctx context.Context, userID uu
 		limit = defaultRecentLimit
 	}
 
-	page, err := uc.transactions.List(ctx, repository.TransactionFilter{
-		UserID:   userID,
-		Page:     1,
-		PageSize: limit,
-		SortBy:   "occurred_on",
-		SortDir:  "desc",
-	})
-	if err != nil {
-		return nil, err
-	}
+	var (
+		page          repository.TransactionPage
+		categoryIndex map[uuid.UUID]*entity.Category
+		accountList   []*entity.Account
+	)
 
-	categoryIndex, err := loadCategoryIndex(ctx, userID, uc.categories)
-	if err != nil {
-		return nil, err
-	}
-
-	accountList, err := uc.accounts.ListByUser(ctx, userID, true)
+	err := parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			page, taskErr = uc.transactions.List(taskCtx, repository.TransactionFilter{
+				UserID:   userID,
+				Page:     1,
+				PageSize: limit,
+				SortBy:   "occurred_on",
+				SortDir:  "desc",
+			})
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			categoryIndex, taskErr = loadCategoryIndex(taskCtx, userID, uc.categories)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			accountList, taskErr = uc.accounts.ListByUser(taskCtx, userID, true)
+			return taskErr
+		},
+	)
 	if err != nil {
 		return nil, err
 	}

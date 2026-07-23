@@ -5,6 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jacks/finapp/backend/internal/application/dto"
+	"github.com/jacks/finapp/backend/internal/application/parallel"
+	"github.com/jacks/finapp/backend/internal/domain/entity"
 	"github.com/jacks/finapp/backend/internal/domain/repository"
 	"github.com/jacks/finapp/backend/internal/domain/service"
 	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
@@ -28,27 +30,38 @@ func NewGetSummaryUseCase(
 func (uc *GetSummaryUseCase) Execute(ctx context.Context, userID uuid.UUID, period vo.Period) (dto.DashboardSummaryOutput, error) {
 	previousPeriod := period.Previous()
 
-	current, err := uc.analytics.Totals(ctx, userID, period)
-	if err != nil {
-		return dto.DashboardSummaryOutput{}, err
-	}
-	previous, err := uc.analytics.Totals(ctx, userID, previousPeriod)
-	if err != nil {
-		return dto.DashboardSummaryOutput{}, err
-	}
+	var (
+		current          repository.Totals
+		previous         repository.Totals
+		accountList      []*entity.Account
+		netUntilNow      vo.Money
+		netUntilPrevious vo.Money
+	)
 
-	accountList, err := uc.accounts.ListByUser(ctx, userID, false)
-	if err != nil {
-		return dto.DashboardSummaryOutput{}, err
-	}
-
-	// O saldo total e um acumulado, nao um total do periodo: ele considera
-	// tudo que aconteceu ate a data final do recorte.
-	netUntilNow, err := uc.analytics.NetUntil(ctx, userID, period.End())
-	if err != nil {
-		return dto.DashboardSummaryOutput{}, err
-	}
-	netUntilPrevious, err := uc.analytics.NetUntil(ctx, userID, previousPeriod.End())
+	err := parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			current, taskErr = uc.analytics.Totals(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			previous, taskErr = uc.analytics.Totals(taskCtx, userID, previousPeriod)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			accountList, taskErr = uc.accounts.ListByUser(taskCtx, userID, false)
+			return taskErr
+		},
+		// O saldo total e um acumulado, nao um total do periodo: ele considera
+		// tudo que aconteceu ate a data final do recorte.
+		func(taskCtx context.Context) (taskErr error) {
+			netUntilNow, taskErr = uc.analytics.NetUntil(taskCtx, userID, period.End())
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			netUntilPrevious, taskErr = uc.analytics.NetUntil(taskCtx, userID, previousPeriod.End())
+			return taskErr
+		},
+	)
 	if err != nil {
 		return dto.DashboardSummaryOutput{}, err
 	}

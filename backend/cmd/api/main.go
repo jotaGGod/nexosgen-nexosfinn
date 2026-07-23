@@ -12,6 +12,7 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -67,23 +68,33 @@ func run() error {
 
 	log.Info("porta HTTP aberta", slog.String("port", cfg.HTTPPort), slog.String("env", cfg.Env))
 
+	connectStarted := time.Now()
 	pool, err := postgres.Connect(ctx, cfg.DatabaseURL, 10)
 	if err != nil {
 		return err
 	}
 	defer pool.Close()
 
-	log.Info("conectado ao banco de dados")
+	log.Info("conectado ao banco de dados",
+		slog.Duration("duration", time.Since(connectStarted)),
+		slog.String("database_host", databaseHost(cfg.DatabaseURL)),
+		slog.String("region", os.Getenv("VERCEL_REGION")),
+	)
 
 	// O schema e aplicado no boot porque plataformas gerenciadas nao oferecem
 	// uma etapa de deploy onde rodar o migrate. Falhar aqui e proposital: e
 	// melhor o servico nao subir do que atender requisicoes contra um banco
 	// desatualizado.
-	if err := postgres.Migrate(cfg.DatabaseURL); err != nil {
+	migrateStarted := time.Now()
+	migrated, err := postgres.MigrateIfNeeded(ctx, pool, cfg.DatabaseURL)
+	if err != nil {
 		return err
 	}
 
-	log.Info("migrations aplicadas")
+	log.Info("migrations verificadas",
+		slog.Bool("applied", migrated),
+		slog.Duration("duration", time.Since(migrateStarted)),
+	)
 
 	// --- Infraestrutura ---
 	users := postgres.NewUserRepository(pool)
@@ -219,4 +230,12 @@ func getEnvOrDefault(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func databaseHost(databaseURL string) string {
+	parsed, err := url.Parse(databaseURL)
+	if err != nil {
+		return "unknown"
+	}
+	return parsed.Hostname()
 }

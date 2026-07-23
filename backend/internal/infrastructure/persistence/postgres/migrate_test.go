@@ -70,3 +70,10 @@ func TestMigrateUpReturnsForceErrorWithoutRunningUp(t *testing.T) {
 	assert.Contains(t, err.Error(), "force failed")
 	assert.False(t, runner.upCalled)
 }
+
+func TestLatestEmbeddedVersionTracksMigrationFiles(t *testing.T) {
+	version, err := latestEmbeddedVersion()
+
+	require.NoError(t, err)
+	assert.Equal(t, uint(8), version)
+}

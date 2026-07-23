@@ -29,7 +29,13 @@ func (uc *GetTrendsUseCase) Execute(ctx context.Context, userID uuid.UUID, refer
 	if err != nil {
 		return nil, err
 	}
+	return TrendsFromCashflow(points), nil
+}
 
+// TrendsFromCashflow acrescenta a taxa de poupanca a uma serie ja carregada.
+// O relatorio usa esta funcao para nao consultar a mesma serie mensal duas
+// vezes na mesma requisicao.
+func TrendsFromCashflow(points []dto.CashflowPointOutput) []dto.TrendPointOutput {
 	trends := make([]dto.TrendPointOutput, 0, len(points))
 	for _, point := range points {
 		income, _ := vo.NewMoneyFromReais(point.Income)
@@ -44,5 +50,5 @@ func (uc *GetTrendsUseCase) Execute(ctx context.Context, userID uuid.UUID, refer
 			SavingsRate: savingsRate(income, expense),
 		})
 	}
-	return trends, nil
+	return trends
 }

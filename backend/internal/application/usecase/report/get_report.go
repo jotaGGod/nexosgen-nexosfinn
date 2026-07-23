@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jacks/finapp/backend/internal/application/dto"
+	"github.com/jacks/finapp/backend/internal/application/parallel"
 	"github.com/jacks/finapp/backend/internal/application/usecase/dashboard"
 	"github.com/jacks/finapp/backend/internal/domain/entity"
 	"github.com/jacks/finapp/backend/internal/domain/repository"
@@ -55,34 +56,36 @@ func (uc *GetReportUseCase) Execute(ctx context.Context, userID uuid.UUID, input
 		months = defaultTrendMonths
 	}
 
-	overview, err := uc.overview.Execute(ctx, userID, period)
-	if err != nil {
-		return nil, err
-	}
+	var (
+		overview dto.ReportOverviewOutput
+		cashflow []dto.CashflowPointOutput
+		expenses dto.CategoryDistributionOutput
+		incomes  dto.CategoryDistributionOutput
+		insights dto.ReportInsightsOutput
+	)
 
-	cashflow, err := uc.cashflow.Execute(ctx, userID, period.End(), months)
+	err = parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			overview, taskErr = uc.overview.Execute(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			cashflow, taskErr = uc.cashflow.Execute(taskCtx, userID, period.End(), months)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			expenses, incomes, taskErr = uc.byCategory.ExecuteBoth(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			insights, taskErr = uc.insights.Execute(taskCtx, userID, period)
+			return taskErr
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
-
-	expenses, err := uc.byCategory.Execute(ctx, userID, period, vo.TransactionTypeExpense)
-	if err != nil {
-		return nil, err
-	}
-	incomes, err := uc.byCategory.Execute(ctx, userID, period, vo.TransactionTypeIncome)
-	if err != nil {
-		return nil, err
-	}
-
-	trends, err := uc.trends.Execute(ctx, userID, period.End(), months)
-	if err != nil {
-		return nil, err
-	}
-
-	insights, err := uc.insights.Execute(ctx, userID, period)
-	if err != nil {
-		return nil, err
-	}
+	trends := TrendsFromCashflow(cashflow)
 
 	return &dto.ReportOutput{
 		Period:           dto.ToPeriodOutput(period),

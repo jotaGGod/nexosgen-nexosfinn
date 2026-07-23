@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { API_BASE_URL, applySessionCookies } from "@/lib/session";
+import { backendUnavailableResponse, fetchBackend } from "@/lib/backend";
+import { applySessionCookies } from "@/lib/session";
 import type { AuthResponse } from "@/types/api";
 
 /**
@@ -12,12 +13,16 @@ import type { AuthResponse } from "@/types/api";
 export async function POST(request: Request) {
   const credentials = await request.text();
 
-  const upstream = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: credentials,
-    cache: "no-store",
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetchBackend("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: credentials,
+    });
+  } catch {
+    return backendUnavailableResponse();
+  }
 
   const payload = await upstream.text();
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jacks/finapp/backend/internal/application/dto"
+	"github.com/jacks/finapp/backend/internal/application/parallel"
 	"github.com/jacks/finapp/backend/internal/domain/entity"
 	"github.com/jacks/finapp/backend/internal/domain/repository"
 	"github.com/jacks/finapp/backend/internal/domain/service"
@@ -33,26 +34,43 @@ func NewGetInsightsUseCase(
 func (uc *GetInsightsUseCase) Execute(ctx context.Context, userID uuid.UUID, period vo.Period) (dto.ReportInsightsOutput, error) {
 	insights := dto.ReportInsightsOutput{}
 
-	categoryIndex, err := loadCategoryIndex(ctx, userID, uc.categories)
+	var (
+		categoryIndex      map[uuid.UUID]*entity.Category
+		highest            *entity.Transaction
+		lowest             *entity.Transaction
+		currentByCategory  []repository.CategoryTotal
+		previousByCategory []repository.CategoryTotal
+		dailySeries        []repository.DailyTotal
+	)
+
+	err := parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			categoryIndex, taskErr = loadCategoryIndex(taskCtx, userID, uc.categories)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			highest, lowest, taskErr = uc.analytics.Extremes(taskCtx, userID, period, vo.TransactionTypeExpense)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			currentByCategory, taskErr = uc.analytics.TotalsByCategory(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			previousByCategory, taskErr = uc.analytics.TotalsByCategory(taskCtx, userID, period.Previous())
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			dailySeries, taskErr = uc.analytics.DailySeries(taskCtx, userID, period)
+			return taskErr
+		},
+	)
 	if err != nil {
 		return insights, err
 	}
 
-	highest, lowest, err := uc.analytics.Extremes(ctx, userID, period, vo.TransactionTypeExpense)
-	if err != nil {
-		return insights, err
-	}
 	insights.BiggestExpense = toHighlight(highest, categoryIndex)
 	insights.SmallestExpense = toHighlight(lowest, categoryIndex)
-
-	currentByCategory, err := uc.analytics.TotalsByCategory(ctx, userID, period)
-	if err != nil {
-		return insights, err
-	}
-	previousByCategory, err := uc.analytics.TotalsByCategory(ctx, userID, period.Previous())
-	if err != nil {
-		return insights, err
-	}
 
 	if trend := service.TrendingCategory(currentByCategory, previousByCategory); trend != nil {
 		insights.TrendingCategory = &dto.TrendingCategoryOutput{
@@ -63,10 +81,6 @@ func (uc *GetInsightsUseCase) Execute(ctx context.Context, userID uuid.UUID, per
 		}
 	}
 
-	dailySeries, err := uc.analytics.DailySeries(ctx, userID, period)
-	if err != nil {
-		return insights, err
-	}
 	if best := service.BestDay(dailySeries); best != nil {
 		insights.BestDay = &dto.BestDayOutput{
 			Date: dto.FormatDate(best.Day),

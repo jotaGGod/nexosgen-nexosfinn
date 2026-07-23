@@ -99,6 +99,7 @@ export function BottomNav() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   tabIndex={gavetaAberta ? 0 : -1}
                   className={cn(
                     "flex items-center gap-2.5 rounded-xl px-3 py-3 text-sm font-medium transition-colors",
@@ -141,6 +142,7 @@ export function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 aria-current={ativo ? "page" : undefined}
                 className={cn(
                   "flex flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-medium transition-colors",

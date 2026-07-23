@@ -19,12 +19,14 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
           queries: {
             // Dados financeiros mudam a cada lançamento; meio minuto é o
             // suficiente para evitar refetch em cada troca de aba.
-            staleTime: 30_000,
+            staleTime: 60_000,
             refetchOnWindowFocus: false,
             retry: (failureCount, error) => {
               // Erros de autenticação e validação não melhoram com repetição.
               if (error instanceof ApiError && error.status < 500) return false;
-              return failureCount < 2;
+              // Uma repeticao cobre cold starts transitorios sem deixar a
+              // tela presa em tres chamadas longas quando o backend caiu.
+              return failureCount < 1;
             },
           },
         },

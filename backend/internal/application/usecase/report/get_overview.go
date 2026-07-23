@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jacks/finapp/backend/internal/application/dto"
+	"github.com/jacks/finapp/backend/internal/application/parallel"
 	"github.com/jacks/finapp/backend/internal/domain/repository"
 	"github.com/jacks/finapp/backend/internal/domain/service"
 	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
@@ -24,11 +25,18 @@ func NewGetOverviewUseCase(analytics repository.TransactionAnalyticsRepository) 
 // Execute apura receitas, despesas, ticket medio e volume de lancamentos,
 // cada um com a variacao contra o periodo anterior.
 func (uc *GetOverviewUseCase) Execute(ctx context.Context, userID uuid.UUID, period vo.Period) (dto.ReportOverviewOutput, error) {
-	current, err := uc.analytics.Totals(ctx, userID, period)
-	if err != nil {
-		return dto.ReportOverviewOutput{}, err
-	}
-	previous, err := uc.analytics.Totals(ctx, userID, period.Previous())
+	var current, previous repository.Totals
+
+	err := parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			current, taskErr = uc.analytics.Totals(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			previous, taskErr = uc.analytics.Totals(taskCtx, userID, period.Previous())
+			return taskErr
+		},
+	)
 	if err != nil {
 		return dto.ReportOverviewOutput{}, err
 	}

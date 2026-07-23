@@ -5,6 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jacks/finapp/backend/internal/application/dto"
+	"github.com/jacks/finapp/backend/internal/application/parallel"
+	"github.com/jacks/finapp/backend/internal/domain/entity"
 	"github.com/jacks/finapp/backend/internal/domain/repository"
 	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
 )
@@ -30,15 +32,51 @@ func (uc *GetByCategoryUseCase) Execute(
 	period vo.Period,
 	transactionType vo.TransactionType,
 ) (dto.CategoryDistributionOutput, error) {
-	totals, err := uc.analytics.TotalsByCategory(ctx, userID, period)
-	if err != nil {
-		return dto.CategoryDistributionOutput{}, err
-	}
-
-	categoryIndex, err := loadCategoryIndex(ctx, userID, uc.categories)
+	totals, categoryIndex, err := uc.load(ctx, userID, period)
 	if err != nil {
 		return dto.CategoryDistributionOutput{}, err
 	}
 
 	return buildDistribution(totals, categoryIndex, transactionType), nil
+}
+
+// ExecuteBoth monta receitas e despesas com uma unica leitura dos totais e
+// das categorias. A tela de relatorios precisa das duas distribuicoes e antes
+// repetia exatamente as mesmas consultas.
+func (uc *GetByCategoryUseCase) ExecuteBoth(
+	ctx context.Context,
+	userID uuid.UUID,
+	period vo.Period,
+) (dto.CategoryDistributionOutput, dto.CategoryDistributionOutput, error) {
+	totals, categoryIndex, err := uc.load(ctx, userID, period)
+	if err != nil {
+		return dto.CategoryDistributionOutput{}, dto.CategoryDistributionOutput{}, err
+	}
+
+	expenses := buildDistribution(totals, categoryIndex, vo.TransactionTypeExpense)
+	incomes := buildDistribution(totals, categoryIndex, vo.TransactionTypeIncome)
+	return expenses, incomes, nil
+}
+
+func (uc *GetByCategoryUseCase) load(
+	ctx context.Context,
+	userID uuid.UUID,
+	period vo.Period,
+) ([]repository.CategoryTotal, map[uuid.UUID]*entity.Category, error) {
+	var (
+		totals        []repository.CategoryTotal
+		categoryIndex map[uuid.UUID]*entity.Category
+	)
+
+	err := parallel.Run(ctx,
+		func(taskCtx context.Context) (taskErr error) {
+			totals, taskErr = uc.analytics.TotalsByCategory(taskCtx, userID, period)
+			return taskErr
+		},
+		func(taskCtx context.Context) (taskErr error) {
+			categoryIndex, taskErr = loadCategoryIndex(taskCtx, userID, uc.categories)
+			return taskErr
+		},
+	)
+	return totals, categoryIndex, err
 }

@@ -25,6 +25,7 @@ function ItemDaLista({ item, ativo }: { item: NavItem; ativo: boolean }) {
   return (
     <Link
       href={item.href}
+      prefetch={false}
       aria-current={ativo ? "page" : undefined}
       className={cn(
         "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
@@ -57,7 +58,7 @@ export function Sidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-border bg-card/40 px-4 py-6 lg:flex">
-      <Link href="/app/dashboard" aria-label="Ir para o início" className="px-3">
+      <Link href="/app/dashboard" prefetch={false} aria-label="Ir para o início" className="px-3">
         <Logo />
       </Link>
 

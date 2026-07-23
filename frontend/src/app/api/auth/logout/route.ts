@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { API_BASE_URL, REFRESH_TOKEN_COOKIE, clearSessionCookies } from "@/lib/session";
+import { fetchBackend } from "@/lib/backend";
+import { REFRESH_TOKEN_COOKIE, clearSessionCookies } from "@/lib/session";
 
 /**
  * Encerra a sessão: revoga o refresh token no backend e limpa os cookies.
@@ -15,11 +16,10 @@ export async function POST() {
 
   if (refreshToken) {
     try {
-      await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
+      await fetchBackend("/api/v1/auth/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh_token: refreshToken }),
-        cache: "no-store",
       });
     } catch {
       // Backend indisponível não pode impedir o usuário de sair.
