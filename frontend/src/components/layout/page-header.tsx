@@ -17,13 +17,25 @@ interface PageHeaderProps {
  */
 export function PageHeader({ title, subtitle, actions, className }: PageHeaderProps) {
   return (
-    <header className={cn("flex flex-col gap-3", className)}>
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">{title}</h1>
-        {subtitle ? <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p> : null}
+    <header
+      className={cn(
+        "flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between lg:min-h-[76px] lg:items-start",
+        className,
+      )}
+    >
+      <div className="min-w-0">
+        <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-active">
+          Sua central financeira
+        </p>
+        <h1 className="text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-3xl">{title}</h1>
+        {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
       </div>
 
-      {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
+      {actions ? (
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end lg:pr-28">
+          {actions}
+        </div>
+      ) : null}
     </header>
   );
 }

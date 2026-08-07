@@ -125,7 +125,7 @@ export function AccountsView() {
       />
 
       {accounts.length > 0 ? (
-        <Card className="border-primary/30 bg-primary/8 p-6">
+        <Card className="border-active/25 bg-active/5 p-6">
           <p className="text-sm font-medium text-muted-foreground">Saldo consolidado</p>
           <p className="mt-1 text-3xl font-semibold tabular-nums">
             {total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}

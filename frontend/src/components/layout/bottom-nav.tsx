@@ -82,7 +82,7 @@ export function BottomNav() {
             <button
               type="button"
               onClick={() => setGavetaAberta(false)}
-              className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="rounded-xl p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               aria-label="Fechar"
               tabIndex={gavetaAberta ? 0 : -1}
             >
@@ -104,7 +104,7 @@ export function BottomNav() {
                   className={cn(
                     "flex items-center gap-2.5 rounded-xl px-3 py-3 text-sm font-medium transition-colors",
                     ativo
-                      ? "bg-primary/10 text-primary"
+                      ? "bg-active/10 text-active"
                       : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                   )}
                 >
@@ -133,7 +133,7 @@ export function BottomNav() {
         className="safe-area-nav fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md px-4 pb-4 lg:hidden"
         aria-label="Navegação principal"
       >
-        <div className="surface flex items-center justify-around gap-1 rounded-3xl p-1.5">
+        <div className="glass-panel flex items-center justify-around gap-1 rounded-[28px] p-1.5 shadow-2xl">
           {primaryNavItems.map((item) => {
             const ativo = pathname.startsWith(item.href);
             const Icon = item.icon;
@@ -145,9 +145,9 @@ export function BottomNav() {
                 prefetch={false}
                 aria-current={ativo ? "page" : undefined}
                 className={cn(
-                  "flex flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-medium transition-colors",
+                  "flex min-h-[54px] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-semibold transition-colors",
                   ativo
-                    ? "bg-primary/10 text-primary"
+                    ? "bg-active/10 text-active"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -162,9 +162,9 @@ export function BottomNav() {
             onClick={() => setGavetaAberta((aberta) => !aberta)}
             aria-expanded={gavetaAberta}
             className={cn(
-              "flex flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-medium transition-colors",
+              "flex min-h-[54px] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-semibold transition-colors",
               gavetaAberta || gavetaAtiva
-                ? "bg-primary/10 text-primary"
+                ? "bg-active/10 text-active"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >

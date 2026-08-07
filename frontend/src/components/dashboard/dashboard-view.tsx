@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 
 import { PeriodPicker, monthPeriod, type PeriodValue } from "@/components/common/period-picker";
+import { useDashboardPreferences } from "@/components/dashboard/dashboard-preferences";
 import {
   CashflowChart,
   CashflowLegend,
@@ -31,19 +33,31 @@ export function DashboardView() {
   useChartPreload();
 
   const [period, setPeriod] = useState<PeriodValue>(() => monthPeriod(todayISO()));
+  const { preferences } = useDashboardPreferences();
+
+  const start = new Date(`${period.start}T00:00:00Z`);
+  const end = new Date(`${period.end}T00:00:00Z`);
+  const monthsInPeriod = Math.max(
+    1,
+    (end.getUTCFullYear() - start.getUTCFullYear()) * 12 + end.getUTCMonth() - start.getUTCMonth() + 1,
+  );
 
   const { data, isPending, isError, refetch } = useDashboard({
     start_date: period.start,
     end_date: period.end,
-    cashflow_months: 5,
+    cashflow_months: Math.min(24, Math.max(5, monthsInPeriod)),
   });
 
+  const showPrimaryAnalytics = preferences.cashflow || preferences.categories;
+  const showSecondaryAnalytics = preferences.transactions || preferences.goals;
+  const hasVisibleSection = preferences.summary || showPrimaryAnalytics || showSecondaryAnalytics;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 lg:space-y-6">
       <PageHeader
         title="Dashboard"
         subtitle="Visão geral das suas finanças"
-        actions={<PeriodPicker value={period} onChange={setPeriod} />}
+        actions={<PeriodPicker mode="advanced" value={period} onChange={setPeriod} />}
       />
 
       {isError ? (
@@ -55,11 +69,11 @@ export function DashboardView() {
         </Card>
       ) : null}
 
-      {isPending && !isError ? <SummaryCardsSkeleton /> : null}
-      {data ? <SummaryCards summary={data.summary} /> : null}
+      {preferences.summary && isPending && !isError ? <SummaryCardsSkeleton /> : null}
+      {preferences.summary && data ? <SummaryCards summary={data.summary} /> : null}
 
-      <div className="grid gap-4 lg:grid-cols-5">
-        <Card className="lg:col-span-3">
+      {showPrimaryAnalytics ? <div className="grid gap-4 lg:grid-cols-5">
+        {preferences.cashflow ? <Card className={preferences.categories ? "lg:col-span-3" : "lg:col-span-5"}>
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Fluxo de Caixa</CardTitle>
             <CashflowLegend />
@@ -68,9 +82,9 @@ export function DashboardView() {
             {isPending ? <ChartSkeleton className="p-0" /> : null}
             {data ? <CashflowChart data={data.cashflow} /> : null}
           </CardContent>
-        </Card>
+        </Card> : null}
 
-        <Card className="lg:col-span-2">
+        {preferences.categories ? <Card className={preferences.cashflow ? "lg:col-span-2" : "lg:col-span-5"}>
           <CardHeader>
             <CardTitle>Gastos por Categoria</CardTitle>
           </CardHeader>
@@ -78,11 +92,11 @@ export function DashboardView() {
             {isPending ? <ChartSkeleton className="p-0" /> : null}
             {data ? <CategoryDonut distribution={data.category_expenses} /> : null}
           </CardContent>
-        </Card>
-      </div>
+        </Card> : null}
+      </div> : null}
 
-      <div className="grid gap-4 lg:grid-cols-5">
-        <Card className="lg:col-span-3">
+      {showSecondaryAnalytics ? <div className="grid gap-4 lg:grid-cols-5">
+        {preferences.transactions ? <Card className={preferences.goals ? "lg:col-span-3" : "lg:col-span-5"}>
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Transações Recentes</CardTitle>
             <Button asChild variant="link" size="sm" className="h-auto p-0">
@@ -93,9 +107,9 @@ export function DashboardView() {
             {isPending ? <RowsSkeleton className="p-0" rows={5} /> : null}
             {data ? <RecentTransactions items={data.recent_transactions} /> : null}
           </CardContent>
-        </Card>
+        </Card> : null}
 
-        <Card className="lg:col-span-2">
+        {preferences.goals ? <Card className={preferences.transactions ? "lg:col-span-2" : "lg:col-span-5"}>
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Metas</CardTitle>
             <Button asChild variant="link" size="sm" className="h-auto p-0">
@@ -106,8 +120,19 @@ export function DashboardView() {
             {isPending ? <RowsSkeleton className="p-0" rows={3} /> : null}
             {data ? <GoalsSummary goals={data.goals} /> : null}
           </CardContent>
+        </Card> : null}
+      </div> : null}
+
+      {!hasVisibleSection ? (
+        <Card className="p-8 text-center">
+          <SlidersHorizontal className="mx-auto size-6 text-active" />
+          <p className="mt-3 text-sm font-semibold">Sua tela inicial está vazia</p>
+          <p className="mt-1 text-sm text-muted-foreground">Escolha os blocos que deseja acompanhar nas preferências.</p>
+          <Button asChild variant="outline" className="mt-4">
+            <Link href="/app/configuracoes?tab=preferencias">Personalizar Dashboard</Link>
+          </Button>
         </Card>
-      </div>
+      ) : null}
     </div>
   );
 }

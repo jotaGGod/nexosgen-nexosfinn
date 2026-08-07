@@ -47,6 +47,13 @@
     --accent: 252 96% 67%;
     --accent-foreground: 0 0% 100%;
 
+    /*
+     * Seleção e navegação no tema claro. O limão da marca tem pouco contraste
+     * como texto sobre branco; o violeta mantém a identidade e passa AA.
+     */
+    --active: 252 72% 48%;
+    --active-foreground: 0 0% 100%;
+
     /* --- Semântica financeira --- */
     --positive: 158 64% 40%;
     --negative: 0 72% 51%;
@@ -79,14 +86,14 @@
     --chart-accent: hsl(252 96% 67%);
 
     /* --- Forma --- */
-    --radius-lg: 28px;
-    --radius-md: 20px;
-    --radius-sm: 12px;
+    --radius-lg: 32px;
+    --radius-md: 24px;
+    --radius-sm: 16px;
     --radius: var(--radius-md);
 
     /* --- Profundidade --- */
-    --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.1);
-    --shadow-glow: 0 0 40px rgb(198 255 61 / 0.15);
+    --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 18px 48px -24px rgb(15 23 42 / 0.16);
+    --shadow-glow: 0 0 48px rgb(198 255 61 / 0.18);
 
     /* --- Movimento --- */
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -97,14 +104,14 @@
 
     /* --- Superfícies (#050505 / #111113 / #1a1a1d) --- */
     --background: 0 0% 2%;
-    --card: 240 6% 7%;
+    --card: 240 6% 6.5%;
     --card-foreground: 240 11% 96%;
     --popover: 240 6% 7%;
     --popover-foreground: 240 11% 96%;
 
     /* --- Texto (#f5f5f7 e sua versão a 60%) --- */
     --foreground: 240 11% 96%;
-    --muted: 240 5% 11%;
+    --muted: 240 5% 12%;
     --muted-foreground: 240 6% 64%;
     --secondary: 240 5% 11%;
     --secondary-foreground: 240 11% 96%;
@@ -114,6 +121,8 @@
 
     --accent: 252 96% 67%;
     --accent-foreground: 0 0% 100%;
+    --active: 78 100% 62%;
+    --active-foreground: 240 10% 4%;
 
     /* #34D399 e #FF5C5C */
     --positive: 158 64% 52%;
@@ -139,7 +148,7 @@
     --chart-expense: hsl(0 100% 68%);
     --chart-accent: hsl(252 96% 67%);
 
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 18px 48px -24px rgb(0 0 0 / 0.8);
+    --shadow-card: 0 1px 0 rgb(255 255 255 / 0.025) inset, 0 22px 64px -32px rgb(0 0 0 / 0.92);
   }
 }
 
@@ -157,6 +166,7 @@
   body {
     min-height: 100dvh;
     font-feature-settings: "cv11", "ss01";
+    letter-spacing: -0.01em;
   }
 
   /* Todo número financeiro alinha na vertical entre linhas de uma lista. */
@@ -172,7 +182,19 @@
    * sombra discreta. É a única fonte de elevação da interface.
    */
   .surface {
-    @apply rounded-2xl border border-border bg-card;
+    @apply rounded-3xl border border-border/90 bg-card;
+    box-shadow: var(--shadow-card);
+  }
+
+  .ambient-grid {
+    background-image:
+      radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.045) 1px, transparent 0),
+      radial-gradient(circle at 82% 4%, hsl(var(--primary) / 0.08), transparent 32rem);
+    background-size: 40px 40px, auto;
+  }
+
+  .glass-panel {
+    @apply border border-border/80 bg-card/80 backdrop-blur-xl;
     box-shadow: var(--shadow-card);
   }
 

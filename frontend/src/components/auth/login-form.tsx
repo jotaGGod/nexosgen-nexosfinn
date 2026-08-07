@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,6 +18,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showResetLink, setShowResetLink] = useState(false);
 
   const {
     register,
@@ -29,6 +31,7 @@ export function LoginForm() {
 
   async function onSubmit(values: LoginValues) {
     setFormError(null);
+    setShowResetLink(false);
 
     let response: Response;
     try {
@@ -47,6 +50,7 @@ export function LoginForm() {
     if (!response.ok) {
       const body = (await response.json().catch(() => null)) as ApiErrorBody | null;
       setFormError(body?.error?.message ?? "Não foi possível entrar. Tente novamente.");
+      setShowResetLink(true);
       return;
     }
 
@@ -61,10 +65,19 @@ export function LoginForm() {
       {formError ? (
         <div
           role="alert"
-          className="rounded-xl border border-destructive/30 bg-red-50 px-4 py-3 text-sm text-destructive dark:bg-destructive/10"
+          className="rounded-2xl border border-destructive/30 bg-red-50 px-4 py-3 text-sm text-destructive dark:bg-destructive/10"
         >
           {formError}
         </div>
+      ) : null}
+
+      {showResetLink ? (
+        <p className="-mt-2 text-center text-sm text-muted-foreground">
+          Esqueceu a senha?{" "}
+          <Link href="/recuperar-senha" className="font-semibold text-primary hover:underline">
+            Redefinir senha
+          </Link>
+        </p>
       ) : null}
 
       <div className="space-y-2">
@@ -95,7 +108,7 @@ export function LoginForm() {
           <button
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-muted-foreground hover:bg-secondary"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl p-2 text-muted-foreground hover:bg-secondary"
             aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}

@@ -4,6 +4,7 @@ import { ArrowLeftRight, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { IconBadge } from "@/components/common/icon-badge";
+import { PeriodPicker, monthPeriod, type PeriodValue } from "@/components/common/period-picker";
 import { PageHeader } from "@/components/layout/page-header";
 import { TransactionFormDialog } from "@/components/transactions/transaction-form-dialog";
 import {
@@ -22,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
 import { runMutation, useCategories, useDeleteTransaction, useTransactions } from "@/hooks/use-nexosgen-nexosfinn";
-import { formatDate } from "@/lib/format";
+import { formatDate, todayISO } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Transaction } from "@/types/api";
 
@@ -34,6 +35,7 @@ export function TransactionsView() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState<string>(ALL);
   const [categoryId, setCategoryId] = useState<string>(ALL);
+  const [period, setPeriod] = useState<PeriodValue>(() => monthPeriod(todayISO()));
   const [page, setPage] = useState(1);
 
   const [formOpen, setFormOpen] = useState(false);
@@ -48,10 +50,12 @@ export function TransactionsView() {
       search: search.trim(),
       type: type === ALL ? undefined : type,
       category_id: categoryId === ALL ? undefined : [categoryId],
+      start_date: period.start,
+      end_date: period.end,
       page,
       page_size: PAGE_SIZE,
     }),
-    [search, type, categoryId, page],
+    [search, type, categoryId, period, page],
   );
 
   const { data, isPending, isError, refetch, isPlaceholderData } = useTransactions(params);
@@ -88,10 +92,16 @@ export function TransactionsView() {
         title="Transações"
         subtitle="Gerencie todas as suas transações"
         actions={
-          <Button variant="gradient" onClick={openCreate}>
-            <Plus />
-            Nova Transação
-          </Button>
+          <>
+            <PeriodPicker
+              value={period}
+              onChange={(nextPeriod) => updateFilter(() => setPeriod(nextPeriod))}
+            />
+            <Button variant="gradient" className="w-full sm:w-auto" onClick={openCreate}>
+              <Plus />
+              Nova Transação
+            </Button>
+          </>
         }
       />
 
@@ -109,9 +119,9 @@ export function TransactionsView() {
               {data.totals.expense.formatted}
             </p>
           </Card>
-          <Card className="border-primary/25 bg-primary/8 p-4">
-            <p className="text-xs font-medium text-primary">Total Líquido</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-primary">
+          <Card className="border-active/25 bg-active/5 p-4">
+            <p className="text-xs font-medium text-active">Total Líquido</p>
+            <p className="mt-1 text-xl font-semibold tabular-nums text-active">
               {data.totals.net.formatted}
             </p>
           </Card>

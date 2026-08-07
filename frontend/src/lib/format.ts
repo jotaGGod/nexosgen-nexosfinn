@@ -106,11 +106,14 @@ export function formatMonthLabel(isoDate: string): string {
 /** Rótulo curto de um intervalo: "01 – 31 Mai 2024". */
 export function formatPeriodLabel(start: string, end: string): string {
   const short = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-  const [, startMonth, startDay] = start.slice(0, 10).split("-");
+  const [startYear, startMonth, startDay] = start.slice(0, 10).split("-");
   const [endYear, endMonth, endDay] = end.slice(0, 10).split("-");
 
-  if (startMonth === endMonth) {
+  if (startYear === endYear && startMonth === endMonth) {
     return `${startDay} – ${endDay} ${short[Number(endMonth) - 1]} ${endYear}`;
+  }
+  if (startYear !== endYear) {
+    return `${startDay} ${short[Number(startMonth) - 1]} ${startYear} – ${endDay} ${short[Number(endMonth) - 1]} ${endYear}`;
   }
   return `${startDay} ${short[Number(startMonth) - 1]} – ${endDay} ${short[Number(endMonth) - 1]} ${endYear}`;
 }

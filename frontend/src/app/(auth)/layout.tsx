@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Logo } from "@/components/layout/logo";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
 
 const destaques = [
@@ -26,22 +27,27 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="flex min-h-dvh bg-background">
-      <aside className="relative hidden w-1/2 flex-col justify-between overflow-hidden border-r border-border p-12 lg:flex">
+    <div className="ambient-grid relative flex min-h-dvh overflow-hidden bg-background p-3 sm:p-5">
+      <div className="absolute right-5 top-5 z-30">
+        <ThemeToggle />
+      </div>
+
+      <aside className="glass-panel relative hidden w-[54%] flex-col justify-between overflow-hidden rounded-[32px] p-10 xl:p-14 lg:flex">
         {/* Halos de cor: o único uso de área ampla do accent em toda a interface. */}
         <div
-          className="pointer-events-none absolute -left-24 -top-24 size-[420px] rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute -left-24 -top-24 size-[520px] rounded-full bg-primary/[0.11] blur-3xl"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -bottom-32 -right-16 size-[380px] rounded-full bg-accent/10 blur-3xl"
+          className="pointer-events-none absolute -bottom-32 -right-16 size-[420px] rounded-full bg-accent/[0.07] blur-3xl"
           aria-hidden="true"
         />
 
         <Logo size="lg" />
 
-        <div className="relative">
-          <h2 className="max-w-md text-4xl font-semibold leading-tight tracking-tight text-foreground">
+        <div className="relative max-w-xl">
+          <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Inteligência financeira pessoal</span>
+          <h2 className="mt-6 max-w-lg text-4xl font-extrabold leading-[1.02] tracking-[-0.05em] text-foreground xl:text-5xl">
             Seu dinheiro,{" "}
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               sob controle
@@ -51,10 +57,10 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
             Acompanhe receitas e despesas, defina limites por categoria e veja suas metas saindo do papel.
           </p>
 
-          <ul className="mt-8 space-y-3 text-sm text-muted-foreground">
+          <ul className="mt-8 grid gap-3 text-sm text-muted-foreground xl:grid-cols-2">
             {destaques.map((item) => (
               <li key={item} className="flex items-center gap-3">
-                <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+                <span className="size-2 rounded-full bg-primary shadow-[0_0_9px_hsl(var(--primary)/0.7)]" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -66,12 +72,14 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
         </p>
       </aside>
 
-      <main className="safe-area-auth flex w-full flex-col justify-center lg:w-1/2">
-        <div className="mx-auto w-full max-w-sm">
-          <div className="mb-8 lg:hidden">
+      <main className="safe-area-auth relative flex w-full flex-col justify-center lg:w-[46%]">
+        <div className="mx-auto w-full max-w-md">
+          <div className="mb-6 lg:hidden">
             <Logo size="lg" />
           </div>
-          {children}
+          <div className="surface rounded-[32px] bg-card/80 p-6 backdrop-blur-xl sm:p-8 lg:p-10">
+            {children}
+          </div>
         </div>
       </main>
     </div>

@@ -39,7 +39,7 @@ export const metadata: Metadata = {
  */
 export default function LandingPage() {
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="min-h-dvh overflow-x-clip bg-background">
       <LandingHeader />
 
       <main>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
 import { DomGuard } from "@/components/common/dom-guard";
 import { ThemeProvider } from "@/components/common/theme-provider";
@@ -8,9 +8,9 @@ import { THEME_COLORS, THEME_STORAGE_KEY } from "@/lib/theme";
 
 import "./globals.css";
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="pt-BR"
       translate="no"
-      className={`dark notranslate ${inter.variable}`}
+      className={`dark notranslate ${jakarta.variable}`}
       suppressHydrationWarning
     >
       <head>

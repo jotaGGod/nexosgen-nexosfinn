@@ -128,7 +128,7 @@ function Insights({ insights }: { insights: Report["insights"] }) {
       {insights.best_day ? (
         <InsightCard
           icon={CalendarCheck}
-          tint="bg-primary/12 text-primary"
+          tint="bg-active/12 text-active"
           label="Melhor dia"
           title={formatDate(insights.best_day.date)}
           detail={`Saldo de ${insights.best_day.net.formatted}`}
@@ -153,7 +153,7 @@ export function ReportsView() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Relatórios"
+        title="Análises"
         subtitle="Análises detalhadas das suas finanças"
         actions={<PeriodPicker value={period} onChange={setPeriod} />}
       />

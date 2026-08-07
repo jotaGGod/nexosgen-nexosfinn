@@ -12,64 +12,46 @@ import { PhoneMockup } from "@/components/landing/phone-mockup";
  */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-28 sm:pt-32">
+    <section className="ambient-grid relative min-h-dvh overflow-hidden pb-20 pt-32 sm:pt-36 lg:flex lg:items-center lg:pb-10 lg:pt-24">
       <div
-        className="pointer-events-none absolute -top-40 left-1/2 size-[640px] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl"
+        className="pointer-events-none absolute -right-48 top-8 size-[720px] rounded-full bg-primary/[0.075] blur-3xl"
         aria-hidden="true"
       />
 
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 lg:grid-cols-2 lg:gap-8">
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
-            <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-5 lg:grid-cols-12 lg:gap-6">
+        <div className="lg:col-span-6 lg:-translate-y-40">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-2 text-xs font-medium text-muted-foreground backdrop-blur-xl">
+            <span className="size-2 rounded-full bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.75)]" aria-hidden="true" />
             Open Finance · seus bancos em um só lugar
           </span>
 
-          <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="mt-8 text-[2.65rem] font-extrabold leading-[0.98] tracking-[-0.055em] sm:text-6xl lg:text-7xl">
             Seu dinheiro
             <br />
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
               sob controle
             </span>
           </h1>
 
-          <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-7 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:text-xl">
             A NexosFinn organiza seus gastos sozinha, mostra para onde seu dinheiro vai e responde às suas
             perguntas sobre ele.
           </p>
 
-          <Link
-            href="/cadastro"
-            className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-glow transition-opacity hover:opacity-90"
-          >
-            Abrir minha conta
-            <ArrowUpRight className="size-4" />
-          </Link>
-
-          <p className="mt-3 text-xs text-muted-foreground">
-            Grátis para começar · sem cartão de crédito
-          </p>
+          <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <Link
+              href="/cadastro"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] sm:w-auto"
+            >
+              Abrir minha conta
+              <ArrowUpRight className="size-4" />
+            </Link>
+            <p className="text-xs text-muted-foreground">Grátis para começar · sem cartão de crédito</p>
+          </div>
         </div>
 
-        <div className="relative">
+        <div className="relative lg:col-span-6">
           <PhoneMockup />
-
-          {/* Cartões flutuantes: profundidade leve, só onde há espaço. */}
-          <div className="absolute -left-4 top-16 hidden w-40 rounded-2xl border border-border bg-card p-3 shadow-card lg:block">
-            <p className="text-[11px] text-muted-foreground">Economia do mês</p>
-            <p className="mt-1 text-lg font-semibold tabular-nums">R$ 1.240</p>
-            <p className="text-[11px] font-medium text-positive">↑ 18% vs mês anterior</p>
-          </div>
-
-          <div className="absolute -right-2 bottom-20 hidden w-44 rounded-2xl border border-border bg-card p-3 shadow-card lg:block">
-            <p className="text-[11px] text-muted-foreground">Meta: Viagem</p>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-[68%] rounded-full bg-primary" />
-            </div>
-            <p className="mt-1.5 text-[11px] tabular-nums text-muted-foreground">
-              R$ 6.800 de R$ 10.000
-            </p>
-          </div>
         </div>
       </div>
     </section>

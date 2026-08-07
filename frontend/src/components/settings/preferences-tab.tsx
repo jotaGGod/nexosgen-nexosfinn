@@ -1,9 +1,22 @@
 "use client";
 
-import { Check, Loader2, Moon, RotateCcw, Sun, TriangleAlert, type LucideIcon } from "lucide-react";
+import {
+  Check,
+  LayoutDashboard,
+  Loader2,
+  Moon,
+  RotateCcw,
+  Sun,
+  TriangleAlert,
+  type LucideIcon,
+} from "lucide-react";
 import { useState, type MouseEvent } from "react";
 
 import { useTheme } from "@/components/common/theme-provider";
+import {
+  type DashboardSection,
+  useDashboardPreferences,
+} from "@/components/dashboard/dashboard-preferences";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,9 +54,18 @@ const themeOptions = [
   icon: LucideIcon;
 }>;
 
+const dashboardOptions: Array<{ value: DashboardSection; label: string; description: string }> = [
+  { value: "summary", label: "Resumo financeiro", description: "Saldo, receitas, despesas e economia." },
+  { value: "cashflow", label: "Fluxo de caixa", description: "Evolução mensal de entradas e saídas." },
+  { value: "categories", label: "Gastos por categoria", description: "Distribuição das despesas do período." },
+  { value: "transactions", label: "Transações recentes", description: "Últimos lançamentos do período escolhido." },
+  { value: "goals", label: "Metas", description: "Progresso dos seus objetivos financeiros." },
+];
+
 /** Aba de preferências visuais salvas neste navegador. */
 export function PreferencesTab() {
   const { theme, setTheme } = useTheme();
+  const { preferences, setSectionVisible, resetPreferences } = useDashboardPreferences();
   const resetFinancialData = useResetFinancialData();
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
@@ -76,7 +98,7 @@ export function PreferencesTab() {
                     className={cn(
                       "relative flex cursor-pointer items-start gap-3 rounded-2xl border bg-background p-4 transition-colors hover:bg-secondary/60",
                       "has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background",
-                      selected && "border-primary bg-primary/5 ring-1 ring-primary/30",
+                      selected && "border-active bg-active/5 ring-1 ring-active/30",
                     )}
                   >
                     <input
@@ -91,7 +113,7 @@ export function PreferencesTab() {
                     <span
                       className={cn(
                         "flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-muted-foreground",
-                        selected && "bg-primary/15 text-primary",
+                        selected && "bg-active/15 text-active",
                       )}
                     >
                       <Icon className="size-[18px]" />
@@ -105,7 +127,7 @@ export function PreferencesTab() {
                     </span>
 
                     {selected ? (
-                      <span className="absolute right-4 top-4 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <span className="absolute right-4 top-4 flex size-5 items-center justify-center rounded-full bg-active text-active-foreground">
                         <Check className="size-3" />
                       </span>
                     ) : null}
@@ -118,6 +140,61 @@ export function PreferencesTab() {
           <p className="mt-4 text-xs text-muted-foreground">
             A preferência fica salva neste navegador e é aplicada também nas telas de entrada e cadastro.
           </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-start gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-active/10 text-active">
+              <LayoutDashboard className="size-[18px]" />
+            </span>
+            <div>
+              <CardTitle>Tela inicial</CardTitle>
+              <CardDescription className="mt-1">
+                Escolha os blocos exibidos no Dashboard em computador, tablet e celular.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <div className="divide-y divide-border/70 rounded-2xl border border-border/80">
+            {dashboardOptions.map((option) => {
+              const visible = preferences[option.value];
+              return (
+                <div key={option.value} className="flex items-center justify-between gap-4 px-4 py-3.5">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-foreground">{option.label}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{option.description}</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={visible}
+                    aria-label={`${visible ? "Ocultar" : "Exibir"} ${option.label}`}
+                    onClick={() => setSectionVisible(option.value, !visible)}
+                    className={cn(
+                      "relative h-7 w-12 shrink-0 rounded-full border outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                      visible ? "border-active bg-active" : "border-border bg-secondary",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "absolute left-0 top-1 size-[18px] rounded-full bg-white shadow-sm transition-transform",
+                        visible ? "translate-x-[25px]" : "translate-x-1",
+                      )}
+                    />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <Button type="button" variant="ghost" size="sm" className="mt-3" onClick={resetPreferences}>
+            <RotateCcw />
+            Restaurar blocos padrão
+          </Button>
         </CardContent>
       </Card>
 

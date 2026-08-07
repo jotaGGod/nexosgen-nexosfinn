@@ -32,14 +32,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-dvh bg-background lg:flex">
+    <div className="ambient-grid relative min-h-dvh overflow-x-clip bg-background lg:flex lg:p-3">
+      <div className="pointer-events-none fixed inset-x-0 top-0 h-64 bg-gradient-to-b from-primary/[0.035] to-transparent" />
       <Sidebar />
 
       {/* min-w-0 para que uma tabela larga role dentro da área, e não empurre a lateral. */}
-      <div className="min-w-0 flex-1">
-        <div className="safe-area-page pb-nav mx-auto w-full max-w-md lg:max-w-7xl lg:pb-12">
+      <div className="relative min-w-0 flex-1">
+        <div className="safe-area-page pb-nav relative mx-auto w-full max-w-md md:max-w-3xl lg:max-w-7xl lg:px-8 lg:pb-12">
           <AppHeader />
-          <main className="mt-5 lg:mt-8">{children}</main>
+          <main className="mt-4 lg:mt-0">{children}</main>
         </div>
       </div>
 

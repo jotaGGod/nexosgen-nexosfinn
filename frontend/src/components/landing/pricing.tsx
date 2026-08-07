@@ -84,36 +84,26 @@ export function Pricing() {
         </p>
       </div>
 
-      <div className="mt-8 flex items-center justify-center gap-3">
-        <span className={cn("text-sm", anual ? "text-muted-foreground" : "font-medium text-foreground")}>
-          Mensal
-        </span>
-
-        <button
-          type="button"
-          role="switch"
-          aria-checked={anual}
-          aria-label="Alternar entre cobrança mensal e anual"
-          onClick={() => setAnual((valor) => !valor)}
-          className={cn(
-            "relative h-7 w-12 rounded-full border border-border transition-colors",
-            anual ? "bg-primary" : "bg-muted",
-          )}
-        >
-          <span
-            className={cn(
-              "absolute top-1/2 size-5 -translate-y-1/2 rounded-full bg-background transition-transform duration-200 ease-out-expo",
-              anual ? "translate-x-[24px]" : "translate-x-[3px]",
-            )}
-          />
-        </button>
-
-        <span className={cn("text-sm", anual ? "font-medium text-foreground" : "text-muted-foreground")}>
-          Anual
-        </span>
-        <span className="rounded-2xl bg-primary/12 px-2.5 py-1 text-xs font-medium text-primary">
-          -20%
-        </span>
+      <div className="mt-8 flex flex-col items-center gap-3">
+        <div className="inline-flex rounded-full border border-border bg-muted/70 p-1.5" role="group" aria-label="Período de cobrança">
+          <button
+            type="button"
+            aria-pressed={!anual}
+            onClick={() => setAnual(false)}
+            className={cn("min-w-28 rounded-full px-6 py-3 text-sm font-bold transition-all", !anual ? "bg-primary text-primary-foreground shadow-glow" : "text-muted-foreground hover:text-foreground")}
+          >
+            Mensal
+          </button>
+          <button
+            type="button"
+            aria-pressed={anual}
+            onClick={() => setAnual(true)}
+            className={cn("min-w-28 rounded-full px-6 py-3 text-sm font-bold transition-all", anual ? "bg-primary text-primary-foreground shadow-glow" : "text-muted-foreground hover:text-foreground")}
+          >
+            Anual
+          </button>
+        </div>
+        <span className="rounded-full bg-primary/12 px-3 py-1 text-xs font-bold text-primary">Economize 20% no anual</span>
       </div>
 
       <div className="mt-12 grid items-start gap-4 lg:grid-cols-3">
@@ -137,14 +127,14 @@ export function Pricing() {
 
             <p className="mt-5 flex items-baseline gap-1">
               <span className="text-3xl font-semibold tabular-nums tracking-tight">
-                {formatarPreco(anual ? plano.anual : plano.mensal)}
+                {formatarPreco(anual && plano.mensal > 0 ? plano.anual * 12 : plano.mensal)}
               </span>
               {plano.mensal > 0 ? (
-                <span className="text-sm text-muted-foreground">/mês</span>
+                <span className="text-sm text-muted-foreground">/{anual ? "ano" : "mês"}</span>
               ) : null}
             </p>
             <p className="mt-1 h-4 text-xs text-muted-foreground">
-              {anual && plano.mensal > 0 ? "cobrado anualmente" : ""}
+              {anual && plano.mensal > 0 ? `equivale a ${formatarPreco(plano.anual)}/mês` : ""}
             </p>
 
             <ul className="mt-6 flex-1 space-y-3">

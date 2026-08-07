@@ -26,6 +26,7 @@ Thumbs.db
 *.log
 npm-debug.log*
 .claude/
+.superdesign/tmp/
 
 # Artefatos de build
 *.tsbuildinfo

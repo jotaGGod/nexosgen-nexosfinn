@@ -8,9 +8,10 @@ export const metadata: Metadata = { title: "Entrar" };
 
 export default function LoginPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-7">
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Bem-vindo de volta</h1>
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">Acesse sua central</p>
+        <h1 className="text-3xl font-extrabold tracking-[-0.04em]">Bem-vindo de volta</h1>
         <p className="text-sm text-muted-foreground">Entre para continuar acompanhando suas finanças.</p>
       </div>
 

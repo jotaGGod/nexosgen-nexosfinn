@@ -26,8 +26,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      // A aba ativa é marcada por uma linha inferior violeta, como na referência.
-      "-mb-px whitespace-nowrap border-b-2 border-transparent px-1 pb-3 pt-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none data-[state=active]:border-primary data-[state=active]:text-primary",
+      "-mb-px whitespace-nowrap border-b-2 border-transparent px-1 pb-3 pt-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none data-[state=active]:border-active data-[state=active]:text-active",
       className,
     )}
     {...props}

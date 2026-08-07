@@ -28,10 +28,10 @@ function ItemDaLista({ item, ativo }: { item: NavItem; ativo: boolean }) {
       prefetch={false}
       aria-current={ativo ? "page" : undefined}
       className={cn(
-        "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+        "flex min-h-11 items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200",
         ativo
-          ? "bg-primary/10 text-primary"
-          : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+          ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.12)]"
+          : "text-muted-foreground hover:translate-x-0.5 hover:bg-secondary/80 hover:text-foreground",
       )}
     >
       <Icon className="size-[18px] shrink-0" />
@@ -57,17 +57,18 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-border bg-card/40 px-4 py-6 lg:flex">
-      <Link href="/app/dashboard" prefetch={false} aria-label="Ir para o início" className="px-3">
-        <Logo />
+    <aside className="glass-panel sticky top-3 hidden h-[calc(100dvh-1.5rem)] w-64 shrink-0 flex-col rounded-[28px] px-4 py-5 lg:flex">
+      <Link href="/app/dashboard" prefetch={false} aria-label="Ir para o início" className="flex items-center justify-between px-3 py-1">
+        <Logo size="lg" />
+        <span className="size-2 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.8)]" aria-label="Sistema online" />
       </Link>
 
-      <nav className="mt-8 flex flex-1 flex-col gap-1" aria-label="Navegação principal">
+      <nav className="mt-7 flex flex-1 flex-col gap-1" aria-label="Navegação principal">
         {primaryNavItems.map((item) => (
           <ItemDaLista key={item.href} item={item} ativo={pathname.startsWith(item.href)} />
         ))}
 
-        <span className="mt-6 px-3 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <span className="mt-6 px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground/70">
           Gerenciar
         </span>
 
@@ -80,7 +81,7 @@ export function Sidebar() {
         type="button"
         onClick={sair}
         disabled={saindo}
-        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
+        className="flex min-h-11 items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
       >
         <LogOut className="size-[18px] shrink-0" />
         {saindo ? "Saindo..." : "Sair da conta"}

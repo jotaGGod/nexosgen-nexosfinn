@@ -17,7 +17,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between gap-2 rounded-xl border border-input bg-card px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 dark:focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate",
+      "flex h-11 w-full items-center justify-between gap-2 rounded-2xl border border-input bg-card/80 px-4 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 dark:focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate",
       "aria-[invalid=true]:border-destructive",
       className,
     )}
@@ -40,7 +40,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "relative z-50 max-h-72 min-w-[8rem] overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg",
+        "relative z-50 max-h-72 min-w-[8rem] overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lg",
         // Sem animação de saída, pelo mesmo motivo do diálogo.
         "data-[state=open]:animate-in data-[state=open]:fade-in-0",
         position === "popper" && "w-full min-w-[var(--radix-select-trigger-width)] translate-y-1",
@@ -69,7 +69,7 @@ const SelectItem = React.forwardRef<
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     <span className="absolute right-2 flex size-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="size-4 text-primary" />
+        <Check className="size-4 text-active" />
       </SelectPrimitive.ItemIndicator>
     </span>
   </SelectPrimitive.Item>

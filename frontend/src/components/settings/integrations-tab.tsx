@@ -152,7 +152,7 @@ export function IntegrationsTab() {
                       "flex size-10 shrink-0 items-center justify-center rounded-xl",
                       revoked
                         ? "bg-secondary text-muted-foreground"
-                        : "bg-primary/12 text-primary",
+                        : "bg-active/12 text-active",
                     )}
                   >
                     <KeyRound className="size-[18px]" />
@@ -227,15 +227,15 @@ export function IntegrationsTab() {
               /api/v1/external/transactions/{"{id}"}
             </li>
             <li>
-              <span className="text-primary">GET</span>{" "}
+              <span className="text-active">GET</span>{" "}
               /api/v1/external/transactions
             </li>
             <li>
-              <span className="text-primary">GET</span>{" "}
+              <span className="text-active">GET</span>{" "}
               /api/v1/external/balance
             </li>
             <li>
-              <span className="text-primary">GET</span>{" "}
+              <span className="text-active">GET</span>{" "}
               /api/v1/external/categories
             </li>
           </ul>
@@ -277,7 +277,7 @@ export function IntegrationsTab() {
                       type="checkbox"
                       checked={scopes.includes(option.value)}
                       onChange={() => toggleScope(option.value)}
-                      className="mt-0.5 size-4 accent-[hsl(var(--primary))]"
+                      className="mt-0.5 size-4 accent-[hsl(var(--active))]"
                     />
                     <span className="min-w-0">
                       <span className="block text-sm font-medium">{option.label}</span>

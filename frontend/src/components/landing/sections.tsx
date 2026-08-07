@@ -14,6 +14,7 @@ import Link from "next/link";
 
 import { DemoAssistente, DemoCategorizacao, DemoMetas } from "@/components/landing/demos";
 import { Reveal } from "@/components/landing/reveal";
+import { cn } from "@/lib/utils";
 
 /** Título padrão de seção, para não repetir a mesma escala em cada bloco. */
 function TituloSecao({ sobretitulo, titulo, texto }: { sobretitulo: string; titulo: string; texto?: string }) {
@@ -36,12 +37,12 @@ export function StatsBar() {
   ];
 
   return (
-    <section className="mx-auto mt-24 w-full max-w-6xl px-5">
-      <Reveal className="surface grid grid-cols-2 gap-px overflow-hidden bg-border lg:grid-cols-4">
+    <section className="mx-auto mt-20 w-full max-w-7xl px-5">
+      <Reveal className="surface grid grid-cols-2 overflow-hidden bg-card/70 backdrop-blur-xl lg:grid-cols-4">
         {itens.map((item) => (
-          <div key={item.rotulo} className="bg-card px-5 py-6 text-center">
-            <p className="text-lg font-semibold tracking-tight">{item.valor}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{item.rotulo}</p>
+          <div key={item.rotulo} className="border-b border-r border-border/60 px-5 py-7 text-center last:border-r-0 lg:border-b-0">
+            <p className="text-xl font-extrabold tracking-[-0.04em] sm:text-2xl">{item.valor}</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{item.rotulo}</p>
           </div>
         ))}
       </Reveal>
@@ -75,23 +76,32 @@ export function FeaturesGrid() {
   ];
 
   return (
-    <section id="recursos" className="mx-auto mt-32 w-full max-w-6xl scroll-mt-24 px-5">
+    <section id="recursos" className="mx-auto mt-32 w-full max-w-7xl scroll-mt-24 px-5">
       <TituloSecao
         sobretitulo="Recursos"
         titulo="O trabalho chato fica com a gente"
         texto="Planilha exige disciplina. A NexosFinn exige que você abra o aplicativo."
       />
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 grid gap-4 md:grid-cols-12">
         {recursos.map((recurso, indice) => {
           const Icone = recurso.icone;
           return (
-            <Reveal key={recurso.titulo} delay={indice * 70} className="surface p-6">
-              <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/12 text-primary">
+            <Reveal
+              key={recurso.titulo}
+              delay={indice * 70}
+              className={cn(
+                "surface flex min-h-56 flex-col justify-between p-7 transition-transform hover:-translate-y-0.5",
+                indice === 0 || indice === 3 ? "md:col-span-7" : "md:col-span-5",
+              )}
+            >
+              <span className="flex size-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
                 <Icone className="size-5" />
               </span>
-              <h3 className="mt-4 font-semibold tracking-tight">{recurso.titulo}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{recurso.texto}</p>
+              <div>
+                <h3 className="mt-8 text-lg font-bold tracking-tight">{recurso.titulo}</h3>
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">{recurso.texto}</p>
+              </div>
             </Reveal>
           );
         })}

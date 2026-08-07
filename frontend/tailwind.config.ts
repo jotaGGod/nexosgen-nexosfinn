@@ -43,6 +43,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--accent) / <alpha-value>)",
           foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
         },
+        active: {
+          DEFAULT: "hsl(var(--active) / <alpha-value>)",
+          foreground: "hsl(var(--active-foreground) / <alpha-value>)",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
@@ -81,7 +85,7 @@ const config: Config = {
         glow: "var(--shadow-glow)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
       },
       transitionTimingFunction: {
         "out-expo": "var(--ease-out-expo)",
