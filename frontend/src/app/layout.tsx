@@ -15,7 +15,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexosgen-nexosfinn.vercel.app"),
+  metadataBase: new URL("https://nexosfinn.vercel.app"),
   title: {
     default: "NexosFinn — Suas finanças sob controle",
     template: "%s · NexosFinn",
