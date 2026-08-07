@@ -14,7 +14,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
 )
 
 // Codigos de erro do PostgreSQL que o dominio sabe interpretar.

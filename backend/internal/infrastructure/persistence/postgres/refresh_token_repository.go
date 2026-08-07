@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	"github.com/jacks/finapp/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
 )
 
 const refreshTokenNotFoundCode = "refresh_token_not_found"

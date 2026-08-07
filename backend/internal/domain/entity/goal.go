@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 // Goal e um objetivo financeiro do usuario, como uma viagem ou uma reserva

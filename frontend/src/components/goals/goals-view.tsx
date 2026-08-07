@@ -33,7 +33,7 @@ import { FieldError, Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useContributeGoal, useDeleteGoal, useGoals, useSaveGoal } from "@/hooks/use-finapp";
+import { runMutation, useContributeGoal, useDeleteGoal, useGoals, useSaveGoal } from "@/hooks/use-nexosgen-financehub";
 import { formatDate, formatPercentage } from "@/lib/format";
 import { resolveIcon } from "@/lib/icons";
 import { goalSchema, type GoalValues } from "@/schemas/transaction";
@@ -155,7 +155,7 @@ export function GoalsView() {
           <EmptyState
             icon={Target}
             title="Nenhuma meta neste filtro"
-            description="Defina um objetivo com valor e prazo — a Vanta calcula quanto guardar por mês."
+            description="Defina um objetivo com valor e prazo — a nexosgen-financehub calcula quanto guardar por mês."
             action={
               <Button
                 variant="gradient"

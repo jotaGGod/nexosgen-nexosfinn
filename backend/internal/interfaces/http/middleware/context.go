@@ -6,15 +6,15 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 type contextKey string
 
 const (
-	userIDKey    contextKey = "finapp.user_id"
-	scopesKey    contextKey = "finapp.scopes"
-	requestIDKey contextKey = "finapp.request_id"
+	userIDKey    contextKey = "nexosgen-financehub.user_id"
+	scopesKey    contextKey = "nexosgen-financehub.scopes"
+	requestIDKey contextKey = "nexosgen-financehub.request_id"
 )
 
 // WithUserID anexa o usuario autenticado ao contexto.

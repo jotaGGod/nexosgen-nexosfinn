@@ -4,8 +4,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 // GoalProgress e a leitura calculada de uma meta, exibida na barra de

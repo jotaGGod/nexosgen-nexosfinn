@@ -1,19 +1,20 @@
-name: finapp
+name: nexosgen-financehub
 
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: finapp-postgres
+    container_name: nexosgen-financehub-postgres
     environment:
-      POSTGRES_USER: finapp
-      POSTGRES_PASSWORD: finapp
-      POSTGRES_DB: finapp
+      POSTGRES_USER: nexosgen_financehub
+      POSTGRES_PASSWORD: nexosgen_financehub
+      POSTGRES_DB: nexosgen_financehub
     ports:
-      - "5432:5432"
+      # Portas configuráveis para não colidir com outros projetos Docker no host.
+      - "${NEXOSGEN_FINANCEHUB_POSTGRES_PORT:-55432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U finapp -d finapp"]
+      test: ["CMD-SHELL", "pg_isready -U nexosgen_financehub -d nexosgen_financehub"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -23,7 +24,7 @@ services:
   # termina com sucesso, garantindo que o schema existe antes da primeira query.
   migrate:
     image: migrate/migrate:v4.17.1
-    container_name: finapp-migrate
+    container_name: nexosgen-financehub-migrate
     depends_on:
       postgres:
         condition: service_healthy
@@ -31,13 +32,13 @@ services:
       - ./backend/migrations:/migrations:ro
     command:
       - "-path=/migrations"
-      - "-database=postgres://finapp:finapp@postgres:5432/finapp?sslmode=disable"
+      - "-database=postgres://nexosgen_financehub:nexosgen_financehub@postgres:5432/nexosgen_financehub?sslmode=disable"
       - "up"
 
   backend:
     build:
       context: ./backend
-    container_name: finapp-backend
+    container_name: nexosgen-financehub-backend
     depends_on:
       postgres:
         condition: service_healthy
@@ -46,16 +47,16 @@ services:
     environment:
       APP_ENV: development
       HTTP_PORT: "8080"
-      DATABASE_URL: postgres://finapp:finapp@postgres:5432/finapp?sslmode=disable
+      DATABASE_URL: postgres://nexosgen_financehub:nexosgen_financehub@postgres:5432/nexosgen_financehub?sslmode=disable
       JWT_SECRET: desenvolvimento-local-segredo-de-48-bytes-para-hs256
       ACCESS_TOKEN_TTL: 15m
       REFRESH_TOKEN_TTL: 168h
       CORS_ALLOWED_ORIGINS: http://localhost:3000
       LOG_LEVEL: info
-      API_KEY_PREFIX: fin_live
+      API_KEY_PREFIX: nfh_live
       OPENAPI_PATH: /app/docs/openapi.yaml
     ports:
-      - "8080:8080"
+      - "${NEXOSGEN_FINANCEHUB_API_PORT:-18082}:8080"
     restart: unless-stopped
 
   frontend:
@@ -65,7 +66,7 @@ services:
         # A URL usada pelo navegador do usuario; o proxy do Next fala com o
         # backend pela rede interna do Compose.
         NEXT_PUBLIC_APP_URL: http://localhost:3000
-    container_name: finapp-frontend
+    container_name: nexosgen-financehub-frontend
     depends_on:
       backend:
         condition: service_healthy
@@ -79,3 +80,4 @@ services:
 
 volumes:
   postgres-data:
+    name: nexosgen-financehub-postgres-data

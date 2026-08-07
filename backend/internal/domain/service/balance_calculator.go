@@ -6,8 +6,8 @@
 package service
 
 import (
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 // TotalBalance devolve o saldo consolidado do usuario: a soma dos saldos

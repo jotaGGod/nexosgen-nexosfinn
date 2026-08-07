@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/application/usecase/workspace"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/workspace"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

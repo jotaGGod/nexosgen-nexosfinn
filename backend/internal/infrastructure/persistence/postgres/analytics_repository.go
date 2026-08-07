@@ -6,10 +6,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	"github.com/jacks/finapp/backend/internal/domain/repository"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 const analyticsErrCode = "analytics_failed"

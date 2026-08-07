@@ -3,7 +3,7 @@ package valueobject
 import (
 	"time"
 
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
 )
 
 // Period e um intervalo fechado de datas [Start, End].

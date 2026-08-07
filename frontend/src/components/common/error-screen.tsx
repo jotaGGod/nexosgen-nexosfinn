@@ -30,7 +30,7 @@ function isStaleBundleError(error: Error): boolean {
   );
 }
 
-const RELOAD_FLAG = "finapp:recarregado-por-versao-antiga";
+const RELOAD_FLAG = "nexosgen-financehub:recarregado-por-versao-antiga";
 
 interface ErrorScreenProps {
   error: Error & { digest?: string };
@@ -43,7 +43,7 @@ export function ErrorScreen({ error, reset }: ErrorScreenProps) {
   useEffect(() => {
     // Loga sempre: em produção o console do navegador é a única pista que
     // sobra para o usuário reportar o problema.
-    console.error("[Vanta] falha na interface:", error);
+    console.error("[nexosgen-financehub] falha na interface:", error);
 
     if (!isStaleBundleError(error)) return;
 

@@ -29,12 +29,12 @@
 
 declare global {
   interface Window {
-    __finappDomGuard?: boolean;
+    __nexosgenFinancehubDomGuard?: boolean;
   }
 }
 
-if (typeof window !== "undefined" && !window.__finappDomGuard) {
-  window.__finappDomGuard = true;
+if (typeof window !== "undefined" && !window.__nexosgenFinancehubDomGuard) {
+  window.__nexosgenFinancehubDomGuard = true;
 
   const originalRemoveChild = Node.prototype.removeChild;
   Node.prototype.removeChild = function removeChildSafely<T extends Node>(this: Node, child: T): T {

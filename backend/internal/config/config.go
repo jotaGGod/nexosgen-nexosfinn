@@ -52,7 +52,7 @@ func Load() (*Config, error) {
 		RefreshTokenTTL: getDuration("REFRESH_TOKEN_TTL", 7*24*time.Hour),
 		CORSOrigins:     getList("CORS_ALLOWED_ORIGINS", []string{"http://localhost:3000"}),
 		LogLevel:        getEnv("LOG_LEVEL", "info"),
-		APIKeyPrefix:    getEnv("API_KEY_PREFIX", "fin_live"),
+		APIKeyPrefix:    getEnv("API_KEY_PREFIX", "nfh_live"),
 	}
 
 	if err := cfg.validate(); err != nil {

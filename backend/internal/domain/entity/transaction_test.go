@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

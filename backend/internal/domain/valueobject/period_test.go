@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

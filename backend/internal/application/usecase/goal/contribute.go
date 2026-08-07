@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	"github.com/jacks/finapp/backend/internal/domain/repository"
-	"github.com/jacks/finapp/backend/internal/domain/service"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 // ContributeUseCase registra um aporte em uma meta.

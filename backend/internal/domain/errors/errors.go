@@ -1,4 +1,4 @@
-// Package errors define os erros de dominio do FinApp.
+// Package errors define os erros de dominio do nexosgen-financehub.
 //
 // A camada de dominio nao conhece HTTP: ela classifica a falha por Kind e a
 // camada interfaces/presenter traduz esse Kind para o status code adequado.

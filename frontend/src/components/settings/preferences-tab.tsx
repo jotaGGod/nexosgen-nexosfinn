@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { runMutation, useResetFinancialData } from "@/hooks/use-finapp";
+import { runMutation, useResetFinancialData } from "@/hooks/use-nexosgen-financehub";
 import type { Theme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
@@ -59,7 +59,7 @@ export function PreferencesTab() {
       <Card>
         <CardHeader>
           <CardTitle>Aparência</CardTitle>
-          <CardDescription>Escolha como a Vanta deve aparecer para você.</CardDescription>
+          <CardDescription>Escolha como a nexosgen-financehub deve aparecer para você.</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -129,7 +129,7 @@ export function PreferencesTab() {
             </span>
             <div className="space-y-1">
               <CardTitle>Começar do zero</CardTitle>
-              <CardDescription>Apague os dados financeiros e volte ao estado inicial da Vanta.</CardDescription>
+              <CardDescription>Apague os dados financeiros e volte ao estado inicial da nexosgen-financehub.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -160,7 +160,7 @@ export function PreferencesTab() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Apagar todos os dados financeiros?</AlertDialogTitle>
                 <AlertDialogDescription className="leading-relaxed">
-                  Esta ação não pode ser desfeita. A Vanta apagará seus lançamentos, contas, categorias, metas e
+                  Esta ação não pode ser desfeita. A nexosgen-financehub apagará seus lançamentos, contas, categorias, metas e
                   orçamentos, e recriará apenas a conta e as categorias padrão.
                 </AlertDialogDescription>
               </AlertDialogHeader>

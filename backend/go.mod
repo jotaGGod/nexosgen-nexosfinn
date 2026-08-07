@@ -1,4 +1,4 @@
-module github.com/jacks/finapp/backend
+module github.com/jotaGGod/nexosgen-financehub/backend
 
 go 1.25.0
 

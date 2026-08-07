@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/application/usecase/apikey"
-	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/apikey"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
 )
 
 // APIKeyHandler expoe a aba Configuracoes > Integracoes.

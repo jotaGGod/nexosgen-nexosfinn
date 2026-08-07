@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Tema Vanta.
+ * Tema nexosgen-financehub.
  *
  * Este arquivo apenas expõe, como utilitários, as variáveis definidas em
  * globals.css. Cor, raio e sombra novos entram lá — nunca hardcoded em

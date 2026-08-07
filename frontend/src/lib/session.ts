@@ -9,8 +9,8 @@ import type { AuthResponse } from "@/types/api";
  * refresh token. As chamadas do cliente passam pelo proxy em /api/proxy, que
  * anexa o token no servidor.
  */
-export const ACCESS_TOKEN_COOKIE = "finapp_access";
-export const REFRESH_TOKEN_COOKIE = "finapp_refresh";
+export const ACCESS_TOKEN_COOKIE = "nexosgen-financehub_access";
+export const REFRESH_TOKEN_COOKIE = "nexosgen-financehub_refresh";
 
 const isProduction = process.env.NODE_ENV === "production";
 

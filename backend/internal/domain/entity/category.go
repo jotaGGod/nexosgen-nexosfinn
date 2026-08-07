@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 // Category classifica transacoes e e a unidade de agrupamento dos relatorios,

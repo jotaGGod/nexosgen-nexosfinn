@@ -19,11 +19,11 @@ type Generator struct {
 	prefix string
 }
 
-// NewGenerator cria o gerador com o prefixo do ambiente (ex.: "fin_live").
+// NewGenerator cria o gerador com o prefixo do ambiente (ex.: "nfh_live").
 func NewGenerator(prefix string) *Generator {
 	prefix = strings.TrimSpace(prefix)
 	if prefix == "" {
-		prefix = "fin_live"
+		prefix = "nfh_live"
 	}
 	return &Generator{prefix: prefix}
 }

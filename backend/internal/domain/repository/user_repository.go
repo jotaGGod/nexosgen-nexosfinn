@@ -9,8 +9,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
 // UserRepository persiste titulares de conta.

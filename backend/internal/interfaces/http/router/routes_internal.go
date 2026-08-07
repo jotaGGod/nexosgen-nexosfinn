@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jacks/finapp/backend/internal/interfaces/http/middleware"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/middleware"
 )
 
 // mountInternalRoutes registra a API consumida pela interface web.
@@ -103,7 +103,7 @@ const swaggerPage = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>FinApp API</title>
+  <title>nexosgen-financehub API</title>
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
 </head>
 <body>

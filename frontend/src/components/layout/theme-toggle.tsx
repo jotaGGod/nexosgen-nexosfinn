@@ -5,7 +5,7 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/components/common/theme-provider";
 
 /**
- * Alterna entre o tema escuro (identidade primária da Vanta) e o claro.
+ * Alterna entre o tema escuro (identidade primária da nexosgen-financehub) e o claro.
  *
  * Fica no cabeçalho porque, sem barra lateral, é onde sobra espaço para
  * controles globais.

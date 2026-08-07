@@ -4,10 +4,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/application/usecase/auth"
-	"github.com/jacks/finapp/backend/internal/application/usecase/workspace"
-	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/auth"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/workspace"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
 )
 
 // AuthHandler expoe os endpoints de identidade.

@@ -25,7 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChartSkeleton, EmptyState, ErrorState } from "@/components/ui/states";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useReport } from "@/hooks/use-finapp";
+import { useReport } from "@/hooks/use-nexosgen-financehub";
 import { formatCompactCurrency, formatCurrency, formatDate, formatPercentage, todayISO } from "@/lib/format";
 import type { Report } from "@/types/api";
 

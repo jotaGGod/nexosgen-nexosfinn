@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
 )
 
 // defaultCashflowMonths e a janela padrao do grafico de linha.

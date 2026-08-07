@@ -22,7 +22,7 @@ import { FieldError, Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useBudgets, useCategories, useDeleteBudget, useUpsertBudget } from "@/hooks/use-finapp";
+import { runMutation, useBudgets, useCategories, useDeleteBudget, useUpsertBudget } from "@/hooks/use-nexosgen-financehub";
 import { formatMonthLabel, formatPercentage, startOfMonth, todayISO } from "@/lib/format";
 import { budgetSchema, type BudgetValues } from "@/schemas/transaction";
 import type { BudgetStatus } from "@/types/api";

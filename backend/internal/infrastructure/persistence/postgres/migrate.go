@@ -14,7 +14,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jacks/finapp/backend/migrations"
+	"github.com/jotaGGod/nexosgen-financehub/backend/migrations"
 )
 
 // migrationDriver e o nome sob o qual o driver do pgx v5 se registra no

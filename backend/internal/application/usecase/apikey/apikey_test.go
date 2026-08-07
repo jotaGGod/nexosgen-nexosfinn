@@ -7,11 +7,11 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/application/fakes"
-	"github.com/jacks/finapp/backend/internal/application/usecase/apikey"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/fakes"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/apikey"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -101,7 +101,7 @@ func TestAuthenticateRejeitaChaveInvalidaOuRevogada(t *testing.T) {
 	created, err := f.create.Execute(ctx, f.userID, dto.CreateAPIKeyInput{Name: "n8n"})
 	require.NoError(t, err)
 
-	_, err = f.authenticate.Execute(ctx, "fin_live_inexistente")
+	_, err = f.authenticate.Execute(ctx, "nfh_live_inexistente")
 	require.Error(t, err)
 	assert.Equal(t, domainerr.KindUnauthorized, domainerr.KindOf(err))
 

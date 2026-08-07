@@ -1,4 +1,4 @@
-# FinApp
+# nexosgen-financehub
 
 Gerenciador financeiro pessoal full stack: **Go 1.26 + PostgreSQL** no backend, **Next.js 15 + TypeScript** no frontend, tudo em containers.
 
@@ -30,8 +30,8 @@ Login → Dashboard → Transações → Metas → Orçamentos → Relatórios �
 Pré-requisitos: **Docker** e **Docker Compose**.
 
 ```bash
-git clone <este-repositorio> gerenciador-financeiro
-cd gerenciador-financeiro
+git clone git@github.com:jotaGGod/nexosgen-financehub.git
+cd nexosgen-financehub
 
 make up          # sobe Postgres, aplica migrations, sobe backend e frontend
 make seed        # popula um usuário de demonstração com 5 meses de histórico
@@ -40,10 +40,10 @@ make seed        # popula um usuário de demonstração com 5 meses de históric
 | Serviço | URL |
 |---|---|
 | Aplicação web | http://localhost:3000 |
-| API | http://localhost:8080 |
-| Documentação da API (Swagger UI) | http://localhost:8080/docs |
-| Especificação OpenAPI | http://localhost:8080/docs/openapi.yaml |
-| PostgreSQL | `localhost:5432` (`finapp` / `finapp`) |
+| API | http://localhost:18082 |
+| Documentação da API (Swagger UI) | http://localhost:18082/docs |
+| Especificação OpenAPI | http://localhost:18082/docs/openapi.yaml |
+| PostgreSQL | `localhost:55432` (`nexosgen_financehub` / `nexosgen_financehub`) |
 
 **Credenciais de demonstração** (criadas pelo `make seed`):
 
@@ -70,7 +70,7 @@ go run ./cmd/api
 # Frontend (em outro terminal)
 cd frontend
 npm install
-API_BASE_URL=http://localhost:8080 npm run dev
+API_BASE_URL=http://localhost:18082 npm run dev
 ```
 
 ---
@@ -157,7 +157,7 @@ frontend/
 │   │       ├── auth/{login,register,logout}/   # cria/limpa cookies httpOnly
 │   │       └── proxy/[...path]/                # encaminha à API com o token
 │   ├── components/{ui,layout,common,dashboard,transactions,...}/
-│   ├── hooks/use-finapp.ts          # queries e mutations (TanStack Query)
+│   ├── hooks/use-nexosgen-financehub.ts          # queries e mutations (TanStack Query)
 │   ├── lib/                         # api-client, session, format, icons
 │   ├── schemas/                     # validação Zod dos formulários
 │   ├── store/                       # Zustand (usuário, UI)
@@ -300,14 +300,14 @@ O `formatted` existe para que uma resposta possa ser enviada direto em uma mensa
 3. Dê um nome (ex.: `Assistente WhatsApp (n8n)`) e marque **apenas os escopos necessários**.
 4. **Copie a chave na hora.** Ela aparece uma única vez.
 
-O que fica gravado no banco é o **hash SHA-256** do segredo mais um prefixo legível (`fin_live_9Xk2mQ7p...`) para identificação na listagem. Nem a interface nem o backend conseguem recuperar a chave depois — perdida, a saída é revogar e gerar outra.
+O que fica gravado no banco é o **hash SHA-256** do segredo mais um prefixo legível (`nfh_live_9Xk2mQ7p...`) para identificação na listagem. Nem a interface nem o backend conseguem recuperar a chave depois — perdida, a saída é revogar e gerar outra.
 
 A revogação é imediata: a próxima chamada da automação recebe `401`.
 
 Pela API:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/api-keys \
+curl -X POST http://localhost:18082/api/v1/api-keys \
   -H "Authorization: Bearer <access_token>" \
   -H "Content-Type: application/json" \
   -d '{"name":"Assistente WhatsApp (n8n)","scopes":["read:balance","write:transactions","read:categories"]}'
@@ -318,8 +318,8 @@ curl -X POST http://localhost:8080/api/v1/api-keys \
 Os dois formatos são aceitos:
 
 ```bash
-curl http://localhost:8080/api/v1/external/balance -H "X-API-Key: fin_live_..."
-curl http://localhost:8080/api/v1/external/balance -H "Authorization: Bearer fin_live_..."
+curl http://localhost:18082/api/v1/external/balance -H "X-API-Key: nfh_live_..."
+curl http://localhost:18082/api/v1/external/balance -H "Authorization: Bearer nfh_live_..."
 ```
 
 Chamando fora do escopo:
@@ -338,7 +338,7 @@ Chamando fora do escopo:
 O desenho previsto:
 
 ```
-WhatsApp ──▶ n8n ──▶ transcreve áudio ──▶ interpreta intenção ──▶ FinApp API
+WhatsApp ──▶ n8n ──▶ transcreve áudio ──▶ interpreta intenção ──▶ nexosgen-financehub API
                                                                       │
    "gastei 45 no mercado"  ──▶  POST /api/v1/external/transactions     │
    "qual meu saldo?"       ──▶  GET  /api/v1/external/balance   ◀──────┘
@@ -347,13 +347,13 @@ WhatsApp ──▶ n8n ──▶ transcreve áudio ──▶ interpreta intenç�
 
 **Passos, quando for implementar:**
 
-1. No n8n, crie uma credencial **Header Auth**: nome `X-API-Key`, valor = a chave gerada no FinApp.
+1. No n8n, crie uma credencial **Header Auth**: nome `X-API-Key`, valor = a chave gerada no nexosgen-financehub.
 2. Antes de criar um lançamento, resolva os identificadores com `GET /api/v1/external/categories` e `GET /api/v1/external/accounts` — é assim que o texto livre ("mercado") vira o `category_id` exigido.
 3. Crie o lançamento:
 
 ```http
 POST /api/v1/external/transactions
-X-API-Key: fin_live_...
+X-API-Key: nfh_live_...
 Content-Type: application/json
 
 {
@@ -373,7 +373,7 @@ Detalhes que facilitam o workflow:
 - Todas as respostas trazem `formatted` em pt-BR, pronto para compor a mensagem de volta ao usuário.
 - Dê à chave do assistente apenas os escopos que ele usa. Um bot que só consulta saldo não precisa de `write:transactions`.
 
-A especificação completa desses endpoints, com exemplos, está em http://localhost:8080/docs.
+A especificação completa desses endpoints, com exemplos, está em http://localhost:18082/docs.
 
 ---
 
@@ -428,13 +428,13 @@ Backend (`backend/.env.example`):
 | `REFRESH_TOKEN_TTL` | `168h` | Validade do refresh token |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Lista separada por vírgula |
 | `LOG_LEVEL` | `info` | `debug` \| `info` \| `warn` \| `error` |
-| `API_KEY_PREFIX` | `fin_live` | Prefixo das chaves geradas |
+| `API_KEY_PREFIX` | `nfh_live` | Prefixo das chaves geradas |
 
 Frontend (`frontend/.env.example`):
 
 | Variável | Padrão | Descrição |
 |---|---|---|
-| `API_BASE_URL` | `http://localhost:8080` | URL da API, usada **apenas** pelo servidor do Next |
+| `API_BASE_URL` | `http://localhost:18082` | URL da API, usada **apenas** pelo servidor do Next |
 | `NEXT_PUBLIC_APP_URL` | `http://localhost:3000` | URL pública, usada em metadados |
 
 > Em produção, gere um `JWT_SECRET` novo (`openssl rand -base64 48`) e troque as credenciais do Postgres no `docker-compose.yml`.

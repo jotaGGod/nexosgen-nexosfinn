@@ -5,7 +5,7 @@ import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Marca Vanta: um "V" anguloso em degradê do limão de assinatura para o roxo
+ * Marca nexosgen-financehub: um "N" anguloso em degradê do limão de assinatura para o roxo
  * de apoio.
  *
  * Desenhada em SVG inline — não depende de arquivo externo, não gera
@@ -13,10 +13,10 @@ import { cn } from "@/lib/utils";
  *
  * O identificador do gradiente vem de `useId` porque duas marcas convivem na
  * mesma página desde que existe barra lateral: uma nela e outra no cabeçalho.
- * Com um id fixo, os dois SVGs declaravam o mesmo `vanta-mark`, e o
- * `fill="url(#vanta-mark)"` de ambos resolvia para o primeiro do documento —
+ * Com um id fixo, os dois SVGs declaravam o mesmo `nexosgen-financehub-mark`, e o
+ * `fill="url(#nexosgen-financehub-mark)"` de ambos resolvia para o primeiro do documento —
  * que é o da barra lateral, oculta com `display: none` no celular. O resultado
- * era o "V" invisível no mobile, com o texto da marca aparecendo sozinho.
+ * era o símbolo invisível no mobile, com o texto da marca aparecendo sozinho.
  *
  * É também o motivo de este componente ser de cliente: `useId` é um hook.
  */
@@ -43,11 +43,11 @@ export function Logo({
             <stop offset="1" stopColor="hsl(var(--accent))" />
           </linearGradient>
         </defs>
-        <path d="M4 3h6.4L16 20.2 21.6 3H28L18.4 29h-4.8L4 3Z" fill={`url(#${gradienteId})`} />
+        <path d="M5 28V4h5l12 15.5V4h5v24h-5L10 12.5V28H5Z" fill={`url(#${gradienteId})`} />
       </svg>
 
       {showWordmark ? (
-        <span className={cn("font-semibold tracking-tight text-foreground", textSize)}>Vanta</span>
+        <span className={cn("font-semibold tracking-tight text-foreground", textSize)}>nexosgen-financehub</span>
       ) : null}
     </div>
   );

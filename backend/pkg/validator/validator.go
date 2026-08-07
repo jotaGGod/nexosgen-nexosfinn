@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
 )
 
 // Validator acumula erros por campo.

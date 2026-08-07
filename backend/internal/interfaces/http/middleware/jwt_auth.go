@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
 )
 
 // TokenVerifier valida o access token da sessao web.

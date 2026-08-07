@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
 )
 
 // AccountRepository persiste contas financeiras.

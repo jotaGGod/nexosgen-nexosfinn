@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/application/usecase/transaction"
-	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/transaction"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
 )
 
 // TransactionHandler expoe o CRUD de lancamentos.

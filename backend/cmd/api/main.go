@@ -1,4 +1,4 @@
-// Command api sobe o servidor HTTP do FinApp.
+// Command api sobe o servidor HTTP do nexosgen-financehub.
 //
 // Este arquivo e o unico lugar onde as camadas se encontram: aqui a
 // infraestrutura concreta e injetada nos casos de uso, e os casos de uso nos
@@ -18,23 +18,23 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jacks/finapp/backend/internal/application/usecase/account"
-	"github.com/jacks/finapp/backend/internal/application/usecase/apikey"
-	"github.com/jacks/finapp/backend/internal/application/usecase/auth"
-	"github.com/jacks/finapp/backend/internal/application/usecase/budget"
-	"github.com/jacks/finapp/backend/internal/application/usecase/category"
-	"github.com/jacks/finapp/backend/internal/application/usecase/dashboard"
-	"github.com/jacks/finapp/backend/internal/application/usecase/goal"
-	"github.com/jacks/finapp/backend/internal/application/usecase/report"
-	"github.com/jacks/finapp/backend/internal/application/usecase/transaction"
-	"github.com/jacks/finapp/backend/internal/application/usecase/workspace"
-	"github.com/jacks/finapp/backend/internal/config"
-	infraapikey "github.com/jacks/finapp/backend/internal/infrastructure/apikey"
-	infraauth "github.com/jacks/finapp/backend/internal/infrastructure/auth"
-	"github.com/jacks/finapp/backend/internal/infrastructure/persistence/postgres"
-	"github.com/jacks/finapp/backend/internal/interfaces/http/handler"
-	"github.com/jacks/finapp/backend/internal/interfaces/http/router"
-	"github.com/jacks/finapp/backend/pkg/logger"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/account"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/apikey"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/auth"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/budget"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/category"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/dashboard"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/goal"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/report"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/transaction"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/workspace"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/config"
+	infraapikey "github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/apikey"
+	infraauth "github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/auth"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/persistence/postgres"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/handler"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/router"
+	"github.com/jotaGGod/nexosgen-financehub/backend/pkg/logger"
 )
 
 func main() {

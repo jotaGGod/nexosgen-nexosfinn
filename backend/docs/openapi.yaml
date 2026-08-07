@@ -1,10 +1,10 @@
 openapi: 3.0.3
 
 info:
-  title: FinApp API
+  title: nexosgen-financehub API
   version: 1.0.0
   description: |
-    API do FinApp, gerenciador financeiro pessoal.
+    API do nexosgen-financehub, gerenciador financeiro pessoal.
 
     A API tem duas superficies com autenticacao independente:
 
@@ -651,7 +651,7 @@ paths:
                   plain_key:
                     type: string
                     description: Segredo completo, exibido uma unica vez
-                    example: "fin_live_9Xk2mQ7pR4tYvB1nZ8sL3dF6gH0jK5wE2aC7uI9oP1x"
+                    example: "nfh_live_9Xk2mQ7pR4tYvB1nZ8sL3dF6gH0jK5wE2aC7uI9oP1x"
 
   /api/v1/api-keys/{id}:
     delete:
@@ -1235,7 +1235,7 @@ components:
         prefix:
           type: string
           description: Parte visivel da chave, para identificacao na listagem
-          example: "fin_live_9Xk2mQ7p..."
+          example: "nfh_live_9Xk2mQ7p..."
         scopes:
           type: array
           items: { type: string }

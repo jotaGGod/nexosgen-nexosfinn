@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/application/usecase/account"
-	"github.com/jacks/finapp/backend/internal/application/usecase/category"
-	"github.com/jacks/finapp/backend/internal/application/usecase/dashboard"
-	"github.com/jacks/finapp/backend/internal/application/usecase/transaction"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
-	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/account"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/category"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/dashboard"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/transaction"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
 )
 
 // ExternalHandler atende as rotas /api/v1/external, autenticadas por API Key.

@@ -45,7 +45,7 @@ type APIKeyGenerator struct {
 // Generate devolve segredo, prefixo e hash.
 func (g *APIKeyGenerator) Generate() (string, string, string, error) {
 	g.counter++
-	secret := "fin_live_test" + itoa(g.counter)
+	secret := "nfh_live_test" + itoa(g.counter)
 	return secret, secret[:len(secret)-2] + "...", g.Hash(secret), nil
 }
 

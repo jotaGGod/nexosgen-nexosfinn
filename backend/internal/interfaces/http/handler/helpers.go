@@ -12,9 +12,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	"github.com/jacks/finapp/backend/internal/interfaces/http/middleware"
-	"github.com/jacks/finapp/backend/internal/interfaces/presenter"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/middleware"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
 )
 
 // maxBodyBytes limita o corpo aceito, evitando que um payload gigante consuma

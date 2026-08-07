@@ -62,7 +62,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
         </div>
 
         <p className="relative text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Vanta
+          © {new Date().getFullYear()} nexosgen-financehub
         </p>
       </aside>
 

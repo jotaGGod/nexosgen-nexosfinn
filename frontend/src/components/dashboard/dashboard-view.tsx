@@ -17,7 +17,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSkeleton, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { useDashboard } from "@/hooks/use-finapp";
+import { useDashboard } from "@/hooks/use-nexosgen-financehub";
 import { todayISO } from "@/lib/format";
 
 /**

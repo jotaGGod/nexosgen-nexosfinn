@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
 )
 
 var emailPattern = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)

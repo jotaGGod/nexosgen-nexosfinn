@@ -5,10 +5,10 @@ import (
 	"math"
 	"time"
 
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	"github.com/jacks/finapp/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
 )
 
 // issueSession emite o par access/refresh token e persiste o refresh.

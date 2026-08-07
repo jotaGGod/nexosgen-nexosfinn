@@ -1,4 +1,4 @@
-export const THEME_STORAGE_KEY = "finapp:theme";
+export const THEME_STORAGE_KEY = "nexosgen-financehub:theme";
 
 export const THEME_COLORS = {
   light: "#FCFCFD",

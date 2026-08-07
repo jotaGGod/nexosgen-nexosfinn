@@ -15,10 +15,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gerenciador-financeiro-u2de.vercel.app"),
+  metadataBase: new URL("https://nexosgen-financehub.vercel.app"),
   title: {
-    default: "Vanta — Suas finanças sob controle",
-    template: "%s · Vanta",
+    default: "nexosgen-financehub — Suas finanças sob controle",
+    template: "%s · nexosgen-financehub",
   },
   description:
     "Acompanhe receitas e despesas, defina limites por categoria e alcance suas metas com um assistente que entende o seu dinheiro.",

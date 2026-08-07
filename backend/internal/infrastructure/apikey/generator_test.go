@@ -4,18 +4,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jacks/finapp/backend/internal/infrastructure/apikey"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/apikey"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGenerate(t *testing.T) {
-	generator := apikey.NewGenerator("fin_live")
+	generator := apikey.NewGenerator("nfh_live")
 
 	plainKey, prefix, hash, err := generator.Generate()
 	require.NoError(t, err)
 
-	assert.True(t, strings.HasPrefix(plainKey, "fin_live_"))
+	assert.True(t, strings.HasPrefix(plainKey, "nfh_live_"))
 	assert.True(t, strings.HasSuffix(prefix, "..."), "o prefixo exibido e truncado")
 	assert.NotContains(t, hash, plainKey, "o hash nao pode conter a chave")
 	assert.Len(t, hash, 64, "SHA-256 em hexadecimal")
@@ -25,7 +25,7 @@ func TestGenerate(t *testing.T) {
 }
 
 func TestGenerateProduzChavesUnicas(t *testing.T) {
-	generator := apikey.NewGenerator("fin_live")
+	generator := apikey.NewGenerator("nfh_live")
 
 	first, _, firstHash, err := generator.Generate()
 	require.NoError(t, err)
@@ -37,8 +37,8 @@ func TestGenerateProduzChavesUnicas(t *testing.T) {
 }
 
 func TestHashEhDeterministicoEIgnoraEspacos(t *testing.T) {
-	generator := apikey.NewGenerator("fin_live")
+	generator := apikey.NewGenerator("nfh_live")
 
-	assert.Equal(t, generator.Hash("fin_live_abc"), generator.Hash("  fin_live_abc  "))
-	assert.NotEqual(t, generator.Hash("fin_live_abc"), generator.Hash("fin_live_abd"))
+	assert.Equal(t, generator.Hash("nfh_live_abc"), generator.Hash("  nfh_live_abc  "))
+	assert.NotEqual(t, generator.Hash("nfh_live_abc"), generator.Hash("nfh_live_abd"))
 }

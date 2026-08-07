@@ -14,12 +14,12 @@ import {
 } from "@/components/landing/sections";
 
 export const metadata: Metadata = {
-  title: "Vanta — Suas finanças sob controle",
+  title: "nexosgen-financehub — Suas finanças sob controle",
   description:
-    "A Vanta organiza seus gastos sozinha, mostra para onde seu dinheiro vai e responde às suas perguntas sobre ele. Comece grátis, sem cartão de crédito.",
+    "A nexosgen-financehub organiza seus gastos sozinha, mostra para onde seu dinheiro vai e responde às suas perguntas sobre ele. Comece grátis, sem cartão de crédito.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Vanta — Suas finanças sob controle",
+    title: "nexosgen-financehub — Suas finanças sob controle",
     description:
       "Categorização automática, orçamento por categoria e metas com aporte calculado. Comece grátis.",
     type: "website",

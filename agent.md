@@ -4,14 +4,14 @@
 > **Atualize este arquivo ao fim de cada etapa relevante.** Ele existe para que
 > uma sessão nova consiga continuar sem reler o histórico inteiro.
 
-**Última atualização:** 2026-07-21 · commit `395573b`
+**Última atualização:** 2026-08-07
 
 ---
 
 ## 1. O que é o projeto
 
-Gerenciador financeiro pessoal full stack, monorepo, rodando em produção na
-Vercel. O backend segue DDD + Clean Architecture; a API já expõe uma superfície
+Gerenciador financeiro pessoal full stack em monorepo. O backend segue DDD +
+Clean Architecture; a API já expõe uma superfície
 autenticada por API Key preparada para automações externas (n8n + WhatsApp) —
 a automação em si **não** faz parte do escopo.
 
@@ -19,15 +19,15 @@ a automação em si **não** faz parte do escopo.
 |---|---|
 | Backend | Go 1.26, chi, pgx v5, PostgreSQL, JWT (HS256) + bcrypt |
 | Frontend | Next.js 15 (App Router), TypeScript, TailwindCSS, TanStack Query, Recharts, Zustand, RHF + Zod |
-| Infra | Docker Compose local · Vercel (services) em produção · Neon Postgres |
+| Infra | Docker Compose local · configuração Vercel services · PostgreSQL |
 
 ### URLs
 
 | O quê | Onde |
 |---|---|
-| Produção | https://gerenciador-financeiro-u2de.vercel.app |
-| Repositório | https://github.com/jotaGGod/gerenciador-financeiro (privado) |
-| API local | http://localhost:8080 · docs em `/docs` |
+| Produção | Sem projeto Vercel ativo no escopo acessível em 2026-08-07 |
+| Repositório | https://github.com/jotaGGod/nexosgen-financehub (privado) |
+| API local | http://localhost:18082 · docs em `/docs` |
 | App local | http://localhost:3000 |
 
 ### Credenciais de demonstração (`make seed`)
@@ -42,14 +42,12 @@ joao@email.com / financas123
 
 Leia esta seção antes de mexer em deploy. Cada item aqui foi um erro real.
 
-### ⚠️ Existem DOIS projetos na Vercel
+### ⚠️ O projeto Vercel anterior não está mais acessível
 
-| Projeto | Situação |
-|---|---|
-| `gerenciador-financeiro-u2de` | **É o que está no ar.** Todo tráfego e todas as env vars |
-| `gerenciador-financeiro` | Importação duplicada, abandonada, zero requisições |
-
-Configurar banco ou variável no de nome "certo" não surte efeito nenhum.
+Em 2026-08-07, a conta e a equipe autenticadas na CLI não listavam este
+projeto, e o endereço de produção anterior respondia `DEPLOYMENT_NOT_FOUND`.
+O arquivo `vercel.json` continua sendo a fonte de configuração caso um novo
+projeto seja vinculado futuramente.
 
 ### ⚠️ O modo *services* da Vercel não aceita Edge Runtime
 
@@ -116,7 +114,7 @@ app/
   api/proxy/[...path]/                anexa o Bearer no servidor e renova sessão
   error.tsx global-error.tsx          fronteira de erro com detalhe técnico
 components/{ui,layout,common,dashboard,transactions,...}
-hooks/use-finapp.ts            queries e mutations (TanStack Query)
+hooks/use-nexosgen-financehub.ts            queries e mutations (TanStack Query)
 lib/                           api-client, session, format, icons, theme
 ```
 
@@ -125,7 +123,7 @@ lib/                           api-client, session, format, icons, theme
 - **Sessão em cookie httpOnly.** O token nunca toca o JavaScript da página;
   tudo passa por `/api/proxy`, que renova com o refresh token de forma
   transparente.
-- **`runMutation` (em `hooks/use-finapp.ts`) é obrigatório.** `mutateAsync`
+- **`runMutation` (em `hooks/use-nexosgen-financehub.ts`) é obrigatório.** `mutateAsync`
   rejeita em erro de API; rejeição não tratada dentro de handler derruba a
   árvore React na error boundary. Nunca chame `mutateAsync` direto.
 - **Diálogos não têm animação de saída.** O Radix mantém o nó montado até o
@@ -162,7 +160,7 @@ lib/                           api-client, session, format, icons, theme
 - API Keys com escopos + endpoints `/api/v1/external/*` validados
 - Deploy na Vercel com migrations automáticas
 - Tema escuro e preferências (commits `89aeca3`, `a08f302`)
-- Redesenho Vanta: landing (`bc638d0`), app mobile-first (`ec4e247`),
+- Redesenho nexosgen-financehub: landing (`bc638d0`), app mobile-first (`ec4e247`),
   gráficos sob demanda (`dd599f7`), correções de toque em 375px (`44fa358`)
 
 ### 📊 Números medidos (não estimados)

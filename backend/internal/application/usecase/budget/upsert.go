@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	"github.com/jacks/finapp/backend/internal/domain/repository"
-	"github.com/jacks/finapp/backend/internal/domain/service"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
-	"github.com/jacks/finapp/backend/pkg/validator"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/pkg/validator"
 )
 
 // UpsertUseCase define ou atualiza o limite de uma categoria em um mes.

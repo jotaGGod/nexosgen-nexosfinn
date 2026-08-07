@@ -5,7 +5,7 @@ import (
 	"math"
 	"strings"
 
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
 )
 
 // Money representa um valor monetario em centavos.

@@ -4,11 +4,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 )
 
-// User e o titular da conta no FinApp e a raiz de agregacao de todos os
+// User e o titular da conta no nexosgen-financehub e a raiz de agregacao de todos os
 // demais recursos (contas, categorias, transacoes, metas, orcamentos e chaves).
 type User struct {
 	ID           uuid.UUID

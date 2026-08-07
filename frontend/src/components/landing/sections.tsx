@@ -65,7 +65,7 @@ export function FeaturesGrid() {
     {
       icone: Target,
       titulo: "Metas com prazo",
-      texto: "Diga quanto e para quando; a Vanta calcula o aporte do mês.",
+      texto: "Diga quanto e para quando; a nexosgen-financehub calcula o aporte do mês.",
     },
     {
       icone: MessageSquareText,
@@ -79,7 +79,7 @@ export function FeaturesGrid() {
       <TituloSecao
         sobretitulo="Recursos"
         titulo="O trabalho chato fica com a gente"
-        texto="Planilha exige disciplina. A Vanta exige que você abra o aplicativo."
+        texto="Planilha exige disciplina. A nexosgen-financehub exige que você abra o aplicativo."
       />
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -114,14 +114,14 @@ export function Showcase() {
       sobretitulo: "Categorização",
       titulo: "Seus gastos se organizam sozinhos",
       texto:
-        "A Vanta reconhece o estabelecimento e classifica o lançamento na hora. Quando você corrige uma vez, ela aprende e não erra de novo naquele comércio.",
+        "A nexosgen-financehub reconhece o estabelecimento e classifica o lançamento na hora. Quando você corrige uma vez, ela aprende e não erra de novo naquele comércio.",
       demo: <DemoCategorizacao />,
     },
     {
       sobretitulo: "Metas",
       titulo: "Do desejo ao valor do mês",
       texto:
-        "Informe quanto precisa juntar e até quando. A Vanta divide pelo prazo, acompanha cada aporte e recalcula sozinha quando você adianta ou atrasa.",
+        "Informe quanto precisa juntar e até quando. A nexosgen-financehub divide pelo prazo, acompanha cada aporte e recalcula sozinha quando você adianta ou atrasa.",
       demo: <DemoMetas />,
     },
   ];
@@ -160,7 +160,7 @@ export function Security() {
     {
       icone: Eye,
       titulo: "Somente leitura",
-      texto: "A Vanta enxerga seus lançamentos e nada além disso. Nenhuma transferência sai daqui.",
+      texto: "A nexosgen-financehub enxerga seus lançamentos e nada além disso. Nenhuma transferência sai daqui.",
     },
     {
       icone: Landmark,
@@ -247,7 +247,7 @@ export function LandingFooter() {
           <div>
             <span className="flex items-center gap-2">
               <Banknote className="size-5 text-primary" />
-              <span className="font-semibold tracking-tight">Vanta</span>
+              <span className="font-semibold tracking-tight">nexosgen-financehub</span>
             </span>
             <p className="mt-3 max-w-xs text-sm text-muted-foreground">
               Finanças pessoais sem planilha, sem esforço e sem surpresa no fim do mês.
@@ -271,10 +271,10 @@ export function LandingFooter() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Vanta. Todos os direitos reservados.
+            © {new Date().getFullYear()} nexosgen-financehub. Todos os direitos reservados.
           </p>
           <p className="text-xs text-muted-foreground">
-            A Vanta não é uma instituição financeira e não movimenta recursos.
+            A nexosgen-financehub não é uma instituição financeira e não movimenta recursos.
           </p>
         </div>
       </div>

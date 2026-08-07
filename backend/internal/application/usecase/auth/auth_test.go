@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/jacks/finapp/backend/internal/application/dto"
-	"github.com/jacks/finapp/backend/internal/application/fakes"
-	"github.com/jacks/finapp/backend/internal/application/usecase/auth"
-	domainerr "github.com/jacks/finapp/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/fakes"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/auth"
+	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

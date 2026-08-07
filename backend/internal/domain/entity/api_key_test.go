@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jacks/finapp/backend/internal/domain/entity"
-	vo "github.com/jacks/finapp/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -14,7 +14,7 @@ import (
 func newAPIKey(t *testing.T, scopes []vo.Scope, expiresAt *time.Time) *entity.APIKey {
 	t.Helper()
 
-	key, err := entity.NewAPIKey(uuid.New(), "n8n WhatsApp", "fin_live_ab12cdef", "hash", scopes, expiresAt)
+	key, err := entity.NewAPIKey(uuid.New(), "n8n WhatsApp", "nfh_live_ab12cdef", "hash", scopes, expiresAt)
 	require.NoError(t, err)
 	return key
 }
@@ -54,6 +54,6 @@ func TestAPIKeyExpiracao(t *testing.T) {
 
 func TestNewAPIKeyRejeitaExpiracaoNoPassado(t *testing.T) {
 	past := time.Now().UTC().Add(-time.Hour)
-	_, err := entity.NewAPIKey(uuid.New(), "chave", "fin_live_x", "hash", nil, &past)
+	_, err := entity.NewAPIKey(uuid.New(), "chave", "nfh_live_x", "hash", nil, &past)
 	assert.Error(t, err)
 }
