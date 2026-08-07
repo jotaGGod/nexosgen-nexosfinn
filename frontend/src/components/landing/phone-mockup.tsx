@@ -260,6 +260,7 @@ export function PhoneMockup() {
           alt=""
           fill
           priority
+          unoptimized
           sizes="(max-width: 640px) 270px, (max-width: 1023px) 290px, 340px"
           className="object-contain drop-shadow-[0_36px_70px_rgba(0,0,0,0.5)]"
         />
