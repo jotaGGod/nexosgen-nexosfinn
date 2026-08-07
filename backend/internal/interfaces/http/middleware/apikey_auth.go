@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/apikey"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/apikey"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/presenter"
 )
 
 // APIKeyAuthenticator resolve a identidade a partir do segredo apresentado.

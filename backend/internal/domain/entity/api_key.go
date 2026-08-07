@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // APIKey e a credencial usada por automacoes externas para falar com a API
-// do nexosgen-financehub sem passar pelo fluxo de login da web.
+// do nexosgen-nexosfinn sem passar pelo fluxo de login da web.
 //
 // Foi desenhada para o cenario de um workflow n8n conectado ao WhatsApp: o
 // usuario gera a chave em Configuracoes > Integracoes e a cola no n8n. O

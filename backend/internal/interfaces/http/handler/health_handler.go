@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/presenter"
 )
 
 // Pinger reporta a disponibilidade de uma dependencia externa.

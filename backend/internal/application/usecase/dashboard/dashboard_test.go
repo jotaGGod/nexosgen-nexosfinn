@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/fakes"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/dashboard"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/fakes"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/dashboard"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

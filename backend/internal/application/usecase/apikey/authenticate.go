@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // Identity e o resultado de uma autenticacao por API Key.

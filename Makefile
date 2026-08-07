@@ -42,7 +42,7 @@ migrate-up: ## Aplica as migrations pendentes
 .PHONY: migrate-down
 migrate-down: ## Desfaz a ultima migration
 	$(COMPOSE) run --rm migrate -path=/migrations \
-		-database=postgres://nexosgen_financehub:nexosgen_financehub@postgres:5432/nexosgen_financehub?sslmode=disable down 1
+		-database=postgres://nexosgen_nexosfinn:nexosgen_nexosfinn@postgres:5432/nexosgen_nexosfinn?sslmode=disable down 1
 
 .PHONY: migrate-create
 migrate-create: ## Cria uma migration: make migrate-create name=add_tags
@@ -64,4 +64,4 @@ lint: ## Verifica formatacao e problemas estaticos no backend
 
 .PHONY: psql
 psql: ## Abre um shell psql no banco
-	$(COMPOSE) exec postgres psql -U nexosgen_financehub -d nexosgen_financehub
+	$(COMPOSE) exec postgres psql -U nexosgen_nexosfinn -d nexosgen_nexosfinn

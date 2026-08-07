@@ -14,13 +14,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/config"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/auth"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/persistence/postgres"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/config"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/infrastructure/auth"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/infrastructure/persistence/postgres"
 )
 
 const (

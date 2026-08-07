@@ -1,7 +1,7 @@
 package service
 
 import (
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // Estados possiveis de um orcamento, usados para colorir a barra na interface.

@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { FieldError, Label } from "@/components/ui/label";
 import { RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useChangePassword, useProfile, useUpdateProfile } from "@/hooks/use-nexosgen-financehub";
+import { runMutation, useChangePassword, useProfile, useUpdateProfile } from "@/hooks/use-nexosgen-nexosfinn";
 import { initials } from "@/lib/format";
 
 const profileSchema = z.object({
@@ -81,7 +81,7 @@ export function ProfileTab() {
       <Card>
         <CardHeader>
           <CardTitle>Dados pessoais</CardTitle>
-          <CardDescription>Como você aparece na nexosgen-financehub.</CardDescription>
+          <CardDescription>Como você aparece na NexosFinn.</CardDescription>
         </CardHeader>
 
         <CardContent>

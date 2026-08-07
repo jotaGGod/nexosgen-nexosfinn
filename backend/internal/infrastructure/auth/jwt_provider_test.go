@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/auth"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/infrastructure/auth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

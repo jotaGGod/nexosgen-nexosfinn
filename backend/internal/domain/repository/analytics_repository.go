@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // Totals agrega receitas, despesas e contagem de um periodo.

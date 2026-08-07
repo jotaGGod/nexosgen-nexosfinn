@@ -12,7 +12,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 )
 
 // JWTProvider emite e valida os tokens da sessao web.
@@ -29,7 +29,7 @@ func NewJWTProvider(secret string, accessTTL, refreshTTL time.Duration) *JWTProv
 		secret:     []byte(secret),
 		accessTTL:  accessTTL,
 		refreshTTL: refreshTTL,
-		issuer:     "nexosgen-financehub",
+		issuer:     "nexosgen-nexosfinn",
 	}
 }
 

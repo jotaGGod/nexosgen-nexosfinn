@@ -23,7 +23,7 @@ import {
   useCategories,
   useCreateTransaction,
   useUpdateTransaction,
-} from "@/hooks/use-nexosgen-financehub";
+} from "@/hooks/use-nexosgen-nexosfinn";
 import { todayISO } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { transactionSchema, type TransactionValues } from "@/schemas/transaction";

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
 )
 
 // GoalRepository persiste metas financeiras.

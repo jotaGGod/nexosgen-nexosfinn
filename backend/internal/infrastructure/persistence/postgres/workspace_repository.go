@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
 )
 
 // WorkspaceRepository reinicia todos os dados financeiros dentro de uma transacao.

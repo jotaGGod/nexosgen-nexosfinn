@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /*
- * Design system nexosgen-financehub — fonte única da verdade.
+ * Design system NexosFinn — fonte única da verdade.
  *
  * Nenhum componente declara cor, raio ou sombra própria: tudo sai daqui, via
  * os utilitários do Tailwind mapeados em tailwind.config.ts. Trocar a
@@ -58,7 +58,7 @@
     --input: 240 6% 90%;
     --ring: 78 100% 45%;
 
-    /* Painel de marca: escuro nos dois temas, é a assinatura da nexosgen-financehub. */
+    /* Painel de marca: escuro nos dois temas, é a assinatura da NexosFinn. */
     --sidebar: 0 0% 2%;
     --sidebar-foreground: 240 6% 64%;
     --sidebar-border: 0 0% 14%;

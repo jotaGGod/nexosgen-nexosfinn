@@ -21,7 +21,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useCategories, useDeleteTransaction, useTransactions } from "@/hooks/use-nexosgen-financehub";
+import { runMutation, useCategories, useDeleteTransaction, useTransactions } from "@/hooks/use-nexosgen-nexosfinn";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Transaction } from "@/types/api";

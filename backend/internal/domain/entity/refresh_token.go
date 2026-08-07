@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 )
 
 // RefreshToken permite renovar o access token sem novo login.

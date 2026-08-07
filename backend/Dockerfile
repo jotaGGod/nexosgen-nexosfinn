@@ -17,7 +17,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/seed ./
 FROM alpine:3.20
 
 RUN apk add --no-cache ca-certificates wget && \
-    adduser -D -u 10001 nexosgen-financehub
+    adduser -D -u 10001 nexosgen-nexosfinn
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ COPY --from=builder /out/api /app/api
 COPY --from=builder /out/seed /app/seed
 COPY --from=builder /src/docs /app/docs
 
-USER nexosgen-financehub
+USER nexosgen-nexosfinn
 
 EXPOSE 8080
 

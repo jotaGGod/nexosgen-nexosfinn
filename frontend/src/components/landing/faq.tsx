@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 
 const perguntas = [
   {
-    pergunta: "A nexosgen-financehub consegue movimentar meu dinheiro?",
+    pergunta: "A NexosFinn consegue movimentar meu dinheiro?",
     resposta:
-      "Não. A conexão com o seu banco é de leitura apenas: conseguimos ver os lançamentos para organizá-los, e nada além disso. Nenhuma transferência, pagamento ou resgate parte da nexosgen-financehub.",
+      "Não. A conexão com o seu banco é de leitura apenas: conseguimos ver os lançamentos para organizá-los, e nada além disso. Nenhuma transferência, pagamento ou resgate parte da NexosFinn.",
   },
   {
     pergunta: "Como meus bancos são conectados?",
@@ -20,7 +20,7 @@ const perguntas = [
   {
     pergunta: "Preciso lançar cada gasto na mão?",
     resposta:
-      "Não. Os lançamentos chegam do banco já categorizados. Você só interfere quando quiser corrigir algo — e, quando corrige, a nexosgen-financehub passa a acertar naquele estabelecimento.",
+      "Não. Os lançamentos chegam do banco já categorizados. Você só interfere quando quiser corrigir algo — e, quando corrige, a NexosFinn passa a acertar naquele estabelecimento.",
   },
   {
     pergunta: "O que acontece se eu cancelar?",

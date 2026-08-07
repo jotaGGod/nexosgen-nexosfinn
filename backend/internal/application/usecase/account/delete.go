@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
 )
 
 // DeleteUseCase remove uma conta sem movimento.

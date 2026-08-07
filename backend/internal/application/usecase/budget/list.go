@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/service"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // ListUseCase devolve os orcamentos de um mes com o consumo apurado.

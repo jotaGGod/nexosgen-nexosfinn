@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // Account e uma conta financeira do usuario (corrente, poupanca, cartao de

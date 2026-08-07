@@ -1,10 +1,10 @@
 openapi: 3.0.3
 
 info:
-  title: nexosgen-financehub API
+  title: NexosFinn API
   version: 1.0.0
   description: |
-    API do nexosgen-financehub, gerenciador financeiro pessoal.
+    API do NexosFinn, gerenciador financeiro pessoal.
 
     A API tem duas superficies com autenticacao independente:
 

@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/service"
 )
 
 // Filtros aceitos pela listagem de metas.

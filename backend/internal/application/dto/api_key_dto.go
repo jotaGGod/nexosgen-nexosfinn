@@ -3,8 +3,8 @@ package dto
 import (
 	"time"
 
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // CreateAPIKeyInput e o payload de geracao de uma chave de integracao.

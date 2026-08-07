@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/service"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

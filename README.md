@@ -1,6 +1,6 @@
-# nexosgen-financehub
+# NexosFinn
 
-Gerenciador financeiro pessoal full stack: **Go 1.26 + PostgreSQL** no backend, **Next.js 15 + TypeScript** no frontend, tudo em containers.
+NexosFinn é um gerenciador financeiro pessoal full stack: **Go 1.26 + PostgreSQL** no backend, **Next.js 15 + TypeScript** no frontend, tudo em containers.
 
 O backend segue DDD + Clean Architecture com injeção de dependência manual, e a API já expõe uma superfície versionada, autenticada por **API Key com escopos**, preparada para ser consumida por uma automação externa (n8n + WhatsApp) — a automação em si não faz parte deste projeto.
 
@@ -30,8 +30,8 @@ Login → Dashboard → Transações → Metas → Orçamentos → Relatórios �
 Pré-requisitos: **Docker** e **Docker Compose**.
 
 ```bash
-git clone git@github.com:jotaGGod/nexosgen-financehub.git
-cd nexosgen-financehub
+git clone git@github.com:jotaGGod/nexosgen-nexosfinn.git
+cd nexosgen-nexosfinn
 
 make up          # sobe Postgres, aplica migrations, sobe backend e frontend
 make seed        # popula um usuário de demonstração com 5 meses de histórico
@@ -43,7 +43,7 @@ make seed        # popula um usuário de demonstração com 5 meses de históric
 | API | http://localhost:18082 |
 | Documentação da API (Swagger UI) | http://localhost:18082/docs |
 | Especificação OpenAPI | http://localhost:18082/docs/openapi.yaml |
-| PostgreSQL | `localhost:55432` (`nexosgen_financehub` / `nexosgen_financehub`) |
+| PostgreSQL | `localhost:55432` (`nexosgen_nexosfinn` / `nexosgen_nexosfinn`) |
 
 **Credenciais de demonstração** (criadas pelo `make seed`):
 
@@ -157,7 +157,7 @@ frontend/
 │   │       ├── auth/{login,register,logout}/   # cria/limpa cookies httpOnly
 │   │       └── proxy/[...path]/                # encaminha à API com o token
 │   ├── components/{ui,layout,common,dashboard,transactions,...}/
-│   ├── hooks/use-nexosgen-financehub.ts          # queries e mutations (TanStack Query)
+│   ├── hooks/use-nexosgen-nexosfinn.ts          # queries e mutations (TanStack Query)
 │   ├── lib/                         # api-client, session, format, icons
 │   ├── schemas/                     # validação Zod dos formulários
 │   ├── store/                       # Zustand (usuário, UI)
@@ -338,7 +338,7 @@ Chamando fora do escopo:
 O desenho previsto:
 
 ```
-WhatsApp ──▶ n8n ──▶ transcreve áudio ──▶ interpreta intenção ──▶ nexosgen-financehub API
+WhatsApp ──▶ n8n ──▶ transcreve áudio ──▶ interpreta intenção ──▶ NexosFinn API
                                                                       │
    "gastei 45 no mercado"  ──▶  POST /api/v1/external/transactions     │
    "qual meu saldo?"       ──▶  GET  /api/v1/external/balance   ◀──────┘
@@ -347,7 +347,7 @@ WhatsApp ──▶ n8n ──▶ transcreve áudio ──▶ interpreta intenç�
 
 **Passos, quando for implementar:**
 
-1. No n8n, crie uma credencial **Header Auth**: nome `X-API-Key`, valor = a chave gerada no nexosgen-financehub.
+1. No n8n, crie uma credencial **Header Auth**: nome `X-API-Key`, valor = a chave gerada no NexosFinn.
 2. Antes de criar um lançamento, resolva os identificadores com `GET /api/v1/external/categories` e `GET /api/v1/external/accounts` — é assim que o texto livre ("mercado") vira o `category_id` exigido.
 3. Crie o lançamento:
 

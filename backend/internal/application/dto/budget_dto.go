@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/service"
 )
 
 // UpsertBudgetInput define ou redefine o limite de uma categoria em um mes.

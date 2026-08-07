@@ -26,7 +26,7 @@ a automação em si **não** faz parte do escopo.
 | O quê | Onde |
 |---|---|
 | Produção | Sem projeto Vercel ativo no escopo acessível em 2026-08-07 |
-| Repositório | https://github.com/jotaGGod/nexosgen-financehub (privado) |
+| Repositório | https://github.com/jotaGGod/nexosgen-nexosfinn (privado) |
 | API local | http://localhost:18082 · docs em `/docs` |
 | App local | http://localhost:3000 |
 
@@ -114,7 +114,7 @@ app/
   api/proxy/[...path]/                anexa o Bearer no servidor e renova sessão
   error.tsx global-error.tsx          fronteira de erro com detalhe técnico
 components/{ui,layout,common,dashboard,transactions,...}
-hooks/use-nexosgen-financehub.ts            queries e mutations (TanStack Query)
+hooks/use-nexosgen-nexosfinn.ts            queries e mutations (TanStack Query)
 lib/                           api-client, session, format, icons, theme
 ```
 
@@ -123,7 +123,7 @@ lib/                           api-client, session, format, icons, theme
 - **Sessão em cookie httpOnly.** O token nunca toca o JavaScript da página;
   tudo passa por `/api/proxy`, que renova com o refresh token de forma
   transparente.
-- **`runMutation` (em `hooks/use-nexosgen-financehub.ts`) é obrigatório.** `mutateAsync`
+- **`runMutation` (em `hooks/use-nexosgen-nexosfinn.ts`) é obrigatório.** `mutateAsync`
   rejeita em erro de API; rejeição não tratada dentro de handler derruba a
   árvore React na error boundary. Nunca chame `mutateAsync` direto.
 - **Diálogos não têm animação de saída.** O Radix mantém o nó montado até o
@@ -160,7 +160,7 @@ lib/                           api-client, session, format, icons, theme
 - API Keys com escopos + endpoints `/api/v1/external/*` validados
 - Deploy na Vercel com migrations automáticas
 - Tema escuro e preferências (commits `89aeca3`, `a08f302`)
-- Redesenho nexosgen-financehub: landing (`bc638d0`), app mobile-first (`ec4e247`),
+- Redesenho NexosFinn: landing (`bc638d0`), app mobile-first (`ec4e247`),
   gráficos sob demanda (`dd599f7`), correções de toque em 375px (`44fa358`)
 
 ### 📊 Números medidos (não estimados)

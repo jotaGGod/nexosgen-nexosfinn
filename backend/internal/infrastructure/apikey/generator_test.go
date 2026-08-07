@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/infrastructure/apikey"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/infrastructure/apikey"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

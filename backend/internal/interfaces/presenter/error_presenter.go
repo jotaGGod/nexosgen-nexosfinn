@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 )
 
 // ErrorBody e o corpo padrao de qualquer resposta de erro da API.

@@ -1,4 +1,4 @@
-module github.com/jotaGGod/nexosgen-financehub/backend
+module github.com/jotaGGod/nexosgen-nexosfinn/backend
 
 go 1.25.0
 

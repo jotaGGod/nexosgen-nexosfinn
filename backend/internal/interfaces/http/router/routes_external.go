@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/go-chi/chi/v5"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/middleware"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/http/middleware"
 )
 
 // mountExternalRoutes registra a superficie consumida por automacoes.

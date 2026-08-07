@@ -7,8 +7,8 @@ package dto
 import (
 	"time"
 
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // DateLayout e o formato aceito e devolvido pela API para datas sem hora.

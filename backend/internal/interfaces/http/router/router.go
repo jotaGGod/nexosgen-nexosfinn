@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/config"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/handler"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/http/middleware"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/config"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/http/handler"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/http/middleware"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/presenter"
 )
 
 // Dependencies reune tudo que o roteador precisa.

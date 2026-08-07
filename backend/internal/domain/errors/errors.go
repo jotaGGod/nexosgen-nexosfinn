@@ -1,4 +1,4 @@
-// Package errors define os erros de dominio do nexosgen-financehub.
+// Package errors define os erros de dominio do nexosgen-nexosfinn.
 //
 // A camada de dominio nao conhece HTTP: ela classifica a falha por Kind e a
 // camada interfaces/presenter traduz esse Kind para o status code adequado.

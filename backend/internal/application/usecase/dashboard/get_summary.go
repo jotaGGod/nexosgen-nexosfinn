@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/parallel"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/service"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/parallel"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/service"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // GetSummaryUseCase monta os quatro cards de metrica do topo do dashboard.

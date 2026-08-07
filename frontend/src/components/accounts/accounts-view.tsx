@@ -32,7 +32,7 @@ import { Input } from "@/components/ui/input";
 import { FieldError, Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useAccounts, useDeleteAccount, useSaveAccount } from "@/hooks/use-nexosgen-financehub";
+import { runMutation, useAccounts, useDeleteAccount, useSaveAccount } from "@/hooks/use-nexosgen-nexosfinn";
 import { accountTypeIcons, accountTypeLabels } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { accountSchema, type AccountValues } from "@/schemas/transaction";

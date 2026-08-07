@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 )
 
 const maxNameLength = 120

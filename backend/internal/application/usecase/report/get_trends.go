@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/dashboard"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/dashboard"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
 
 // GetTrendsUseCase monta a serie da aba "Tendencias".

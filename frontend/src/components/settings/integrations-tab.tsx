@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useAPIKeys, useCreateAPIKey, useRevokeAPIKey } from "@/hooks/use-nexosgen-financehub";
+import { runMutation, useAPIKeys, useCreateAPIKey, useRevokeAPIKey } from "@/hooks/use-nexosgen-nexosfinn";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { APIKey, APIKeyStatus } from "@/types/api";
@@ -111,7 +111,7 @@ export function IntegrationsTab() {
           <div>
             <CardTitle>Chaves de API</CardTitle>
             <CardDescription className="mt-1 max-w-2xl">
-              Use esta chave para conectar sua nexosgen-financehub a automações externas, como assistentes de WhatsApp via
+              Use esta chave para conectar sua NexosFinn a automações externas, como assistentes de WhatsApp via
               n8n. Cada chave carrega apenas os escopos que você marcar.
             </CardDescription>
           </div>

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
 )
 
 // RevokeUseCase invalida uma chave de integracao.

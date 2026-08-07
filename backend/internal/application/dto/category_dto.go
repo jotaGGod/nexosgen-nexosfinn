@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/entity"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
 )
 
 // CreateCategoryInput e o payload de criacao de categoria.

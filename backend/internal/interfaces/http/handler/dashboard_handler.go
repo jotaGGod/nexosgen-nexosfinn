@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/usecase/dashboard"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/interfaces/presenter"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/dashboard"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/presenter"
 )
 
 // DashboardHandler expoe a tela inicial.

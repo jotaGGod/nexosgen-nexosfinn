@@ -34,7 +34,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
-            A nexosgen-financehub organiza seus gastos sozinha, mostra para onde seu dinheiro vai e responde às suas
+            A NexosFinn organiza seus gastos sozinha, mostra para onde seu dinheiro vai e responde às suas
             perguntas sobre ele.
           </p>
 

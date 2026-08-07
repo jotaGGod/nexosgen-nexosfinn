@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/application/dto"
-	domainerr "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/errors"
-	"github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/repository"
-	vo "github.com/jotaGGod/nexosgen-financehub/backend/internal/domain/valueobject"
-	"github.com/jotaGGod/nexosgen-financehub/backend/pkg/validator"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
+	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/pkg/validator"
 )
 
 // UpdateUseCase altera uma categoria existente.

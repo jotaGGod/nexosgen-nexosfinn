@@ -33,7 +33,7 @@ import { FieldError, Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
-import { runMutation, useCategories, useDeleteCategory, useSaveCategory } from "@/hooks/use-nexosgen-financehub";
+import { runMutation, useCategories, useDeleteCategory, useSaveCategory } from "@/hooks/use-nexosgen-nexosfinn";
 import { categorySchema, type CategoryValues } from "@/schemas/transaction";
 import type { Category } from "@/types/api";
 
