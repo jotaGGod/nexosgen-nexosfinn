@@ -161,10 +161,15 @@
   body {
     @apply bg-background text-foreground antialiased;
     min-height: 100%;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   body {
+    min-height: 100svh;
     min-height: 100dvh;
+    overscroll-behavior-x: none;
     font-feature-settings: "cv11", "ss01";
     letter-spacing: -0.01em;
   }
@@ -217,9 +222,9 @@
   }
 
   .safe-area-auth {
-    padding-top: calc(3rem + env(safe-area-inset-top, 0px));
+    padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
     padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
-    padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
     padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
   }
 
@@ -230,6 +235,14 @@
 
   .safe-area-nav {
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /*
@@ -276,6 +289,19 @@
     .pb-nav {
       padding-bottom: 2rem;
     }
+  }
+}
+
+/*
+ * O Safari amplia automaticamente a página quando um campo menor que 16px
+ * recebe foco. Manter 16px no celular evita o zoom sem bloquear o gesto de
+ * ampliação do usuário, preservando a acessibilidade.
+ */
+@media (max-width: 639px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
   }
 }
 

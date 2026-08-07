@@ -12,7 +12,7 @@ import { PhoneMockup } from "@/components/landing/phone-mockup";
  */
 export function Hero() {
   return (
-    <section className="ambient-grid relative min-h-dvh overflow-hidden pb-20 pt-32 sm:pt-36 lg:flex lg:items-center lg:pb-10 lg:pt-24">
+    <section className="ambient-grid relative min-h-dvh overflow-hidden pb-20 pt-[calc(8rem+env(safe-area-inset-top,0px))] sm:pt-36 lg:flex lg:items-center lg:pb-10 lg:pt-24">
       <div
         className="pointer-events-none absolute -right-48 top-8 size-[720px] rounded-full bg-primary/[0.075] blur-3xl"
         aria-hidden="true"

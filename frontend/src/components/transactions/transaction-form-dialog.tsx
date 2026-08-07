@@ -129,7 +129,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className="min-w-0 space-y-4 overflow-x-clip pb-1" noValidate>
           <Controller
             control={control}
             name="type"
@@ -148,7 +148,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
                     aria-selected={field.value === option.value}
                     onClick={() => field.onChange(option.value)}
                     className={cn(
-                      "rounded-lg py-2 text-sm font-medium transition-colors",
+                      "min-h-11 rounded-lg py-2 text-sm font-medium transition-colors",
                       field.value === option.value
                         ? option.value === "income"
                           ? "bg-positive text-background shadow-sm"
@@ -174,25 +174,33 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
             <FieldError>{errors.description?.message}</FieldError>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="amount">Valor</Label>
-            <Controller
-              control={control}
-              name="amount"
-              render={({ field }) => (
-                <MoneyInput
-                  id="amount"
-                  value={field.value}
-                  onChange={field.onChange}
-                  aria-invalid={Boolean(errors.amount)}
-                />
-              )}
-            />
-            <FieldError>{errors.amount?.message}</FieldError>
+          <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4">
+            <div className="min-w-0 space-y-2">
+              <Label htmlFor="amount">Valor</Label>
+              <Controller
+                control={control}
+                name="amount"
+                render={({ field }) => (
+                  <MoneyInput
+                    id="amount"
+                    value={field.value}
+                    onChange={field.onChange}
+                    aria-invalid={Boolean(errors.amount)}
+                  />
+                )}
+              />
+              <FieldError>{errors.amount?.message}</FieldError>
+            </div>
+
+            <div className="min-w-0 space-y-2">
+              <Label htmlFor="date">Data</Label>
+              <Input id="date" type="date" className="min-w-0 px-3" aria-invalid={Boolean(errors.date)} {...register("date")} />
+              <FieldError>{errors.date?.message}</FieldError>
+            </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
+          <div className="grid min-w-0 grid-cols-2 gap-3 sm:gap-4">
+            <div className="min-w-0 space-y-2">
               <Label htmlFor="category">Categoria</Label>
               <Controller
                 control={control}
@@ -221,55 +229,48 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
               <FieldError>{errors.category_id?.message}</FieldError>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="date">Data</Label>
-              <Input id="date" type="date" aria-invalid={Boolean(errors.date)} {...register("date")} />
-              <FieldError>{errors.date?.message}</FieldError>
+            <div className="min-w-0 space-y-2">
+              <Label htmlFor="account">Conta</Label>
+              <Controller
+                control={control}
+                name="account_id"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="account" aria-invalid={Boolean(errors.account_id)}>
+                      <SelectValue placeholder="Selecione uma conta" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {accounts.map((account) => (
+                        <SelectItem key={account.id} value={account.id}>
+                          {account.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <FieldError>{errors.account_id?.message}</FieldError>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="account">Conta</Label>
-            <Controller
-              control={control}
-              name="account_id"
-              render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="account" aria-invalid={Boolean(errors.account_id)}>
-                    <SelectValue placeholder="Selecione uma conta" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {accounts.map((account) => (
-                      <SelectItem key={account.id} value={account.id}>
-                        {account.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            <FieldError>{errors.account_id?.message}</FieldError>
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="notes">Observações (opcional)</Label>
-            <Textarea id="notes" rows={3} placeholder="Digite uma observação..." {...register("notes")} />
+            <Textarea id="notes" rows={2} className="min-h-[72px] resize-none" placeholder="Digite uma observação..." {...register("notes")} />
             <FieldError>{errors.notes?.message}</FieldError>
           </div>
 
-          <div className="space-y-2 pt-1">
-            <Button type="submit" variant="gradient" className="w-full" disabled={isSaving}>
-              {isSaving ? <Loader2 className="size-4 animate-spin" /> : null}
-              Salvar Transação
-            </Button>
+          <div className="grid grid-cols-[auto_1fr] gap-2 pt-1">
             <Button
               type="button"
               variant="ghost"
-              className="w-full"
               onClick={() => onOpenChange(false)}
               disabled={isSaving}
             >
               Cancelar
+            </Button>
+            <Button type="submit" variant="gradient" className="w-full" disabled={isSaving}>
+              {isSaving ? <Loader2 className="size-4 animate-spin" /> : null}
+              Salvar Transação
             </Button>
           </div>
         </form>

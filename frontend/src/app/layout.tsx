@@ -16,6 +16,16 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nexosfinn.vercel.app"),
+  applicationName: "NexosFinn",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "NexosFinn",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   title: {
     default: "NexosFinn — Suas finanças sob controle",
     template: "%s · NexosFinn",
@@ -67,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content={THEME_COLORS.dark} />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </head>
       <body className="min-h-dvh bg-background font-sans">

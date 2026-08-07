@@ -31,7 +31,7 @@ export function LandingHeader() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:px-5 sm:pt-3">
       <div
         className={cn(
           "mx-auto flex h-16 w-full max-w-6xl items-center justify-between rounded-full border px-4 transition-all duration-300 sm:px-5",

@@ -27,8 +27,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="ambient-grid relative flex min-h-dvh overflow-hidden bg-background p-3 sm:p-5">
-      <div className="absolute right-5 top-5 z-30">
+    <div className="ambient-grid relative flex min-h-[100svh] w-full max-w-full overflow-x-clip bg-background lg:p-3 xl:p-5">
+      <div className="absolute right-[max(1rem,env(safe-area-inset-right,0px))] top-[calc(1rem+env(safe-area-inset-top,0px))] z-30 lg:right-5 lg:top-5">
         <ThemeToggle />
       </div>
 
@@ -72,7 +72,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
         </p>
       </aside>
 
-      <main className="safe-area-auth relative flex w-full flex-col justify-center lg:w-[46%]">
+      <main className="safe-area-auth relative flex min-h-[100svh] w-full flex-col justify-start overflow-x-hidden lg:min-h-0 lg:w-[46%] lg:justify-center">
         <div className="mx-auto w-full max-w-md">
           <div className="mb-6 lg:hidden">
             <Logo size="lg" />
