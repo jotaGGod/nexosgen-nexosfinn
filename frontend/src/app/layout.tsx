@@ -81,6 +81,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </head>
       <body className="min-h-dvh bg-background font-sans">
+        {/*
+         * Pintura de fundo da tela inteira, atrás de tudo.
+         *
+         * No PWA instalado do iOS (standalone) a página desenha de ponta a
+         * ponta com `viewport-fit=cover`, mas as áreas seguras — atrás do
+         * recorte no topo e do indicador de início na base — só ficam pintadas
+         * se algum elemento realmente as cobrir. Quando o conteúdo é mais curto
+         * que a tela, ou vive dentro de um contêiner com rolagem própria, essas
+         * faixas apareciam pretas. Esta camada `fixed inset-0` cobre a viewport
+         * visual inteira, inclusive as áreas seguras, e acompanha o tema — então
+         * a tela fica fluida, sem faixas, no claro e no escuro.
+         */}
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-background" />
         <DomGuard />
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>

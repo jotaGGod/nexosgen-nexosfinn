@@ -1,12 +1,14 @@
 "use client";
 
 import { LogOut } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Logo } from "@/components/layout/logo";
 import { primaryNavItems, secondaryNavItems, type NavItem } from "@/components/layout/nav";
+import { useProfile } from "@/hooks/use-nexosgen-nexosfinn";
 import { cn } from "@/lib/utils";
 
 /**
@@ -28,12 +30,20 @@ function ItemDaLista({ item, ativo }: { item: NavItem; ativo: boolean }) {
       prefetch={false}
       aria-current={ativo ? "page" : undefined}
       className={cn(
-        "flex min-h-11 items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200",
+        "relative flex min-h-11 items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ease-out-expo",
         ativo
-          ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.12)]"
+          ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.14)]"
           : "text-muted-foreground hover:translate-x-0.5 hover:bg-secondary/80 hover:text-foreground",
       )}
     >
+      {/* Trilho de marca no item ativo — o sinal "você está aqui". */}
+      <span
+        aria-hidden
+        className={cn(
+          "absolute left-1 top-1/2 h-4 w-1 -translate-y-1/2 rounded-full bg-active transition-opacity duration-200",
+          ativo ? "opacity-100 shadow-[0_0_10px_hsl(var(--active)/0.7)]" : "opacity-0",
+        )}
+      />
       <Icon className="size-[18px] shrink-0" />
       <span className="truncate">{item.label}</span>
     </Link>
@@ -43,6 +53,7 @@ function ItemDaLista({ item, ativo }: { item: NavItem; ativo: boolean }) {
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: user } = useProfile();
   const [saindo, setSaindo] = useState(false);
 
   async function sair() {
@@ -77,15 +88,45 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <button
-        type="button"
-        onClick={sair}
-        disabled={saindo}
-        className="flex min-h-11 items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
-      >
-        <LogOut className="size-[18px] shrink-0" />
-        {saindo ? "Saindo..." : "Sair da conta"}
-      </button>
+      {/*
+       * Zona compacta de usuário: preenche o espaço entre a navegação e a saída
+       * com identidade — quem está logado — em vez de deixar um vão vazio.
+       */}
+      <div className="mt-4 space-y-1 border-t border-sidebar-border/70 pt-3">
+        <Link
+          href="/app/configuracoes?tab=perfil"
+          prefetch={false}
+          className="group flex items-center gap-3 rounded-2xl px-2 py-2 transition-colors hover:bg-secondary/70"
+        >
+          <span className="relative size-9 shrink-0 overflow-hidden rounded-full border border-border bg-card">
+            <Image
+              src="/images/default-user-avatar.svg"
+              alt=""
+              fill
+              sizes="36px"
+              className="object-cover"
+            />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-sm font-semibold text-foreground">
+              {user?.name ?? "Minha conta"}
+            </span>
+            {user?.email ? (
+              <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
+            ) : null}
+          </span>
+        </Link>
+
+        <button
+          type="button"
+          onClick={sair}
+          disabled={saindo}
+          className="flex min-h-11 w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
+        >
+          <LogOut className="size-[18px] shrink-0" />
+          {saindo ? "Saindo..." : "Sair da conta"}
+        </button>
+      </div>
     </aside>
   );
 }

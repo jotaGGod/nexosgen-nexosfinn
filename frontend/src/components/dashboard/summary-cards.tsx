@@ -16,20 +16,35 @@ interface SummaryCardProps {
   icon: LucideIcon;
   tint: string;
   invertVariation?: boolean;
+  /** O saldo total é o número focal da tela: maior e com um halo de marca. */
+  hero?: boolean;
   className?: string;
 }
 
-function SummaryCard({ label, value, variation, icon: Icon, tint, invertVariation, className }: SummaryCardProps) {
+function SummaryCard({ label, value, variation, icon: Icon, tint, invertVariation, hero, className }: SummaryCardProps) {
   return (
-    <Card className={cn("p-5", className)}>
-      <div className="flex items-start justify-between gap-3">
+    <Card className={cn("relative overflow-hidden p-5", hero && "p-6", className)}>
+      {hero ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-16 size-48 rounded-full bg-primary/10 blur-3xl"
+        />
+      ) : null}
+      <div className="relative flex items-start justify-between gap-3">
         <p className="text-sm font-medium text-muted-foreground">{label}</p>
-        <span className={`flex size-9 items-center justify-center rounded-xl ${tint}`}>
-          <Icon className="size-[18px]" />
+        <span className={cn("flex items-center justify-center rounded-xl", hero ? "size-10" : "size-9", tint)}>
+          <Icon className={hero ? "size-5" : "size-[18px]"} />
         </span>
       </div>
-      <p className="mt-3 text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
-      <Variation className="mt-2" value={variation} invert={invertVariation} label="vs mês anterior" />
+      <p
+        className={cn(
+          "relative mt-3 font-semibold tracking-tight tabular-nums",
+          hero ? "text-[1.75rem] leading-none sm:text-4xl" : "text-2xl",
+        )}
+      >
+        {value}
+      </p>
+      <Variation className="relative mt-2" value={variation} invert={invertVariation} label="vs mês anterior" />
     </Card>
   );
 }
@@ -43,6 +58,7 @@ export function SummaryCards({ summary }: { summary: DashboardSummary }) {
         variation={summary.total_balance.variation}
         icon={Wallet}
         tint="bg-active/12 text-active"
+        hero
         className="col-span-2 md:col-span-3 lg:col-span-2"
       />
       <SummaryCard

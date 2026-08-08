@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { PageTransition } from "@/components/layout/page-transition";
 import { Sidebar } from "@/components/layout/sidebar";
 import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
 
@@ -40,7 +41,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <div className="relative min-w-0 flex-1">
         <div className="safe-area-page pb-nav relative mx-auto w-full max-w-md md:max-w-3xl lg:max-w-7xl lg:px-8 lg:pb-12">
           <AppHeader />
-          <main className="mt-4 lg:mt-0">{children}</main>
+          <main className="mt-4 lg:mt-0">
+            <PageTransition>{children}</PageTransition>
+          </main>
         </div>
       </div>
 
