@@ -58,11 +58,29 @@ const themeInitializer = `
     document.documentElement.classList.toggle("dark", theme === "dark");
     document.documentElement.style.colorScheme = theme;
     document.documentElement.style.backgroundColor = themeColor;
-    document.querySelector('meta[name="color-scheme"]').setAttribute("content", theme);
-    document.querySelector('meta[name="theme-color"]').setAttribute(
-      "content",
-      themeColor
-    );
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
+
+    /*
+     * No app instalado, a cor de tema sai de cena.
+     *
+     * No navegador ela é útil: tinge a barra do Safari e do Chrome. Já no modo
+     * standalone do iOS, uma cor de tema declarada faz o sistema desenhar uma
+     * faixa sólida atrás do relógio e da bateria — e o conteúdo para de correr
+     * por baixo dela. Removendo a marcação só nesse modo, o
+     * "black-translucent" volta a valer e a tela usa a altura inteira, sem
+     * perder o tingimento no navegador.
+     */
+    var instalado =
+      window.navigator.standalone === true ||
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.matchMedia("(display-mode: fullscreen)").matches;
+
+    var metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (instalado) {
+      metaThemeColor?.remove();
+    } else {
+      metaThemeColor?.setAttribute("content", themeColor);
+    }
   } catch (_) {}
 `;
 
@@ -77,6 +95,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content={THEME_COLORS.dark} />
+        {/*
+         * Declaradas à mão de propósito.
+         *
+         * O `appleWebApp` do metadata gera o título e o estilo da barra de
+         * status, mas não emite esta — e sem `apple-mobile-web-app-capable` o
+         * iOS abre o ícone como uma aba comum, sem tela cheia, e o
+         * `black-translucent` deixa de valer. A variante sem prefixo, lida pelo
+         * Android, o Next já emite sozinho.
+         */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </head>
