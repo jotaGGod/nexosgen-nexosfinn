@@ -31,18 +31,16 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_SHA: ${{ github.sha }}
-          REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ github.token }}
         run: |
           ssh -i ~/.ssh/nexosfinn_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_HOST" \
-            "GITHUB_TOKEN=$(printf %q "$GITHUB_TOKEN") DEPLOY_SHA=$(printf %q "$DEPLOY_SHA") REPOSITORY=$(printf %q "$REPOSITORY") bash -s" <<'REMOTE'
+            "DEPLOY_SHA=$(printf %q "$DEPLOY_SHA") bash -s" <<'REMOTE'
           set -euo pipefail
 
           app_dir=/opt/nexosgen/apps/nexosfinn
-          auth_header="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 --wrap=0)"
+          git_ssh='ssh -i /home/ubuntu/.ssh/nexosfinn_github_deploy -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes'
 
-          git -C "$app_dir" remote set-url origin "https://github.com/${REPOSITORY}.git"
-          git -C "$app_dir" -c http.extraheader="$auth_header" fetch --depth=1 origin main
+          git -C "$app_dir" remote set-url origin git@github.com:jotaGGod/nexosgen-nexosfinn.git
+          GIT_SSH_COMMAND="$git_ssh" git -C "$app_dir" fetch --depth=1 origin main
           git -C "$app_dir" checkout --force --detach "$DEPLOY_SHA"
 
           cd "$app_dir"
