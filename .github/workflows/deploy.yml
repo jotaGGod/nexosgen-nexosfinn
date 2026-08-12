@@ -44,11 +44,24 @@ jobs:
           git -C "$app_dir" checkout --force --detach "$DEPLOY_SHA"
 
           cd "$app_dir"
-          docker compose --env-file .env.prod -f compose.prod.yml up -d --build
+          # A VPS tem recursos limitados: construir backend e frontend em
+          # sequência evita que o host fique sem resposta durante o deploy.
+          docker compose --env-file .env.prod -f compose.prod.yml build backend
+          docker compose --env-file .env.prod -f compose.prod.yml build frontend
+          docker compose --env-file .env.prod -f compose.prod.yml up -d --no-build
           docker compose --env-file .env.prod -f compose.prod.yml ps
 
-          for container in nexosfinn-postgres nexosfinn-backend nexosfinn-frontend; do
-            status=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$container")
-            test "$status" = healthy || { echo "$container is $status" >&2; exit 1; }
+          for attempt in $(seq 1 36); do
+            postgres=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' nexosfinn-postgres)
+            backend=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' nexosfinn-backend)
+            frontend=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' nexosfinn-frontend)
+            if [ "$postgres" = healthy ] && [ "$backend" = healthy ] && [ "$frontend" = healthy ]; then
+              docker compose --env-file .env.prod -f compose.prod.yml ps
+              exit 0
+            fi
+            sleep 5
           done
+
+          docker compose --env-file .env.prod -f compose.prod.yml ps
+          exit 1
           REMOTE
