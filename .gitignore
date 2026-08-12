@@ -12,6 +12,7 @@ backend/bin/
 .env
 .env.local
 .env.*.local
+.env.prod
 
 # Editores
 .idea/

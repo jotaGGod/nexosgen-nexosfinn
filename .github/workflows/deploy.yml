@@ -1,0 +1,56 @@
+name: Deploy NexosFinn
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-nexosfinn-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_PRIVATE_KEY" > ~/.ssh/nexosfinn_deploy
+          chmod 600 ~/.ssh/nexosfinn_deploy
+          printf '%s\n' "$DEPLOY_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Update and deploy NexosFinn
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_SHA: ${{ github.sha }}
+          REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ssh -i ~/.ssh/nexosfinn_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes "$DEPLOY_HOST" \
+            "GITHUB_TOKEN=$(printf %q "$GITHUB_TOKEN") DEPLOY_SHA=$(printf %q "$DEPLOY_SHA") REPOSITORY=$(printf %q "$REPOSITORY") bash -s" <<'REMOTE'
+          set -euo pipefail
+
+          app_dir=/opt/nexosgen/apps/nexosfinn
+          auth_header="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 --wrap=0)"
+
+          git -C "$app_dir" remote set-url origin "https://github.com/${REPOSITORY}.git"
+          git -C "$app_dir" -c http.extraheader="$auth_header" fetch --depth=1 origin main
+          git -C "$app_dir" checkout --force --detach "$DEPLOY_SHA"
+
+          cd "$app_dir"
+          docker compose --env-file .env.prod -f compose.prod.yml up -d --build
+          docker compose --env-file .env.prod -f compose.prod.yml ps
+
+          for container in nexosfinn-postgres nexosfinn-backend nexosfinn-frontend; do
+            status=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$container")
+            test "$status" = healthy || { echo "$container is $status" >&2; exit 1; }
+          done
+          REMOTE

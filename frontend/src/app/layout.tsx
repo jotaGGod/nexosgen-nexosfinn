@@ -15,7 +15,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexosfinn.vercel.app"),
+  metadataBase: new URL("https://nexosfinn.nexosgen.com.br"),
   applicationName: "NexosFinn",
   manifest: "/manifest.webmanifest",
   appleWebApp: {

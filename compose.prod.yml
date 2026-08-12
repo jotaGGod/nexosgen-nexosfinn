@@ -1,0 +1,66 @@
+name: nexosfinn
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nexosfinn-postgres
+    env_file:
+      - .env.prod
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    container_name: nexosfinn-backend
+    env_file:
+      - .env.prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health/ready >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_APP_URL: https://nexosfinn.nexosgen.com.br
+    container_name: nexosfinn-frontend
+    environment:
+      NODE_ENV: production
+      API_BASE_URL: http://backend:8080
+      NEXT_PUBLIC_APP_URL: https://nexosfinn.nexosgen.com.br
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - default
+      - nexosgen-proxy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+    name: nexosfinn-postgres-data
+
+networks:
+  nexosgen-proxy:
+    external: true
+    name: nexosgen-proxy
