@@ -49,7 +49,8 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Inteligência financeira pessoal</span>
           <h2 className="mt-6 max-w-lg text-4xl font-extrabold leading-[1.02] tracking-[-0.05em] text-foreground xl:text-5xl">
             Seu dinheiro,{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            {/* pr-[0.08em]: mesma compensação do hero — o tracking negativo cortava a última letra. */}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text pr-[0.08em] text-transparent">
               sob controle
             </span>
           </h2>

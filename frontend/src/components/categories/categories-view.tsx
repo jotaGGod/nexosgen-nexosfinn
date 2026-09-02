@@ -203,6 +203,7 @@ export function CategoriesView() {
                 id="category-name"
                 placeholder="Ex: Alimentação"
                 aria-invalid={Boolean(errors.name)}
+                autoComplete="off"
                 {...register("name")}
               />
               <FieldError>{errors.name?.message}</FieldError>

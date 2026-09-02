@@ -47,6 +47,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--active) / <alpha-value>)",
           foreground: "hsl(var(--active-foreground) / <alpha-value>)",
         },
+        // Chip do item de navegação ativo no tema claro; ver globals.css.
+        "nav-active": "hsl(var(--nav-active) / <alpha-value>)",
         destructive: {
           DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",

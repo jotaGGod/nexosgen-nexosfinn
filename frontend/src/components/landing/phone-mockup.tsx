@@ -39,7 +39,7 @@ function PhoneLogo() {
       <defs>
         <linearGradient id="phone-nexosfinn-mark" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
           <stop stopColor="#C6FF3D" />
-          <stop offset="1" stopColor="#7C5CFC" />
+          <stop offset="1" stopColor="#297A52" />
         </linearGradient>
       </defs>
       <path d="M5 28V4h5l12 15.5V4h5v24h-5L10 12.5V28H5Z" fill="url(#phone-nexosfinn-mark)" />

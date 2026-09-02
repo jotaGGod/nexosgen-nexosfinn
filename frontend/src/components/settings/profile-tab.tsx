@@ -98,13 +98,13 @@ export function ProfileTab() {
           <form onSubmit={profileForm.handleSubmit(onSubmitProfile)} className="space-y-4" noValidate>
             <div className="space-y-2">
               <Label htmlFor="profile-name">Nome</Label>
-              <Input id="profile-name" {...profileForm.register("name")} />
+              <Input id="profile-name" autoComplete="name" {...profileForm.register("name")} />
               <FieldError>{profileForm.formState.errors.name?.message}</FieldError>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="profile-email">E-mail</Label>
-              <Input id="profile-email" type="email" {...profileForm.register("email")} />
+              <Input id="profile-email" type="email" autoComplete="email" {...profileForm.register("email")} />
               <FieldError>{profileForm.formState.errors.email?.message}</FieldError>
             </div>
 

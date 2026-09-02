@@ -32,7 +32,9 @@ function ItemDaLista({ item, ativo }: { item: NavItem; ativo: boolean }) {
       className={cn(
         "relative flex min-h-11 items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ease-out-expo",
         ativo
-          ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.14)]"
+          ? // Claro: chip escuro para o limão neon poder aparecer. Escuro:
+            // véu do próprio limão sobre o fundo quase preto.
+            "bg-nav-active text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22)] dark:bg-primary/[0.12] dark:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.14)]"
           : "text-muted-foreground hover:translate-x-0.5 hover:bg-secondary/80 hover:text-foreground",
       )}
     >
@@ -40,8 +42,8 @@ function ItemDaLista({ item, ativo }: { item: NavItem; ativo: boolean }) {
       <span
         aria-hidden
         className={cn(
-          "absolute left-1 top-1/2 h-4 w-1 -translate-y-1/2 rounded-full bg-active transition-opacity duration-200",
-          ativo ? "opacity-100 shadow-[0_0_10px_hsl(var(--active)/0.7)]" : "opacity-0",
+          "absolute left-1 top-1/2 h-4 w-1 -translate-y-1/2 rounded-full bg-primary transition-opacity duration-200",
+          ativo ? "opacity-100 shadow-[0_0_10px_hsl(var(--primary)/0.8)]" : "opacity-0",
         )}
       />
       <Icon className="size-[18px] shrink-0" />

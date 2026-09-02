@@ -104,7 +104,7 @@ export function BottomNav() {
                   className={cn(
                     "flex items-center gap-2.5 rounded-xl px-3 py-3 text-sm font-medium transition-colors",
                     ativo
-                      ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.14)]"
+                      ? "bg-nav-active text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22)] dark:bg-primary/[0.12] dark:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.14)]"
                       : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                   )}
                 >
@@ -147,7 +147,7 @@ export function BottomNav() {
                 className={cn(
                   "flex min-h-[54px] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-semibold transition-all duration-200 ease-out-expo",
                   ativo
-                    ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.14)]"
+                    ? "bg-nav-active text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22)] dark:bg-primary/[0.12] dark:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.14)]"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -164,7 +164,7 @@ export function BottomNav() {
             className={cn(
               "flex min-h-[54px] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-semibold transition-all duration-200 ease-out-expo",
               gavetaAberta || gavetaAtiva
-                ? "bg-active/[0.12] text-active shadow-[inset_0_0_0_1px_hsl(var(--active)/0.14)]"
+                ? "bg-nav-active text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22)] dark:bg-primary/[0.12] dark:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.14)]"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >

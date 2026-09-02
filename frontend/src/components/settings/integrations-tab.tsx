@@ -262,6 +262,7 @@ export function IntegrationsTab() {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="Ex: Assistente WhatsApp (n8n)"
+                autoComplete="off"
               />
             </div>
 

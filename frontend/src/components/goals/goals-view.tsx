@@ -301,6 +301,7 @@ export function GoalsView() {
                 id="goal-name"
                 placeholder="Ex: Viagem Europa"
                 aria-invalid={Boolean(errors.name)}
+                autoComplete="off"
                 {...register("name")}
               />
               <FieldError>{errors.name?.message}</FieldError>
@@ -339,7 +340,7 @@ export function GoalsView() {
 
             <div className="space-y-2">
               <Label htmlFor="goal-image">URL da imagem (opcional)</Label>
-              <Input id="goal-image" placeholder="https://..." {...register("image_url")} />
+              <Input id="goal-image" placeholder="https://..." autoComplete="off" {...register("image_url")} />
               <FieldError>{errors.image_url?.message}</FieldError>
             </div>
 

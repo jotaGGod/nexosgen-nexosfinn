@@ -129,7 +129,18 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="min-w-0 space-y-4 overflow-x-clip pb-1" noValidate>
+        {/*
+         * `px-1 -mx-1` acompanha o `overflow-x-clip`.
+         *
+         * O corte horizontal impede que um campo largo gere rolagem lateral no
+         * diálogo, mas ele acontece na borda da caixa de preenchimento. Como os
+         * campos são `w-full`, o anel de foco — que é desenhado 3px para fora
+         * da caixa — caía justamente em cima dessa borda e aparecia fatiado nas
+         * laterais. O preenchimento afasta a borda de corte o suficiente para o
+         * anel caber, e a margem negativa devolve a largura original, então
+         * nada muda de posição.
+         */}
+        <form onSubmit={handleSubmit(onSubmit)} className="-mx-1 min-w-0 space-y-4 overflow-x-clip px-1 pb-1" noValidate>
           <Controller
             control={control}
             name="type"
@@ -152,7 +163,16 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
                       field.value === option.value
                         ? option.value === "income"
                           ? "bg-positive text-background shadow-sm"
-                          : "bg-primary text-primary-foreground shadow-sm"
+                          : /*
+                             * Vermelho, como em todo o resto do app (cards do
+                             * dashboard, resumo e valores da lista de
+                             * transações). `--negative` não tem uma
+                             * `-foreground` própria, mas é numericamente
+                             * idêntico a `--destructive` nos dois temas — o
+                             * par de contraste já calibrado para este mesmo
+                             * vermelho.
+                             */
+                            "bg-negative text-destructive-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground",
                     )}
                   >
@@ -169,6 +189,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
               id="description"
               placeholder="Ex: Salário, Freelance, etc."
               aria-invalid={Boolean(errors.description)}
+              autoComplete="off"
               {...register("description")}
             />
             <FieldError>{errors.description?.message}</FieldError>
@@ -255,7 +276,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
 
           <div className="space-y-2">
             <Label htmlFor="notes">Observações (opcional)</Label>
-            <Textarea id="notes" rows={2} className="min-h-[72px] resize-none" placeholder="Digite uma observação..." {...register("notes")} />
+            <Textarea id="notes" rows={2} className="min-h-[72px] resize-none" placeholder="Digite uma observação..." autoComplete="off" {...register("notes")} />
             <FieldError>{errors.notes?.message}</FieldError>
           </div>
 

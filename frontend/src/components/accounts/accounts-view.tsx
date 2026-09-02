@@ -246,6 +246,7 @@ export function AccountsView() {
                 id="account-name"
                 placeholder="Ex: Conta Corrente"
                 aria-invalid={Boolean(errors.name)}
+                autoComplete="off"
                 {...register("name")}
               />
               <FieldError>{errors.name?.message}</FieldError>

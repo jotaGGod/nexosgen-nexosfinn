@@ -139,6 +139,7 @@ export function TransactionsView() {
                 placeholder="Buscar transações..."
                 className="pl-9"
                 aria-label="Buscar transações"
+                autoComplete="off"
               />
             </div>
 

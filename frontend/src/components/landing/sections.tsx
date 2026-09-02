@@ -143,7 +143,8 @@ export function Showcase() {
 
         return (
           <Reveal key={bloco.titulo} as="article" className="grid items-center gap-10 lg:grid-cols-2">
-            <div className={invertido ? "lg:order-2" : undefined}>
+            {/* min-w-0: mesmo risco do hero — sem isto, o parágrafo com max-w-md pode empurrar a coluna além do espaço disponível. */}
+            <div className={cn("min-w-0", invertido ? "lg:order-2" : undefined)}>
               <span className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
                 {bloco.sobretitulo}
               </span>
@@ -154,7 +155,7 @@ export function Showcase() {
             </div>
 
             {/* Proporção fixa: o bloco reserva o espaço antes de pintar. */}
-            <div className={invertido ? "lg:order-1" : undefined} style={{ aspectRatio: "4 / 3" }}>
+            <div className={cn("min-w-0", invertido ? "lg:order-1" : undefined)} style={{ aspectRatio: "4 / 3" }}>
               {bloco.demo}
             </div>
           </Reveal>
