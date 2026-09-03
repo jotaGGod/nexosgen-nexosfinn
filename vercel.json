@@ -20,6 +20,13 @@
   },
   "rewrites": [
     {
+      "source": "/docs(/.*)?",
+      "destination": {
+        "type": "service",
+        "service": "backend"
+      }
+    },
+    {
       "source": "/api/v1(/.*)?",
       "destination": {
         "type": "service",

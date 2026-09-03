@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "settings-integrations": {
+      "targetKind": "existing-ui",
+      "projectId": "d25ee149-2a7f-4f3e-9bdb-9d899431f8ff",
+      "activeDraftId": "cbd7b93f-1036-4776-af9b-72af33151977",
+      "designSystemPath": ".superdesign/design-system.md",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "frontend/src/components/settings/integrations-tab.tsx",
+        "frontend/src/components/settings/settings-view.tsx",
+        "frontend/src/components/layout/page-header.tsx",
+        "frontend/src/components/ui/card.tsx",
+        "frontend/src/components/ui/button.tsx",
+        "frontend/src/components/ui/badge.tsx",
+        "frontend/src/lib/utils.ts",
+        "frontend/src/app/globals.css:1:220"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "c4ec2e463ca98b615e4e0181573639d03962e9432e65e6679261454ca2b1455c",
+        "frontend/src/components/settings/integrations-tab.tsx": "57e089177524693e87ac25d26d4b9a6d61e385b92e9ed0ad33827decb07e4998",
+        "frontend/src/components/settings/settings-view.tsx": "dfb6031d06c1384f1a1943b8ff0ac2fc56983cb8c838c5030c324f6a71fc54f8",
+        "frontend/src/components/layout/page-header.tsx": "6e2cb917a50e12b2159e2c888e00dc9b4c0034aa657d8ceeea5fe7b437f8bcbb",
+        "frontend/src/components/ui/card.tsx": "62004cd716dd47441238bd30db05544595adab40fa8ec917c660ceb32925d720",
+        "frontend/src/components/ui/button.tsx": "87e617b52084e451789b5b4f4a4d278ab93e347ca724122a9b48587811c2811b",
+        "frontend/src/components/ui/badge.tsx": "a7417aa574989522e8be81bd01ae9937ceaf795533762292a6d2a94dfbaed3ea",
+        "frontend/src/lib/utils.ts": "b908ce3ac51b04a47824d530f7bf1d30f152908bf92a8a09dfa97c9922ba2730",
+        "frontend/src/app/globals.css": "ca3efe1864455e203b0275ce242159f50d6c72be59bcd8d5106c4698ad5e82f2"
+      },
+      "drafts": {
+        "cbd7b93f-1036-4776-af9b-72af33151977": {
+          "title": "NexosFinn — Integrações expandidas",
+          "visualDirection": "catálogo compacto de recursos da API externa, preservando a interface escura existente",
+          "currentVersion": 1
+        }
+      },
+      "updatedAt": "2026-09-03T23:45:00.000Z"
+    }
+  }
+}

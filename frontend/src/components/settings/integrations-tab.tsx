@@ -1,6 +1,20 @@
 "use client";
 
-import { AlertTriangle, Check, Copy, KeyRound, Loader2, Plus, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  BookOpen,
+  Check,
+  Copy,
+  Goal,
+  KeyRound,
+  Landmark,
+  Loader2,
+  Plus,
+  ReceiptText,
+  Tags,
+  Trash2,
+  WalletCards,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -32,13 +46,111 @@ import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { APIKey, APIKeyStatus } from "@/types/api";
 
-/** Escopos oferecidos na criação da chave. */
-const scopeOptions = [
-  { value: "read:transactions", label: "Ler transações", description: "Consultar lançamentos e totais" },
-  { value: "write:transactions", label: "Criar e editar transações", description: "Lançar e corrigir gastos" },
-  { value: "read:balance", label: "Ler saldo", description: "Consultar saldo e contas" },
-  { value: "read:categories", label: "Ler categorias", description: "Mapear texto livre em categoria" },
+/**
+ * Escopos oferecidos na criação da chave, agrupados pelo recurso exposto na
+ * API externa. A ordem acompanha o contrato do backend para que a interface
+ * não anuncie permissões que a chave não consegue receber.
+ */
+interface ScopeOption {
+  value: string;
+  label: string;
+  description: string;
+}
+
+interface ScopeGroup {
+  label: string;
+  description: string;
+  options: ScopeOption[];
+}
+
+const scopeGroups: ScopeGroup[] = [
+  {
+    label: "Transações",
+    description: "Lançamentos, consulta e liquidação",
+    options: [
+      { value: "read:transactions", label: "Ler", description: "Listar, consultar e filtrar lançamentos" },
+      { value: "write:transactions", label: "Criar e editar", description: "Criar, atualizar e liquidar" },
+      { value: "delete:transactions", label: "Excluir", description: "Remover lançamentos" },
+    ],
+  },
+  {
+    label: "Saldo e contas",
+    description: "Saldo consolidado e contas financeiras",
+    options: [
+      { value: "read:balance", label: "Ler saldo", description: "Consultar saldo e resumo por período" },
+      { value: "read:accounts", label: "Ler contas", description: "Listar e consultar contas" },
+      { value: "write:accounts", label: "Criar e editar contas", description: "Cadastrar ou atualizar contas" },
+      { value: "delete:accounts", label: "Excluir contas", description: "Remover contas permitidas" },
+    ],
+  },
+  {
+    label: "Categorias",
+    description: "Classificação de receitas e despesas",
+    options: [
+      { value: "read:categories", label: "Ler", description: "Listar e consultar categorias" },
+      { value: "write:categories", label: "Criar e editar", description: "Cadastrar ou atualizar categorias" },
+      { value: "delete:categories", label: "Excluir", description: "Remover categorias permitidas" },
+    ],
+  },
+  {
+    label: "Metas",
+    description: "Objetivos de poupança e aportes",
+    options: [
+      { value: "read:goals", label: "Ler", description: "Listar e consultar metas" },
+      { value: "write:goals", label: "Criar, editar e aportar", description: "Gerenciar metas e registrar aportes" },
+      { value: "delete:goals", label: "Excluir", description: "Remover metas" },
+    ],
+  },
+  {
+    label: "Orçamentos",
+    description: "Limites mensais por categoria",
+    options: [
+      { value: "read:budgets", label: "Ler", description: "Listar e consultar orçamentos" },
+      { value: "write:budgets", label: "Criar e editar", description: "Definir ou atualizar limites" },
+      { value: "delete:budgets", label: "Excluir", description: "Remover orçamentos" },
+    ],
+  },
 ];
+
+const scopeOptions = scopeGroups.flatMap((group) => group.options);
+
+const endpointGroups = [
+  {
+    icon: ReceiptText,
+    title: "Transações",
+    scope: "read/write/delete:transactions",
+    methods: "GET, POST, PUT, PATCH e DELETE",
+    routes: ["/transactions", "/transactions/{id}"],
+  },
+  {
+    icon: Tags,
+    title: "Categorias",
+    scope: "read/write/delete:categories",
+    methods: "GET, POST, PUT e DELETE",
+    routes: ["/categories", "/categories/{id}"],
+  },
+  {
+    icon: Landmark,
+    title: "Saldo e contas",
+    scope: "read:balance e read/write/delete:accounts",
+    methods: "GET, POST, PUT e DELETE",
+    routes: ["/balance", "/accounts", "/accounts/{id}"],
+  },
+  {
+    icon: Goal,
+    title: "Metas e aportes",
+    scope: "read/write/delete:goals",
+    methods: "GET, POST, PUT e DELETE",
+    routes: ["/goals", "/goals/{id}", "/goals/{id}/contributions"],
+  },
+  {
+    icon: WalletCards,
+    title: "Orçamentos",
+    scope: "read/write/delete:budgets",
+    methods: "GET, PUT e DELETE",
+    routes: ["/budgets", "/budgets/{id}"],
+  },
+] as const;
 
 const statusBadge: Record<APIKeyStatus, { variant: "income" | "expense" | "outline"; label: string }> = {
   active: { variant: "income", label: "Ativa" },
@@ -206,49 +318,60 @@ export function IntegrationsTab() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Como conectar ao n8n</CardTitle>
+          <CardTitle>API externa e como conectar ao n8n</CardTitle>
           <CardDescription>
-            A automação de WhatsApp não faz parte deste projeto — a API já está pronta para recebê-la.
+            A automação de WhatsApp não faz parte deste projeto — a API já está pronta para receber transações,
+            categorias, contas, metas, aportes e orçamentos.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm text-muted-foreground">
+        <CardContent className="space-y-5 text-sm text-muted-foreground">
           <p>
             No n8n, crie uma credencial <span className="font-medium text-foreground">Header Auth</span> com o
             nome <code className="rounded bg-secondary px-1 py-0.5 font-mono text-xs">X-API-Key</code> e cole a
-            chave gerada aqui. Depois aponte os nós HTTP para:
+            chave gerada aqui. Depois use a base{" "}
+            <code className="break-all rounded bg-secondary px-1 py-0.5 font-mono text-xs">
+              https://nexosfinn.vercel.app/api/v1/external
+            </code>{" "}
+            nos nós HTTP.
           </p>
-          <ul className="space-y-1.5 font-mono text-xs">
-            <li>
-              <span className="text-positive">POST</span>{" "}
-              /api/v1/external/transactions
-            </li>
-            <li>
-              <span className="text-amber-600 dark:text-amber-400">PUT</span>{" "}
-              /api/v1/external/transactions/{"{id}"}
-            </li>
-            <li>
-              <span className="text-active">GET</span>{" "}
-              /api/v1/external/transactions
-            </li>
-            <li>
-              <span className="text-active">GET</span>{" "}
-              /api/v1/external/balance
-            </li>
-            <li>
-              <span className="text-active">GET</span>{" "}
-              /api/v1/external/categories
-            </li>
-          </ul>
-          <p>
-            A documentação completa está em{" "}
-            <code className="rounded bg-secondary px-1 py-0.5 font-mono text-xs">/docs</code> na API.
-          </p>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {endpointGroups.map(({ icon: Icon, title, scope, methods, routes }) => (
+              <article key={title} className="rounded-2xl border border-border bg-secondary/35 p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-active/10 text-active">
+                    <Icon className="size-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-medium text-foreground">{title}</h3>
+                    <p className="mt-0.5 text-xs">{methods}</p>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-1 font-mono text-[11px] text-foreground/85">
+                  {routes.map((route) => (
+                    <p key={route} className="break-all">
+                      {route}
+                    </p>
+                  ))}
+                </div>
+                <p className="mt-3 font-mono text-[10px] text-muted-foreground">{scope}</p>
+              </article>
+            ))}
+          </div>
+
+          <a
+            href="/docs"
+            className="inline-flex items-center gap-2 font-medium text-active underline-offset-4 hover:underline"
+          >
+            <BookOpen className="size-4" />
+            Abrir documentação completa da API
+          </a>
         </CardContent>
       </Card>
 
       {/* Criação */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Gerar nova API Key</DialogTitle>
             <DialogDescription>Conceda apenas os escopos que a automação realmente precisa.</DialogDescription>
@@ -266,25 +389,48 @@ export function IntegrationsTab() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label>Escopos</Label>
-              <div className="space-y-2">
-                {scopeOptions.map((option) => (
-                  <label
-                    key={option.value}
-                    className="flex cursor-pointer items-start gap-3 rounded-xl border border-border p-3 transition-colors hover:bg-secondary/60"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={scopes.includes(option.value)}
-                      onChange={() => toggleScope(option.value)}
-                      className="mt-0.5 size-4 accent-[hsl(var(--active))]"
-                    />
-                    <span className="min-w-0">
-                      <span className="block text-sm font-medium">{option.label}</span>
-                      <span className="block text-xs text-muted-foreground">{option.description}</span>
-                    </span>
-                  </label>
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <Label>Escopos</Label>
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="h-auto px-0 text-xs"
+                  onClick={() => setScopes(scopeOptions.map((option) => option.value))}
+                >
+                  Selecionar todos
+                </Button>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {scopeGroups.map((group) => (
+                  <section key={group.label} className="rounded-2xl border border-border p-3">
+                    <div className="mb-2">
+                      <p className="text-sm font-medium">{group.label}</p>
+                      <p className="text-xs text-muted-foreground">{group.description}</p>
+                    </div>
+                    <div className="space-y-1">
+                      {group.options.map((option) => (
+                        <label
+                          key={option.value}
+                          className="flex cursor-pointer items-start gap-2 rounded-xl px-2 py-2 transition-colors hover:bg-secondary/60"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={scopes.includes(option.value)}
+                            onChange={() => toggleScope(option.value)}
+                            className="mt-0.5 size-4 accent-[hsl(var(--active))]"
+                          />
+                          <span className="min-w-0">
+                            <span className="block text-xs font-medium">{option.label}</span>
+                            <span className="block text-[11px] leading-snug text-muted-foreground">
+                              {option.description}
+                            </span>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </section>
                 ))}
               </div>
             </div>
