@@ -124,6 +124,7 @@ func run() error {
 
 	createTransactionUC := transaction.NewCreateUseCase(transactions, categories, accounts)
 	updateTransactionUC := transaction.NewUpdateUseCase(transactions, categories, accounts)
+	patchTransactionSettlementUC := transaction.NewPatchSettlementUseCase(transactions, categories, accounts)
 	deleteTransactionUC := transaction.NewDeleteUseCase(transactions)
 	getTransactionUC := transaction.NewGetUseCase(transactions, categories, accounts)
 	listTransactionsUC := transaction.NewListUseCase(transactions, categories, accounts)
@@ -177,7 +178,7 @@ func run() error {
 			registerUC, loginUC, refreshUC, logoutUC, profileUC, updateProfileUC,
 			changePasswordUC, resetWorkspaceUC, log),
 		Transaction: handler.NewTransactionHandler(
-			createTransactionUC, updateTransactionUC, deleteTransactionUC, getTransactionUC, listTransactionsUC, log),
+			createTransactionUC, updateTransactionUC, patchTransactionSettlementUC, deleteTransactionUC, getTransactionUC, listTransactionsUC, log),
 		Category: handler.NewCategoryHandler(
 			createCategoryUC, updateCategoryUC, deleteCategoryUC, listCategoriesUC, log),
 		Account: handler.NewAccountHandler(
@@ -190,7 +191,7 @@ func run() error {
 		APIKey:    handler.NewAPIKeyHandler(createAPIKeyUC, listAPIKeysUC, revokeAPIKeyUC, log),
 		External: handler.NewExternalHandler(
 			createTransactionUC, updateTransactionUC, listTransactionsUC,
-			listCategoriesUC, listAccountsUC, summaryUC, log),
+			listCategoriesUC, listAccountsUC, getTransactionUC, listGoalsUC, listBudgetsUC, summaryUC, log),
 	})
 
 	server := &http.Server{

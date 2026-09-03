@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
 	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
@@ -78,12 +79,13 @@ func (uc *ListUseCase) Execute(ctx context.Context, userID uuid.UUID, input dto.
 // os limites de paginacao e ignorando identificadores malformados.
 func buildFilter(userID uuid.UUID, input dto.ListTransactionsInput) (repository.TransactionFilter, error) {
 	filter := repository.TransactionFilter{
-		UserID:   userID,
-		Search:   input.Search,
-		Page:     input.Page,
-		PageSize: input.PageSize,
-		SortBy:   input.SortBy,
-		SortDir:  input.SortDir,
+		UserID:    userID,
+		Search:    input.Search,
+		Page:      input.Page,
+		PageSize:  input.PageSize,
+		SortBy:    input.SortBy,
+		SortDir:   input.SortDir,
+		DateState: input.Status,
 	}
 
 	if filter.Page < 1 {
@@ -112,6 +114,28 @@ func buildFilter(userID uuid.UUID, input dto.ListTransactionsInput) (repository.
 			return repository.TransactionFilter{}, err
 		}
 		filter.Period = &period
+	}
+
+	// Status é uma conveniência semântica para integrações. Não é persistido:
+	// "overdue" continua derivado de data + liquidação.
+	switch input.Status {
+	case "settled":
+		settled := true
+		filter.Settlement = &settled
+	case "pending", "unpaid", "not_received":
+		settled := false
+		filter.Settlement = &settled
+	case "paid":
+		typeExpense := vo.TransactionTypeExpense
+		settled := true
+		filter.Type, filter.Settlement = &typeExpense, &settled
+	case "received":
+		typeIncome := vo.TransactionTypeIncome
+		settled := true
+		filter.Type, filter.Settlement = &typeIncome, &settled
+	case "overdue", "future", "today", "past", "":
+	default:
+		return repository.TransactionFilter{}, domainerr.InvalidInput("invalid_status", "status de transação inválido")
 	}
 
 	for _, raw := range input.CategoryIDs {

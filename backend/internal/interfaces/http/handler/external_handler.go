@@ -7,9 +7,12 @@ import (
 
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/account"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/budget"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/category"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/dashboard"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/goal"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/usecase/transaction"
+	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/interfaces/presenter"
 )
@@ -34,6 +37,9 @@ type ExternalHandler struct {
 	listTransactions  *transaction.ListUseCase
 	listCategories    *category.ListUseCase
 	listAccounts      *account.ListUseCase
+	getTransaction    *transaction.GetUseCase
+	listGoals         *goal.ListUseCase
+	listBudgets       *budget.ListUseCase
 	summary           *dashboard.GetSummaryUseCase
 	logger            *slog.Logger
 }
@@ -45,6 +51,9 @@ func NewExternalHandler(
 	listTransactions *transaction.ListUseCase,
 	listCategories *category.ListUseCase,
 	listAccounts *account.ListUseCase,
+	getTransaction *transaction.GetUseCase,
+	listGoals *goal.ListUseCase,
+	listBudgets *budget.ListUseCase,
 	summary *dashboard.GetSummaryUseCase,
 	logger *slog.Logger,
 ) *ExternalHandler {
@@ -54,9 +63,132 @@ func NewExternalHandler(
 		listTransactions:  listTransactions,
 		listCategories:    listCategories,
 		listAccounts:      listAccounts,
+		getTransaction:    getTransaction,
+		listGoals:         listGoals,
+		listBudgets:       listBudgets,
 		summary:           summary,
 		logger:            logger,
 	}
+}
+
+// GetTransaction devolve um lançamento individual sem expor o repositório.
+func (h *ExternalHandler) GetTransaction(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	id, err := pathUUID(r, "id")
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	output, err := h.getTransaction.Execute(r.Context(), userID, id)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	presenter.JSON(w, http.StatusOK, output)
+}
+
+func (h *ExternalHandler) GetCategory(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	id, err := pathUUID(r, "id")
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	items, err := h.listCategories.Execute(r.Context(), userID, "", true)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	for _, item := range items {
+		if item.ID == id.String() {
+			presenter.JSON(w, http.StatusOK, item)
+			return
+		}
+	}
+	presenter.Error(r.Context(), w, h.logger, domainerr.NotFound("category_not_found", "categoria nao encontrada"))
+}
+
+func (h *ExternalHandler) GetAccount(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	id, err := pathUUID(r, "id")
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	items, err := h.listAccounts.Execute(r.Context(), userID, true)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	for _, item := range items {
+		if item.ID == id.String() {
+			presenter.JSON(w, http.StatusOK, item)
+			return
+		}
+	}
+	presenter.Error(r.Context(), w, h.logger, domainerr.NotFound("account_not_found", "conta nao encontrada"))
+}
+
+func (h *ExternalHandler) GetGoal(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	id, err := pathUUID(r, "id")
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	items, err := h.listGoals.Execute(r.Context(), userID, "", true)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	for _, item := range items {
+		if item.ID == id.String() {
+			presenter.JSON(w, http.StatusOK, item)
+			return
+		}
+	}
+	presenter.Error(r.Context(), w, h.logger, domainerr.NotFound("goal_not_found", "meta não encontrada"))
+}
+
+func (h *ExternalHandler) GetBudget(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	id, err := pathUUID(r, "id")
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	items, err := h.listBudgets.Execute(r.Context(), userID, dto.ListBudgetsInput{Month: r.URL.Query().Get("month")})
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	for _, item := range items.Items {
+		if item.ID == id.String() {
+			presenter.JSON(w, http.StatusOK, item)
+			return
+		}
+	}
+	presenter.Error(r.Context(), w, h.logger, domainerr.NotFound("budget_not_found", "orçamento não encontrado"))
 }
 
 // CreateTransaction registra um lancamento vindo de uma automacao.

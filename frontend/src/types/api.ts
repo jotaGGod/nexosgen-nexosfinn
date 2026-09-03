@@ -82,6 +82,11 @@ export interface Transaction {
   category: CategoryRef;
   account: AccountRef;
   created_at: string;
+  settlement: { status: "pending" | "settled"; settled_at: string };
+  /** Presente apenas em despesas. */
+  is_paid?: boolean;
+  /** Presente apenas em receitas. */
+  is_received?: boolean;
 }
 
 export interface TransactionList {

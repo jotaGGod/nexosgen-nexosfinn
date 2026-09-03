@@ -11,24 +11,50 @@ import (
 
 // TransactionHandler expoe o CRUD de lancamentos.
 type TransactionHandler struct {
-	create *transaction.CreateUseCase
-	update *transaction.UpdateUseCase
-	remove *transaction.DeleteUseCase
-	get    *transaction.GetUseCase
-	list   *transaction.ListUseCase
-	logger *slog.Logger
+	create          *transaction.CreateUseCase
+	update          *transaction.UpdateUseCase
+	patchSettlement *transaction.PatchSettlementUseCase
+	remove          *transaction.DeleteUseCase
+	get             *transaction.GetUseCase
+	list            *transaction.ListUseCase
+	logger          *slog.Logger
 }
 
 // NewTransactionHandler monta o handler com seus casos de uso.
 func NewTransactionHandler(
 	create *transaction.CreateUseCase,
 	update *transaction.UpdateUseCase,
+	patchSettlement *transaction.PatchSettlementUseCase,
 	remove *transaction.DeleteUseCase,
 	get *transaction.GetUseCase,
 	list *transaction.ListUseCase,
 	logger *slog.Logger,
 ) *TransactionHandler {
-	return &TransactionHandler{create: create, update: update, remove: remove, get: get, list: list, logger: logger}
+	return &TransactionHandler{create: create, update: update, patchSettlement: patchSettlement, remove: remove, get: get, list: list, logger: logger}
+}
+
+// PatchSettlement altera exclusivamente o estado de pagamento/recebimento.
+func (h *TransactionHandler) PatchSettlement(w http.ResponseWriter, r *http.Request) {
+	userID, err := currentUserID(r)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	transactionID, err := pathUUID(r, "id")
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	var input dto.PatchTransactionInput
+	if !decodeJSON(w, r, &input) {
+		return
+	}
+	output, err := h.patchSettlement.Execute(r.Context(), userID, transactionID, input)
+	if err != nil {
+		presenter.Error(r.Context(), w, h.logger, err)
+		return
+	}
+	presenter.JSON(w, http.StatusOK, output)
 }
 
 // Create registra um lancamento.
@@ -157,5 +183,6 @@ func transactionFilterFromRequest(r *http.Request) dto.ListTransactionsInput {
 		PageSize: queryInt(r, "page_size", 10),
 		SortBy:   query.Get("sort_by"),
 		SortDir:  query.Get("sort_dir"),
+		Status:   query.Get("status"),
 	}
 }

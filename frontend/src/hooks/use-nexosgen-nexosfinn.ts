@@ -126,6 +126,7 @@ export interface TransactionParams {
   page_size?: number;
   sort_by?: string;
   sort_dir?: string;
+  status?: string;
 }
 
 export interface TransactionPayload {
@@ -136,6 +137,9 @@ export interface TransactionPayload {
   account_id: string;
   date: string;
   notes: string;
+  is_paid?: boolean;
+  is_received?: boolean;
+  settled_at?: string;
 }
 
 export function useTransactions(params: TransactionParams) {

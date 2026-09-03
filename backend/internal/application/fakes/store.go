@@ -415,6 +415,28 @@ func (r *transactionRepo) match(filter repository.TransactionFilter) []*entity.T
 		if filter.Period != nil && !filter.Period.Contains(transaction.OccurredOn) {
 			continue
 		}
+		if filter.Settlement != nil && transaction.IsSettled != *filter.Settlement {
+			continue
+		}
+		today := vo.TruncateToDay(time.Now().UTC())
+		switch filter.DateState {
+		case "overdue":
+			if transaction.IsSettled || !transaction.OccurredOn.Before(today) {
+				continue
+			}
+		case "future":
+			if !transaction.OccurredOn.After(today) {
+				continue
+			}
+		case "today":
+			if !transaction.OccurredOn.Equal(today) {
+				continue
+			}
+		case "past":
+			if !transaction.OccurredOn.Before(today) {
+				continue
+			}
+		}
 		if filter.Search != "" && !strings.Contains(
 			strings.ToLower(transaction.Description), strings.ToLower(filter.Search)) {
 			continue

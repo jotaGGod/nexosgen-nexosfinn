@@ -3,13 +3,54 @@ package transaction
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
 	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
 	vo "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/valueobject"
 )
+
+// resolveSettlement traduz os campos públicos específicos por tipo para o
+// estado interno único. Assim, uma despesa nunca pode ser "recebida" e uma
+// receita nunca pode ser "paga".
+func resolveSettlement(transactionType vo.TransactionType, isPaid, isReceived *bool, rawSettledAt string) (bool, *time.Time, error) {
+	if isPaid != nil && isReceived != nil {
+		return false, nil, domainerr.InvalidInput("invalid_settlement", "informe apenas o estado correspondente ao tipo do lancamento")
+	}
+
+	var settled *bool
+	if transactionType.IsExpense() {
+		if isReceived != nil {
+			return false, nil, domainerr.InvalidInput("invalid_settlement", "despesas usam is_paid")
+		}
+		settled = isPaid
+	} else {
+		if isPaid != nil {
+			return false, nil, domainerr.InvalidInput("invalid_settlement", "receitas usam is_received")
+		}
+		settled = isReceived
+	}
+
+	isSettled := false
+	if settled != nil {
+		isSettled = *settled
+	}
+	if !isSettled {
+		if rawSettledAt != "" {
+			return false, nil, domainerr.InvalidInput("invalid_settled_at", "settled_at só pode ser informada para um lançamento liquidado")
+		}
+		return false, nil, nil
+	}
+
+	settledAt, err := dto.ParseOptionalDate(rawSettledAt, "data de liquidação")
+	if err != nil {
+		return false, nil, err
+	}
+	return true, settledAt, nil
+}
 
 // catalog guarda categorias e contas do usuario indexadas por id.
 //

@@ -61,6 +61,11 @@ func (uc *CreateUseCase) Execute(ctx context.Context, userID uuid.UUID, input dt
 		}
 	}
 
+	isSettled, settledAt, err := resolveSettlement(transactionType, input.IsPaid, input.IsReceived, input.SettledAt)
+	if err != nil {
+		return nil, err
+	}
+
 	category, account, err := resolveReferences(ctx, userID, categoryID, accountID, transactionType, uc.categories, uc.accounts)
 	if err != nil {
 		return nil, err
@@ -74,6 +79,7 @@ func (uc *CreateUseCase) Execute(ctx context.Context, userID uuid.UUID, input dt
 	if err != nil {
 		return nil, err
 	}
+	created.SetSettlement(isSettled, settledAt)
 
 	if err := uc.transactions.Create(ctx, created); err != nil {
 		return nil, err

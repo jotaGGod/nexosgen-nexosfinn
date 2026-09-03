@@ -67,6 +67,24 @@ func RequireScope(scope vo.Scope, logger *slog.Logger) func(http.Handler) http.H
 	}
 }
 
+// RequireAnyScope mantém compatibilidade quando uma permissão antiga cobre a
+// mesma leitura de uma permissão nova e mais explícita.
+func RequireAnyScope(scopes []vo.Scope, logger *slog.Logger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			for _, granted := range Scopes(r.Context()) {
+				for _, expected := range scopes {
+					if granted == expected {
+						next.ServeHTTP(w, r)
+						return
+					}
+				}
+			}
+			presenter.Error(r.Context(), w, logger, domainerr.Forbidden("insufficient_scope", "esta chave de API não possui o escopo necessário"))
+		})
+	}
+}
+
 // apiKeyFromRequest aceita as duas convencoes usuais.
 //
 // O n8n manda credenciais em "Authorization: Bearer" por padrao, mas varios

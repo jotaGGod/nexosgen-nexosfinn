@@ -55,6 +55,11 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, userID, transactionID uuid
 		return nil, err
 	}
 
+	isSettled, settledAt, err := resolveSettlement(transactionType, input.IsPaid, input.IsReceived, input.SettledAt)
+	if err != nil {
+		return nil, err
+	}
+
 	// FindByID ja e escopado por usuario: um id de outra conta responde
 	// "nao encontrado", sem revelar que o recurso existe.
 	existing, err := uc.transactions.FindByID(ctx, userID, transactionID)
@@ -70,6 +75,7 @@ func (uc *UpdateUseCase) Execute(ctx context.Context, userID, transactionID uuid
 	if err := existing.Update(accountID, categoryID, transactionType, amount, input.Description, input.Notes, occurredOn); err != nil {
 		return nil, err
 	}
+	existing.SetSettlement(isSettled, settledAt)
 
 	if err := uc.transactions.Update(ctx, existing); err != nil {
 		return nil, err

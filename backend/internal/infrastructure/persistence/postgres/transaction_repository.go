@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -29,13 +30,13 @@ func NewTransactionRepository(db *pgxpool.Pool) repository.TransactionRepository
 func (r *TransactionRepository) Create(ctx context.Context, transaction *entity.Transaction) error {
 	const query = `
 		INSERT INTO transactions
-			(id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
+			(id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, is_settled, settled_at, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
 
 	_, err := r.db.Exec(ctx, query,
 		transaction.ID, transaction.UserID, transaction.AccountID, transaction.CategoryID,
 		transaction.Type.String(), transaction.Amount.Cents(), transaction.Description,
-		transaction.Notes, transaction.OccurredOn, transaction.CreatedAt, transaction.UpdatedAt)
+		transaction.Notes, transaction.OccurredOn, transaction.IsSettled, transaction.SettledAt, transaction.CreatedAt, transaction.UpdatedAt)
 	return translateError(err, transactionNotFoundCode, transactionNotFoundMessage)
 }
 
@@ -43,13 +44,13 @@ func (r *TransactionRepository) Update(ctx context.Context, transaction *entity.
 	const query = `
 		UPDATE transactions
 		SET account_id = $3, category_id = $4, type = $5, amount = $6,
-		    description = $7, notes = $8, occurred_on = $9, updated_at = $10
+		    description = $7, notes = $8, occurred_on = $9, is_settled = $10, settled_at = $11, updated_at = $12
 		WHERE id = $1 AND user_id = $2`
 
 	tag, err := r.db.Exec(ctx, query,
 		transaction.ID, transaction.UserID, transaction.AccountID, transaction.CategoryID,
 		transaction.Type.String(), transaction.Amount.Cents(), transaction.Description,
-		transaction.Notes, transaction.OccurredOn, transaction.UpdatedAt)
+		transaction.Notes, transaction.OccurredOn, transaction.IsSettled, transaction.SettledAt, transaction.UpdatedAt)
 	if err != nil {
 		return translateError(err, transactionNotFoundCode, transactionNotFoundMessage)
 	}
@@ -74,7 +75,7 @@ func (r *TransactionRepository) Delete(ctx context.Context, userID, id uuid.UUID
 
 func (r *TransactionRepository) FindByID(ctx context.Context, userID, id uuid.UUID) (*entity.Transaction, error) {
 	const query = `
-		SELECT id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, created_at, updated_at
+		SELECT id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, is_settled, settled_at, created_at, updated_at
 		FROM transactions WHERE id = $1 AND user_id = $2`
 
 	rows, err := r.db.Query(ctx, query, id, userID)
@@ -99,7 +100,7 @@ func (r *TransactionRepository) List(ctx context.Context, filter repository.Tran
 	}
 
 	query := fmt.Sprintf(`
-		SELECT id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, created_at, updated_at
+		SELECT id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, is_settled, settled_at, created_at, updated_at
 		FROM transactions %s
 		ORDER BY %s
 		LIMIT $%d OFFSET $%d`,
@@ -177,6 +178,27 @@ func buildWhere(filter repository.TransactionFilter) (string, []any) {
 		conditions = append(conditions, fmt.Sprintf("occurred_on <= $%d", len(args)))
 	}
 
+	if filter.Settlement != nil {
+		args = append(args, *filter.Settlement)
+		conditions = append(conditions, fmt.Sprintf("is_settled = $%d", len(args)))
+	}
+
+	today := time.Now().UTC().Truncate(24 * time.Hour)
+	switch filter.DateState {
+	case "overdue":
+		args = append(args, false, today)
+		conditions = append(conditions, fmt.Sprintf("is_settled = $%d AND occurred_on < $%d", len(args)-1, len(args)))
+	case "future":
+		args = append(args, today)
+		conditions = append(conditions, fmt.Sprintf("occurred_on > $%d", len(args)))
+	case "today":
+		args = append(args, today)
+		conditions = append(conditions, fmt.Sprintf("occurred_on = $%d", len(args)))
+	case "past":
+		args = append(args, today)
+		conditions = append(conditions, fmt.Sprintf("occurred_on < $%d", len(args)))
+	}
+
 	if search := strings.TrimSpace(filter.Search); search != "" {
 		args = append(args, "%"+search+"%")
 		conditions = append(conditions, fmt.Sprintf("(description ILIKE $%d OR notes ILIKE $%d)", len(args), len(args)))
@@ -226,7 +248,7 @@ func scanTransaction(rows pgx.Rows) (*entity.Transaction, error) {
 	if err := rows.Scan(
 		&transaction.ID, &transaction.UserID, &transaction.AccountID, &transaction.CategoryID,
 		&rawType, &amount, &transaction.Description, &transaction.Notes,
-		&transaction.OccurredOn, &transaction.CreatedAt, &transaction.UpdatedAt,
+		&transaction.OccurredOn, &transaction.IsSettled, &transaction.SettledAt, &transaction.CreatedAt, &transaction.UpdatedAt,
 	); err != nil {
 		return nil, translateError(err, transactionNotFoundCode, transactionNotFoundMessage)
 	}

@@ -14,15 +14,34 @@ import (
 type Scope string
 
 const (
-	ScopeReadTransactions  Scope = "read:transactions"
-	ScopeWriteTransactions Scope = "write:transactions"
-	ScopeReadBalance       Scope = "read:balance"
-	ScopeReadCategories    Scope = "read:categories"
+	ScopeReadTransactions   Scope = "read:transactions"
+	ScopeWriteTransactions  Scope = "write:transactions"
+	ScopeReadBalance        Scope = "read:balance"
+	ScopeReadCategories     Scope = "read:categories"
+	ScopeWriteCategories    Scope = "write:categories"
+	ScopeDeleteTransactions Scope = "delete:transactions"
+	ScopeDeleteCategories   Scope = "delete:categories"
+	ScopeReadAccounts       Scope = "read:accounts"
+	ScopeWriteAccounts      Scope = "write:accounts"
+	ScopeDeleteAccounts     Scope = "delete:accounts"
+	ScopeReadGoals          Scope = "read:goals"
+	ScopeWriteGoals         Scope = "write:goals"
+	ScopeDeleteGoals        Scope = "delete:goals"
+	ScopeReadBudgets        Scope = "read:budgets"
+	ScopeWriteBudgets       Scope = "write:budgets"
+	ScopeDeleteBudgets      Scope = "delete:budgets"
 )
 
 // AllScopes lista os escopos concedidos por padrao a uma nova chave.
 func AllScopes() []Scope {
-	return []Scope{ScopeReadTransactions, ScopeWriteTransactions, ScopeReadBalance, ScopeReadCategories}
+	return []Scope{
+		ScopeReadTransactions, ScopeWriteTransactions, ScopeDeleteTransactions,
+		ScopeReadBalance,
+		ScopeReadCategories, ScopeWriteCategories, ScopeDeleteCategories,
+		ScopeReadAccounts, ScopeWriteAccounts, ScopeDeleteAccounts,
+		ScopeReadGoals, ScopeWriteGoals, ScopeDeleteGoals,
+		ScopeReadBudgets, ScopeWriteBudgets, ScopeDeleteBudgets,
+	}
 }
 
 // ParseScope valida um escopo individual.
@@ -62,7 +81,12 @@ func (s Scope) String() string { return string(s) }
 // IsValid reporta se o escopo esta entre os valores conhecidos.
 func (s Scope) IsValid() bool {
 	switch s {
-	case ScopeReadTransactions, ScopeWriteTransactions, ScopeReadBalance, ScopeReadCategories:
+	case ScopeReadTransactions, ScopeWriteTransactions, ScopeDeleteTransactions,
+		ScopeReadBalance,
+		ScopeReadCategories, ScopeWriteCategories, ScopeDeleteCategories,
+		ScopeReadAccounts, ScopeWriteAccounts, ScopeDeleteAccounts,
+		ScopeReadGoals, ScopeWriteGoals, ScopeDeleteGoals,
+		ScopeReadBudgets, ScopeWriteBudgets, ScopeDeleteBudgets:
 		return true
 	default:
 		return false

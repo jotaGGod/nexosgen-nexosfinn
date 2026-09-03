@@ -35,6 +35,7 @@ export function TransactionsView() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState<string>(ALL);
   const [categoryId, setCategoryId] = useState<string>(ALL);
+  const [status, setStatus] = useState<string>(ALL);
   const [period, setPeriod] = useState<PeriodValue>(() => monthPeriod(todayISO()));
   const [page, setPage] = useState(1);
 
@@ -50,12 +51,13 @@ export function TransactionsView() {
       search: search.trim(),
       type: type === ALL ? undefined : type,
       category_id: categoryId === ALL ? undefined : [categoryId],
+      status: status === ALL ? undefined : status,
       start_date: period.start,
       end_date: period.end,
       page,
       page_size: PAGE_SIZE,
     }),
-    [search, type, categoryId, period, page],
+    [search, type, categoryId, status, period, page],
   );
 
   const { data, isPending, isError, refetch, isPlaceholderData } = useTransactions(params);
@@ -84,7 +86,7 @@ export function TransactionsView() {
 
   const items = data?.items ?? [];
   const pagination = data?.pagination;
-  const hasFilters = search.trim() !== "" || type !== ALL || categoryId !== ALL;
+  const hasFilters = search.trim() !== "" || type !== ALL || categoryId !== ALL || status !== ALL;
 
   return (
     <div className="space-y-6">
@@ -130,7 +132,7 @@ export function TransactionsView() {
 
       <Card>
         <CardContent className="p-4">
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -167,6 +169,19 @@ export function TransactionsView() {
                 <SelectItem value="expense">Despesas</SelectItem>
               </SelectContent>
             </Select>
+
+            <Select value={status} onValueChange={(value) => updateFilter(() => setStatus(value))}>
+              <SelectTrigger className="sm:w-44" aria-label="Filtrar por liquidação">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ALL}>Todos os status</SelectItem>
+                <SelectItem value="settled">Liquidadas</SelectItem>
+                <SelectItem value="pending">Pendentes</SelectItem>
+                <SelectItem value="overdue">Vencidas</SelectItem>
+                <SelectItem value="future">Futuras</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
 
@@ -191,6 +206,7 @@ export function TransactionsView() {
                       setSearch("");
                       setType(ALL);
                       setCategoryId(ALL);
+                      setStatus(ALL);
                     })
                   }
                 >
@@ -220,6 +236,11 @@ export function TransactionsView() {
                     <p className="truncate text-sm font-medium">{transaction.description}</p>
                     <p className="truncate text-xs text-muted-foreground">
                       {transaction.category.name} · {formatDate(transaction.date)}
+                    </p>
+                    <p className={cn("mt-1 text-xs font-medium", transaction.settlement.status === "settled" ? "text-positive" : "text-amber-600 dark:text-amber-400")}>
+                      {transaction.type === "expense"
+                        ? transaction.settlement.status === "settled" ? "Paga" : "Não paga"
+                        : transaction.settlement.status === "settled" ? "Recebida" : "Não recebida"}
                     </p>
                   </div>
                   {/*

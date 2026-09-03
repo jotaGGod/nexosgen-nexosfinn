@@ -16,6 +16,8 @@ type TransactionFilter struct {
 	AccountIDs  []uuid.UUID
 	Type        *vo.TransactionType
 	Period      *vo.Period
+	Settlement  *bool
+	DateState   string // overdue | future | today | past
 	Page        int
 	PageSize    int
 	SortBy      string // occurred_on | amount | description

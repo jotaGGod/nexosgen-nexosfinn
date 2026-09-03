@@ -10,6 +10,8 @@ export const transactionSchema = z.object({
   account_id: z.string().min(1, "Selecione uma conta"),
   date: z.string().min(1, "Informe a data"),
   notes: z.string().max(1000, "Observação muito longa"),
+  is_settled: z.boolean(),
+  settled_at: z.string(),
 });
 
 export type TransactionValues = z.infer<typeof transactionSchema>;

@@ -44,6 +44,8 @@ const emptyValues: TransactionValues = {
   account_id: "",
   date: todayISO(),
   notes: "",
+  is_settled: false,
+  settled_at: "",
 };
 
 /**
@@ -89,6 +91,8 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
             account_id: transaction.account.id,
             date: transaction.date,
             notes: transaction.notes,
+            is_settled: transaction.settlement?.status === "settled",
+            settled_at: transaction.settlement?.settled_at ?? "",
           }
         : emptyValues,
     );
@@ -108,7 +112,12 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
   const isSaving = createTransaction.isPending || updateTransaction.isPending;
 
   async function onSubmit(values: TransactionValues) {
-    const payload = { ...values };
+    const { is_settled, settled_at, ...base } = values;
+    const payload = {
+      ...base,
+      ...(type === "expense" ? { is_paid: is_settled } : { is_received: is_settled }),
+      ...(is_settled && settled_at ? { settled_at } : {}),
+    };
 
     const result = transaction
       ? await runMutation(updateTransaction, { id: transaction.id, ...payload })
@@ -180,6 +189,23 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
                   </button>
                 ))}
               </div>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="is_settled"
+            render={({ field }) => (
+              <label className={cn(
+                "flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors",
+                field.value ? "border-positive/40 bg-positive/10" : "border-border bg-secondary/30",
+              )}>
+                <span>
+                  <span className="block font-medium">{type === "expense" ? "Despesa paga" : "Receita recebida"}</span>
+                  <span className="text-xs text-muted-foreground">{field.value ? "Liquidação registrada" : "Permanece pendente"}</span>
+                </span>
+                <input type="checkbox" checked={field.value} onChange={(event) => field.onChange(event.target.checked)} className="size-4 accent-primary" />
+              </label>
             )}
           />
 

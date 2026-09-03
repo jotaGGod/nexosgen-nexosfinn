@@ -95,6 +95,58 @@ func TestCreateSemDataUsaHoje(t *testing.T) {
 	assert.Equal(t, time.Now().UTC().Format("2006-01-02"), output.Date)
 }
 
+func TestCreatePreservaLiquidacaoIndependenteDaData(t *testing.T) {
+	f := newFixture(t)
+
+	paid := true
+	future := f.expenseInput()
+	future.Date = "2030-09-15"
+	future.IsPaid = &paid
+	created, err := f.create.Execute(context.Background(), f.userID, future)
+	require.NoError(t, err)
+	require.NotNil(t, created.IsPaid)
+	assert.True(t, *created.IsPaid)
+	assert.Equal(t, "settled", created.Settlement.Status)
+
+	unpaid := false
+	past := f.expenseInput()
+	past.Date = "2020-08-20"
+	past.IsPaid = &unpaid
+	pending, err := f.create.Execute(context.Background(), f.userID, past)
+	require.NoError(t, err)
+	require.NotNil(t, pending.IsPaid)
+	assert.False(t, *pending.IsPaid)
+	assert.Equal(t, "pending", pending.Settlement.Status)
+}
+
+func TestCreateReceitaUsaSomenteIsReceived(t *testing.T) {
+	f := newFixture(t)
+	received := true
+	created, err := f.create.Execute(context.Background(), f.userID, dto.CreateTransactionInput{
+		Type: "income", Amount: 2500, Description: "Salário", CategoryID: f.incomeCategory.String(), AccountID: f.accountID.String(), Date: "2030-09-10", IsReceived: &received,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, created.IsReceived)
+	assert.True(t, *created.IsReceived)
+	assert.Nil(t, created.IsPaid)
+}
+
+func TestPatchSettlementMarcaEDesmarca(t *testing.T) {
+	f := newFixture(t)
+	created, err := f.create.Execute(context.Background(), f.userID, f.expenseInput())
+	require.NoError(t, err)
+	patch := transaction.NewPatchSettlementUseCase(f.store.TransactionRepo(), f.store.CategoryRepo(), f.store.AccountRepo())
+	paid := true
+	settled, err := patch.Execute(context.Background(), f.userID, uuid.MustParse(created.ID), dto.PatchTransactionInput{IsPaid: &paid})
+	require.NoError(t, err)
+	assert.Equal(t, "settled", settled.Settlement.Status)
+	unpaid := false
+	pending, err := patch.Execute(context.Background(), f.userID, uuid.MustParse(created.ID), dto.PatchTransactionInput{IsPaid: &unpaid})
+	require.NoError(t, err)
+	assert.Equal(t, "pending", pending.Settlement.Status)
+	assert.Empty(t, pending.Settlement.SettledAt)
+}
+
 func TestCreateRejeitaCategoriaDeTipoIncompativel(t *testing.T) {
 	f := newFixture(t)
 

@@ -634,7 +634,7 @@ paths:
                   description: Vazio concede todos os escopos
                   items:
                     type: string
-                    enum: [read:transactions, write:transactions, read:balance, read:categories]
+                    enum: ["read:transactions", "write:transactions", "delete:transactions", "read:balance", "read:categories", "write:categories", "delete:categories", "read:accounts", "write:accounts", "delete:accounts", "read:goals", "write:goals", "delete:goals", "read:budgets", "write:budgets", "delete:budgets"]
                 expires_at:
                   type: string
                   format: date
@@ -682,6 +682,7 @@ paths:
         - { in: query, name: end_date, schema: { type: string, format: date } }
         - { in: query, name: page, schema: { type: integer, default: 1 } }
         - { in: query, name: page_size, schema: { type: integer, default: 10 } }
+        - { in: query, name: status, schema: { type: string, enum: [settled, pending, paid, unpaid, received, not_received, overdue, future, today, past] } }
       responses:
         "200":
           description: Pagina de lancamentos
@@ -725,6 +726,15 @@ paths:
         "422": { $ref: "#/components/responses/ValidationError" }
 
   /api/v1/external/transactions/{id}:
+    get:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Consulta um lançamento por ID
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Lançamento }
+        "404": { $ref: "#/components/responses/NotFound" }
     put:
       tags: [Externo (n8n / WhatsApp)]
       summary: Altera um lancamento
@@ -748,6 +758,32 @@ paths:
               schema: { $ref: "#/components/schemas/Transaction" }
         "403": { $ref: "#/components/responses/InsufficientScope" }
         "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Marca despesa como paga ou receita como recebida
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_paid: { type: boolean }
+                is_received: { type: boolean }
+                settled_at: { type: string, format: date }
+      responses:
+        "200": { description: Lançamento atualizado }
+    delete:
+      tags: [Externo (n8n / WhatsApp)]
+      summary: Exclui um lançamento
+      security: [{ apiKeyBearer: [] }, { apiKeyHeader: [] }]
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "204": { description: Lançamento excluído }
 
   /api/v1/external/balance:
     get:
@@ -1001,6 +1037,13 @@ components:
         category: { $ref: "#/components/schemas/CategoryRef" }
         account: { $ref: "#/components/schemas/AccountRef" }
         created_at: { type: string, format: date-time }
+        settlement:
+          type: object
+          properties:
+            status: { type: string, enum: [pending, settled] }
+            settled_at: { type: string, format: date }
+        is_paid: { type: boolean }
+        is_received: { type: boolean }
 
     TransactionInput:
       type: object
@@ -1019,6 +1062,9 @@ components:
           format: date
           description: "Opcional na criacao; ausente significa hoje"
         notes: { type: string }
+        is_paid: { type: boolean, description: "Somente para despesas" }
+        is_received: { type: boolean, description: "Somente para receitas" }
+        settled_at: { type: string, format: date }
 
     TransactionList:
       type: object

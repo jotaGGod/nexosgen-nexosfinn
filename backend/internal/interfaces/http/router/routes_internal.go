@@ -35,6 +35,7 @@ func mountInternalRoutes(api chi.Router, deps Dependencies) {
 			transactions.Post("/", deps.Transaction.Create)
 			transactions.Get("/{id}", deps.Transaction.Get)
 			transactions.Put("/{id}", deps.Transaction.Update)
+			transactions.Patch("/{id}", deps.Transaction.PatchSettlement)
 			transactions.Delete("/{id}", deps.Transaction.Delete)
 		})
 

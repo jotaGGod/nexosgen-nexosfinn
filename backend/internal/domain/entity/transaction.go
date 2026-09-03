@@ -24,8 +24,13 @@ type Transaction struct {
 	Description string
 	Notes       string
 	OccurredOn  time.Time
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	// IsSettled e a representacao interna unica para pagamento de despesas e
+	// recebimento de receitas. A camada de aplicacao traduz a semantica correta
+	// para cada tipo, sem permitir estados contraditorios.
+	IsSettled bool
+	SettledAt *time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // NewTransaction cria um lancamento validado.
@@ -115,6 +120,23 @@ func (t *Transaction) apply(
 	t.Notes = trimmedNotes
 	t.OccurredOn = vo.TruncateToDay(occurredOn)
 	return nil
+}
+
+// SetSettlement liquida ou reabre o lançamento. Quando a liquidação é feita
+// sem data explícita, usa o dia atual; ao reabrir, a data anterior é limpa.
+func (t *Transaction) SetSettlement(isSettled bool, settledAt *time.Time) {
+	t.IsSettled = isSettled
+	if !isSettled {
+		t.SettledAt = nil
+		return
+	}
+	if settledAt == nil {
+		now := vo.TruncateToDay(time.Now().UTC())
+		t.SettledAt = &now
+		return
+	}
+	date := vo.TruncateToDay(*settledAt)
+	t.SettledAt = &date
 }
 
 // SignedAmount devolve o valor com sinal contabil: positivo para receita,
