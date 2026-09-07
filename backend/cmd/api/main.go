@@ -107,6 +107,7 @@ func run() error {
 	apiKeys := postgres.NewAPIKeyRepository(pool)
 	refreshTokens := postgres.NewRefreshTokenRepository(pool)
 	workspaces := postgres.NewWorkspaceRepository(pool)
+	idempotency := postgres.NewIdempotencyRepository(pool)
 
 	hasher := infraauth.NewBcryptHasher(0)
 	tokens := infraauth.NewJWTProvider(cfg.JWTSecret, cfg.AccessTokenTTL, cfg.RefreshTokenTTL)
@@ -171,6 +172,7 @@ func run() error {
 		Logger:              log,
 		TokenVerifier:       tokens,
 		APIKeyAuthenticator: authenticateAPIKeyUC,
+		Idempotency:         idempotency,
 		OpenAPIPath:         getEnvOrDefault("OPENAPI_PATH", "docs/openapi.yaml"),
 
 		Health: handler.NewHealthHandler(pool),

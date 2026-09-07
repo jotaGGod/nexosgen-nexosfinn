@@ -55,11 +55,15 @@ existente do domínio. Categorias e contas com histórico não são removidas de
 forma insegura: os casos de uso preservam as regras de integridade da
 interface web.
 
+## Idempotência
+
+Todas as rotas externas mutáveis exigem `Idempotency-Key`. A primeira chamada
+persiste o vínculo entre usuário, chave, método, rota e corpo; repetições com o
+mesmo conteúdo reproduzem a resposta original sem executar a mutação novamente.
+Uma chave não pode ser reutilizada com outro payload.
+
 ## Limitações atuais
 
-- O cabeçalho `Idempotency-Key` ainda não é persistido para criação de
-  transações, metas e contas. Consumidores devem não repetir automaticamente
-  um POST após uma resposta ambígua até essa camada ser adicionada.
 - Não existem cartões, transferências, assinaturas, parcelas ou recorrências
   como recursos próprios neste repositório; portanto não há endpoints para
   esses recursos.

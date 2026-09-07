@@ -22,6 +22,7 @@ type Dependencies struct {
 
 	TokenVerifier       middleware.TokenVerifier
 	APIKeyAuthenticator middleware.APIKeyAuthenticator
+	Idempotency         middleware.IdempotencyStore
 
 	Health      *handler.HealthHandler
 	Auth        *handler.AuthHandler

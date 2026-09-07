@@ -24,6 +24,7 @@ func mountExternalRoutes(api chi.Router, deps Dependencies) {
 
 		external.Group(func(write chi.Router) {
 			write.Use(middleware.RequireScope(vo.ScopeWriteTransactions, deps.Logger))
+			write.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			write.Post("/transactions", deps.External.CreateTransaction)
 			write.Put("/transactions/{id}", deps.External.UpdateTransaction)
 			write.Patch("/transactions/{id}", deps.Transaction.PatchSettlement)
@@ -31,6 +32,7 @@ func mountExternalRoutes(api chi.Router, deps Dependencies) {
 
 		external.Group(func(remove chi.Router) {
 			remove.Use(middleware.RequireScope(vo.ScopeDeleteTransactions, deps.Logger))
+			remove.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			remove.Delete("/transactions/{id}", deps.Transaction.Delete)
 		})
 
@@ -47,11 +49,13 @@ func mountExternalRoutes(api chi.Router, deps Dependencies) {
 
 		external.Group(func(categories chi.Router) {
 			categories.Use(middleware.RequireScope(vo.ScopeWriteCategories, deps.Logger))
+			categories.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			categories.Post("/categories", deps.Category.Create)
 			categories.Put("/categories/{id}", deps.Category.Update)
 		})
 		external.Group(func(categories chi.Router) {
 			categories.Use(middleware.RequireScope(vo.ScopeDeleteCategories, deps.Logger))
+			categories.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			categories.Delete("/categories/{id}", deps.Category.Delete)
 		})
 
@@ -62,11 +66,13 @@ func mountExternalRoutes(api chi.Router, deps Dependencies) {
 		})
 		external.Group(func(accounts chi.Router) {
 			accounts.Use(middleware.RequireScope(vo.ScopeWriteAccounts, deps.Logger))
+			accounts.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			accounts.Post("/accounts", deps.Account.Create)
 			accounts.Put("/accounts/{id}", deps.Account.Update)
 		})
 		external.Group(func(accounts chi.Router) {
 			accounts.Use(middleware.RequireScope(vo.ScopeDeleteAccounts, deps.Logger))
+			accounts.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			accounts.Delete("/accounts/{id}", deps.Account.Delete)
 		})
 
@@ -77,12 +83,14 @@ func mountExternalRoutes(api chi.Router, deps Dependencies) {
 		})
 		external.Group(func(goals chi.Router) {
 			goals.Use(middleware.RequireScope(vo.ScopeWriteGoals, deps.Logger))
+			goals.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			goals.Post("/goals", deps.Goal.Create)
 			goals.Put("/goals/{id}", deps.Goal.Update)
 			goals.Post("/goals/{id}/contributions", deps.Goal.Contribute)
 		})
 		external.Group(func(goals chi.Router) {
 			goals.Use(middleware.RequireScope(vo.ScopeDeleteGoals, deps.Logger))
+			goals.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			goals.Delete("/goals/{id}", deps.Goal.Delete)
 		})
 
@@ -93,10 +101,12 @@ func mountExternalRoutes(api chi.Router, deps Dependencies) {
 		})
 		external.Group(func(budgets chi.Router) {
 			budgets.Use(middleware.RequireScope(vo.ScopeWriteBudgets, deps.Logger))
+			budgets.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			budgets.Put("/budgets", deps.Budget.Upsert)
 		})
 		external.Group(func(budgets chi.Router) {
 			budgets.Use(middleware.RequireScope(vo.ScopeDeleteBudgets, deps.Logger))
+			budgets.Use(middleware.Idempotency(deps.Idempotency, deps.Logger))
 			budgets.Delete("/budgets/{id}", deps.Budget.Delete)
 		})
 	})
