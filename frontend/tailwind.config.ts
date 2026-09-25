@@ -64,6 +64,8 @@ const config: Config = {
         // Semântica financeira: entrada e saída de dinheiro.
         positive: "hsl(var(--positive) / <alpha-value>)",
         negative: "hsl(var(--negative) / <alpha-value>)",
+        warning: "hsl(var(--warning) / <alpha-value>)",
+        "surface-hover": "hsl(var(--surface-hover) / <alpha-value>)",
         // Painel escuro de marca (tela de acesso e navegação).
         sidebar: {
           DEFAULT: "hsl(var(--sidebar) / <alpha-value>)",
@@ -88,6 +90,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
+        // Só para palavras de destaque em títulos; ver .font-display.
+        serif: ["var(--font-serif)", "Georgia", "serif"],
       },
       transitionTimingFunction: {
         "out-expo": "var(--ease-out-expo)",
@@ -114,6 +118,21 @@ const config: Config = {
           from: { strokeDashoffset: "1200" },
           to: { strokeDashoffset: "0" },
         },
+        // Flutuação lenta da prévia do produto no hero.
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        // Halo de luz que "respira" atrás da interface.
+        breathe: {
+          "0%, 100%": { opacity: "0.75", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.06)" },
+        },
+        // Entrada do hero: curta, para não atrasar a primeira pintura.
+        "fade-up": {
+          from: { opacity: "0", transform: "translateY(18px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -121,6 +140,9 @@ const config: Config = {
         "rise-in": "rise-in 400ms var(--ease-out-expo) both",
         "pulse-dot": "pulse-dot 2s ease-in-out infinite",
         "draw-line": "draw-line 1.6s var(--ease-out-expo) forwards",
+        float: "float 7s ease-in-out infinite",
+        breathe: "breathe 8s ease-in-out infinite",
+        "fade-up": "fade-up 700ms var(--ease-out-expo) both",
       },
     },
   },

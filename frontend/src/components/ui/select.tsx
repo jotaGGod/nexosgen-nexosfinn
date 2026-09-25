@@ -17,7 +17,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-12 w-full min-w-0 max-w-full items-center justify-between gap-2 rounded-2xl border border-input bg-card/80 px-4 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 dark:focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-sm [&>span]:min-w-0 [&>span]:truncate",
+      "flex h-12 w-full min-w-0 max-w-full items-center justify-between gap-2 rounded-full border border-input bg-secondary/60 px-5 py-2 text-base transition-[border-color,box-shadow,background-color] duration-200 hover:border-foreground/15 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 dark:focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-sm [&>span]:min-w-0 [&>span]:truncate",
       "aria-[invalid=true]:border-destructive",
       className,
     )}
@@ -40,7 +40,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "relative z-50 max-h-72 max-w-[calc(100vw-2rem)] min-w-[8rem] overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lg",
+        "relative z-50 max-h-72 max-w-[calc(100vw-2rem)] min-w-[8rem] overflow-hidden rounded-3xl border border-border bg-popover text-popover-foreground shadow-lg",
         // Sem animação de saída, pelo mesmo motivo do diálogo.
         "data-[state=open]:animate-in data-[state=open]:fade-in-0",
         position === "popper" && "w-full min-w-[var(--radix-select-trigger-width)] translate-y-1",
@@ -61,7 +61,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-lg py-2 pl-3 pr-8 text-sm outline-none focus:bg-secondary data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-pointer select-none items-center rounded-2xl py-2.5 pl-3.5 pr-8 text-sm outline-none focus:bg-secondary data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}

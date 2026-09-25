@@ -325,7 +325,7 @@ export function PeriodPicker({ value, onChange, mode = "month", className }: Per
         <button
           type="button"
           className={cn(
-            "flex min-h-11 w-full items-center justify-between gap-3 rounded-2xl border border-input bg-card px-4 text-sm font-semibold shadow-sm outline-none transition-colors hover:border-active/30 hover:bg-secondary/60 focus-visible:ring-2 focus-visible:ring-ring sm:w-auto",
+            "flex min-h-11 w-full items-center justify-between gap-3 rounded-full border border-border/80 bg-card px-5 text-sm font-semibold outline-none transition-colors hover:border-primary/35 hover:bg-secondary/60 focus-visible:ring-2 focus-visible:ring-ring sm:w-auto",
             className,
           )}
           aria-label={`Filtrar período: ${periodLabel(value)}`}
@@ -355,8 +355,8 @@ export function PeriodPicker({ value, onChange, mode = "month", className }: Per
                   type="button"
                   onClick={() => selectMode(option.value)}
                   className={cn(
-                    "min-h-11 rounded-xl px-3 text-left text-sm font-medium transition-colors hover:bg-secondary",
-                    pickerMode === option.value && "bg-active/10 text-active",
+                    "min-h-11 rounded-full px-4 text-left text-sm font-medium transition-colors hover:bg-secondary",
+                    pickerMode === option.value && "bg-primary text-primary-foreground hover:bg-primary",
                   )}
                 >
                   {option.label}

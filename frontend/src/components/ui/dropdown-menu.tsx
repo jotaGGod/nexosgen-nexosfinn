@@ -17,7 +17,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[10rem] overflow-hidden rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-lg",
+        "z-50 min-w-[10rem] overflow-hidden rounded-3xl border border-border bg-popover p-1.5 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         // Sem animação de saída, pelo mesmo motivo do diálogo.
         "data-[state=open]:animate-in data-[state=open]:fade-in-0",
         className,
@@ -35,7 +35,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-colors focus:bg-secondary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:size-4",
+      "relative flex cursor-pointer select-none items-center gap-2 rounded-2xl px-3 py-2.5 text-sm outline-none transition-colors focus:bg-secondary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:size-4",
       destructive && "text-destructive focus:bg-destructive/10",
       className,
     )}

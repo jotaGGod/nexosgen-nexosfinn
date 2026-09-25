@@ -8,7 +8,7 @@ import { formatRelativeDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Transaction } from "@/types/api";
 
-/** Lista compacta dos últimos lançamentos, como no card da referência. */
+/** Lista compacta dos últimos lançamentos, em linhas arredondadas. */
 export function RecentTransactions({ items }: { items: Transaction[] }) {
   if (items.length === 0) {
     return (
@@ -21,12 +21,15 @@ export function RecentTransactions({ items }: { items: Transaction[] }) {
   }
 
   return (
-    <ul className="divide-y divide-border/70">
+    <ul className="-mx-2 space-y-1">
       {items.map((transaction) => {
         const income = transaction.type === "income";
 
         return (
-          <li key={transaction.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+          <li
+            key={transaction.id}
+            className="flex items-center gap-3 rounded-2xl px-2 py-2.5 transition-colors hover:bg-secondary/60"
+          >
             <IconBadge icon={transaction.category.icon} color={transaction.category.color} />
 
             <div className="min-w-0 flex-1">

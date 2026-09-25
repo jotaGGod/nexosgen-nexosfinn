@@ -13,15 +13,16 @@ interface RevealProps {
 }
 
 /**
- * Entrada suave ao rolar: aparece subindo.
+ * Entrada suave ao rolar: aparece subindo 28px, em 700ms.
  *
  * Feito com IntersectionObserver e transição CSS em vez de uma biblioteca de
  * animação. Numa página de vendas estática, o custo de ~50 kB de JavaScript
- * para produzir um fade de 400ms sairia direto do orçamento de performance —
- * que é justamente o que a página precisa entregar.
+ * para produzir um fade sairia direto do orçamento de performance — que é
+ * justamente o que a página precisa entregar.
  *
- * O elemento já ocupa seu espaço final antes de animar (só opacidade e
- * deslocamento mudam), então não há deslocamento de layout.
+ * Só `opacity` e `transform` mudam, então não há reflow nem deslocamento de
+ * layout: o elemento já ocupa seu espaço final antes de animar. Quem pediu
+ * menos movimento no sistema vê o conteúdo direto, sem transição.
  */
 export function Reveal({ children, delay = 0, className, as: Tag = "div" }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
@@ -43,7 +44,7 @@ export function Reveal({ children, delay = 0, className, as: Tag = "div" }: Reve
         setVisivel(true);
         observer.disconnect();
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     );
 
     observer.observe(elemento);
@@ -54,8 +55,8 @@ export function Reveal({ children, delay = 0, className, as: Tag = "div" }: Reve
     <Tag
       ref={ref as never}
       className={cn(
-        "transition-[opacity,transform] duration-[400ms] ease-out-expo motion-reduce:transition-none",
-        visivel ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+        "transition-[opacity,transform] duration-700 ease-out-expo motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none",
+        visivel ? "translate-y-0 opacity-100" : "translate-y-7 opacity-0",
         className,
       )}
       style={{ transitionDelay: `${delay}ms` }}

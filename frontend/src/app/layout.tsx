@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 
 import { DomGuard } from "@/components/common/dom-guard";
 import { ThemeProvider } from "@/components/common/theme-provider";
@@ -11,6 +11,18 @@ import "./globals.css";
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
+  display: "swap",
+});
+
+/*
+ * Serif itálica de destaque, usada pontualmente em palavras de títulos.
+ * Só o corte itálico é carregado: é o único que a interface usa.
+ */
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -89,7 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="pt-BR"
       translate="no"
-      className={`dark notranslate ${jakarta.variable}`}
+      className={`dark notranslate ${jakarta.variable} ${instrumentSerif.variable}`}
       suppressHydrationWarning
     >
       <head>

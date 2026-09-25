@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import { BarraAnimada } from "@/components/dashboard/chart-bar";
 import { formatCompactCurrency, formatCurrency } from "@/lib/format";
 import type { TrendPoint } from "@/types/api";
 
@@ -11,7 +12,7 @@ function TrendTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-xl border border-border bg-card px-3 py-2 shadow-card">
+    <div className="rounded-2xl border border-border bg-popover px-3.5 py-2.5 shadow-lg">
       <p className="mb-1 text-xs font-semibold">{label}</p>
       {payload.map((entry: any) => (
         <p key={entry.dataKey} className="text-xs text-muted-foreground">
@@ -38,7 +39,7 @@ export const IncomeBarChart = memo(function IncomeBarChart({ data }: { data: Tre
     <div className="h-[240px] w-full lg:h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
-          <CartesianGrid strokeDasharray="4 4" stroke="var(--chart-grid)" vertical={false} />
+          <CartesianGrid strokeDasharray="4 6" stroke="var(--chart-grid)" vertical={false} />
           <XAxis
             dataKey="label"
             axisLine={false}
@@ -53,12 +54,13 @@ export const IncomeBarChart = memo(function IncomeBarChart({ data }: { data: Tre
             tickFormatter={formatCompactCurrency}
             width={62}
           />
-          <Tooltip content={<TrendTooltip />} cursor={{ fill: "var(--chart-hover)" }} />
+          <Tooltip content={<TrendTooltip />} cursor={{ fill: "var(--chart-hover)", radius: 12 } as never} />
           <Bar
             dataKey="income"
             name="Receitas"
             fill="var(--chart-income)"
-            radius={[6, 6, 0, 0]}
+            maxBarSize={34}
+            shape={<BarraAnimada />}
             isAnimationActive={false}
           />
         </BarChart>

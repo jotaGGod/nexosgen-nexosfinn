@@ -35,7 +35,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "no-scrollbar fixed inset-0 z-50 grid h-[100dvh] max-h-[100dvh] w-full min-w-0 max-w-none content-start gap-4 overflow-x-hidden overflow-y-auto overscroll-contain rounded-none border-0 bg-card px-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] pt-[calc(1rem+env(safe-area-inset-top,0px))] shadow-xl duration-200",
-        "sm:bottom-auto sm:left-1/2 sm:right-auto sm:top-1/2 sm:h-auto sm:max-h-[92dvh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:gap-5 sm:rounded-3xl sm:border sm:p-7",
+        "sm:bottom-auto sm:left-1/2 sm:right-auto sm:top-1/2 sm:h-auto sm:max-h-[92dvh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:gap-5 sm:rounded-[32px] sm:border sm:p-7",
         // Apenas animação de entrada. Com animação de saída, o Radix mantém o
         // nó montado até o `animationend` do estado "closed" — evento que não
         // chega de forma confiável nesta combinação de versões, deixando o

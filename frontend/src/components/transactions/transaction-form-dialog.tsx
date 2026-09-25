@@ -34,6 +34,11 @@ interface TransactionFormDialogProps {
   onOpenChange: (open: boolean) => void;
   /** Preenchido quando o diálogo está editando um lançamento existente. */
   transaction?: Transaction | null;
+  /**
+   * Tipo pré-selecionado ao criar (atalhos "Adicionar despesa/receita" do
+   * início). Só muda o valor inicial do seletor — o usuário ainda pode trocar.
+   */
+  defaultType?: TransactionValues["type"];
 }
 
 const emptyValues: TransactionValues = {
@@ -55,7 +60,7 @@ const emptyValues: TransactionValues = {
  * categorias ficam disponíveis: o backend recusa uma despesa em categoria de
  * receita, então a interface já impede a combinação inválida.
  */
-export function TransactionFormDialog({ open, onOpenChange, transaction }: TransactionFormDialogProps) {
+export function TransactionFormDialog({ open, onOpenChange, transaction, defaultType }: TransactionFormDialogProps) {
   const isEditing = Boolean(transaction);
 
   const createTransaction = useCreateTransaction();
@@ -94,9 +99,9 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
             is_settled: transaction.settlement?.status === "settled",
             settled_at: transaction.settlement?.settled_at ?? "",
           }
-        : emptyValues,
+        : { ...emptyValues, type: defaultType ?? emptyValues.type },
     );
-  }, [open, transaction, reset]);
+  }, [open, transaction, defaultType, reset]);
 
   const selectedCategory = watch("category_id");
 
@@ -154,7 +159,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
             control={control}
             name="type"
             render={({ field }) => (
-              <div className="grid grid-cols-2 gap-1 rounded-xl bg-secondary p-1" role="tablist">
+              <div className="grid grid-cols-2 gap-1 rounded-full bg-secondary p-1" role="tablist">
                 {(
                   [
                     { value: "income", label: "Receita" },
@@ -168,7 +173,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction }: Trans
                     aria-selected={field.value === option.value}
                     onClick={() => field.onChange(option.value)}
                     className={cn(
-                      "min-h-11 rounded-lg py-2 text-sm font-medium transition-colors",
+                      "min-h-11 rounded-full py-2 text-sm font-medium transition-colors",
                       field.value === option.value
                         ? option.value === "income"
                           ? "bg-positive text-background shadow-sm"

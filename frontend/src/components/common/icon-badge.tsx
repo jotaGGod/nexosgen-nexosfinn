@@ -9,9 +9,9 @@ interface IconBadgeProps {
 }
 
 const sizeClasses = {
-  sm: "size-8 rounded-lg [&_svg]:size-4",
-  md: "size-10 rounded-xl [&_svg]:size-[18px]",
-  lg: "size-12 rounded-2xl [&_svg]:size-5",
+  sm: "size-8 rounded-full [&_svg]:size-4",
+  md: "size-11 rounded-full [&_svg]:size-[18px]",
+  lg: "size-12 rounded-full [&_svg]:size-5",
 };
 
 /**

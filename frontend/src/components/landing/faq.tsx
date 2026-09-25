@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import { Destaque, Eyebrow, Section } from "@/components/landing/primitives";
 import { Reveal } from "@/components/landing/reveal";
 import { cn } from "@/lib/utils";
 
@@ -50,53 +51,74 @@ export function FAQ() {
   const [aberta, setAberta] = useState<number | null>(0);
 
   return (
-    <section className="mx-auto mt-32 w-full max-w-3xl px-5">
-      <div className="text-center">
-        <span className="text-xs font-medium uppercase tracking-[0.18em] text-primary">Dúvidas</span>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-          O que costumam perguntar
-        </h2>
-      </div>
+    <Section id="duvidas">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <div className="flex flex-col items-center text-center lg:sticky lg:top-28 lg:items-start lg:self-start lg:text-left">
+          <Eyebrow>Dúvidas</Eyebrow>
+          <h2 className="mt-5 text-balance text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
+            O que costumam <Destaque>perguntar</Destaque>
+          </h2>
+          <p className="mt-5 max-w-sm text-pretty text-base leading-relaxed text-muted-foreground">
+            Segurança, conexão com os bancos e o que acontece com seus dados. Se ficar alguma dúvida, o suporte
+            responde de segunda a sexta.
+          </p>
+        </div>
 
-      <div className="mt-10 space-y-3">
-        {perguntas.map((item, indice) => {
-          const estaAberta = aberta === indice;
+        <div className="space-y-3">
+          {perguntas.map((item, indice) => {
+            const estaAberta = aberta === indice;
+            const numero = String(indice + 1).padStart(2, "0");
 
-          return (
-            <Reveal key={item.pergunta} delay={indice * 40} className="surface overflow-hidden">
-              <h3>
-                <button
-                  type="button"
-                  onClick={() => setAberta(estaAberta ? null : indice)}
-                  aria-expanded={estaAberta}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
-                >
-                  <span className="text-sm font-medium sm:text-base">{item.pergunta}</span>
-                  <Plus
-                    className={cn(
-                      "size-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-out-expo",
-                      estaAberta && "rotate-45 text-primary",
-                    )}
-                  />
-                </button>
-              </h3>
-
-              <div
+            return (
+              <Reveal
+                key={item.pergunta}
+                delay={indice * 50}
                 className={cn(
-                  "grid transition-all duration-300 ease-out-expo",
-                  estaAberta ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                  "lp-card overflow-hidden rounded-2xl transition-colors duration-300",
+                  estaAberta && "border-white/[0.14] bg-[#101010]",
                 )}
               >
-                <div className="overflow-hidden">
-                  <p className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground">
-                    {item.resposta}
-                  </p>
+                <h3>
+                  <button
+                    type="button"
+                    onClick={() => setAberta(estaAberta ? null : indice)}
+                    aria-expanded={estaAberta}
+                    aria-controls={`faq-resposta-${indice}`}
+                    className="flex min-h-16 w-full items-center gap-4 px-5 py-4 text-left sm:px-6"
+                  >
+                    <span className="font-mono text-xs tabular-nums text-muted-foreground/70">{numero}</span>
+                    <span className="flex-1 text-sm font-medium sm:text-base">{item.pergunta}</span>
+                    <span
+                      className={cn(
+                        "flex size-8 shrink-0 items-center justify-center rounded-lg border transition-[transform,background-color,border-color,color] duration-300 ease-out-expo",
+                        estaAberta
+                          ? "rotate-45 border-primary/40 bg-primary text-primary-foreground"
+                          : "border-white/10 bg-white/[0.04] text-muted-foreground",
+                      )}
+                    >
+                      <Plus className="size-4" />
+                    </span>
+                  </button>
+                </h3>
+
+                <div
+                  id={`faq-resposta-${indice}`}
+                  className={cn(
+                    "grid transition-[grid-template-rows,opacity] duration-300 ease-out-expo",
+                    estaAberta ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                  )}
+                >
+                  <div className="overflow-hidden">
+                    <p className="px-5 pb-5 pl-[3.25rem] text-sm leading-relaxed text-muted-foreground sm:px-6 sm:pl-[3.6rem]">
+                      {item.resposta}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Reveal>
-          );
-        })}
+              </Reveal>
+            );
+          })}
+        </div>
       </div>
-    </section>
+    </Section>
   );
 }

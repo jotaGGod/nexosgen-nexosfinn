@@ -71,7 +71,7 @@ export function CashflowLegend() {
         Receitas
       </span>
       <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full" style={{ backgroundColor: "var(--chart-expense)" }} />
+        <span className="size-2 rounded-full" style={{ backgroundColor: "var(--chart-neutral)" }} />
         Despesas
       </span>
     </div>

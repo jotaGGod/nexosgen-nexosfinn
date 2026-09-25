@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-semibold transition-all duration-200 ease-out-expo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:translate-y-0 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all duration-200 ease-out-expo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:translate-y-0 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -18,15 +18,17 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:-translate-y-0.5 hover:bg-destructive/95",
         outline:
-          "border border-input bg-card hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-secondary",
+          "border border-border bg-card/70 hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-secondary",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        // Pílula clara, a ação de maior contraste num painel escuro.
+        contrast: "bg-foreground text-background hover:-translate-y-0.5 hover:bg-foreground/90",
         ghost: "hover:bg-secondary hover:text-secondary-foreground",
         link: "text-active underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 py-2",
-        sm: "h-10 rounded-xl px-4",
-        lg: "h-12 rounded-full px-7",
+        sm: "h-10 px-4",
+        lg: "h-12 px-7",
         icon: "h-11 w-11",
       },
     },

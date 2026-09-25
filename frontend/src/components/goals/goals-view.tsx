@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarClock, Loader2, Pencil, Plus, Target, Trash2, TrendingUp } from "lucide-react";
+import { CalendarClock, Loader2, Pencil, Plus, PlusCircle, Target, Trash2, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -111,32 +111,47 @@ export function GoalsView() {
     if (result.ok) setPendingDelete(null);
   }
 
+  function novaMeta() {
+    setEditing(null);
+    setFormOpen(true);
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="stagger space-y-6">
       <PageHeader
         title="Metas"
         subtitle="Acompanhe seus objetivos financeiros"
         actions={
-          <Button
-            variant="gradient"
-            onClick={() => {
-              setEditing(null);
-              setFormOpen(true);
-            }}
-          >
+          <Button variant="gradient" className="hidden lg:inline-flex" onClick={novaMeta}>
             <Plus />
             Nova Meta
           </Button>
         }
       />
 
-      <Tabs value={filter} onValueChange={(value) => setFilter(value as typeof filter)}>
-        <TabsList>
-          <TabsTrigger value="all">Todas as Metas</TabsTrigger>
-          <TabsTrigger value="in_progress">Em Andamento</TabsTrigger>
-          <TabsTrigger value="completed">Concluídas</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Criar meta: o cartão em degradê das referências, no celular. */}
+      <button
+        type="button"
+        onClick={novaMeta}
+        className="brand-gradient flex w-full items-center justify-between rounded-[28px] px-5 py-5 text-left shadow-[0_20px_44px_-24px_rgba(255,106,26,0.8)] transition-transform duration-200 ease-out-expo active:scale-[0.98] lg:hidden"
+      >
+        <span>
+          <span className="block text-xs opacity-70">Adicionar</span>
+          <span className="block text-xl font-semibold tracking-tight">Nova meta</span>
+        </span>
+        <PlusCircle className="size-7" strokeWidth={1.5} />
+      </button>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-medium tracking-tight">Lista de metas</h2>
+        <Tabs value={filter} onValueChange={(value) => setFilter(value as typeof filter)}>
+          <TabsList>
+            <TabsTrigger value="all">Todas</TabsTrigger>
+            <TabsTrigger value="in_progress">Em andamento</TabsTrigger>
+            <TabsTrigger value="completed">Concluídas</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
 
       {isError ? (
         <Card>
@@ -157,13 +172,7 @@ export function GoalsView() {
             title="Nenhuma meta neste filtro"
             description="Defina um objetivo com valor e prazo — a NexosFinn calcula quanto guardar por mês."
             action={
-              <Button
-                variant="gradient"
-                onClick={() => {
-                  setEditing(null);
-                  setFormOpen(true);
-                }}
-              >
+              <Button variant="gradient" onClick={novaMeta}>
                 <Plus />
                 Nova Meta
               </Button>
@@ -173,113 +182,127 @@ export function GoalsView() {
       ) : null}
 
       {/*
-        Cada meta é um cartão largo com barra de progresso. Empilhados, num
-        monitor eles viram uma coluna de faixas com metros de vazio à direita;
-        em duas colunas a barra ainda tem largura para ser legível.
+        Cada meta é um cartão com a régua de progresso (0% · atual · 100%), a
+        barra grossa em degradê e três colunas: alvo, guardado e prazo. No
+        desktop, duas ou três colunas de cartões.
       */}
-      <div className="space-y-3 xl:grid xl:grid-cols-2 xl:gap-3 xl:space-y-0">
+      <div className="grid gap-3 md:grid-cols-2 lg:gap-4 2xl:grid-cols-3">
         {goals.map((goal) => {
           const Icon = resolveIcon(goal.icon);
+          const pct = Math.min(Math.max(goal.percentage, 0), 100);
 
           return (
-            <Card key={goal.id} className="group flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
-              {goal.image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={goal.image_url}
-                  alt=""
-                  className="h-24 w-full shrink-0 rounded-xl object-cover sm:w-32"
-                />
-              ) : (
-                <span
-                  className="flex h-24 w-full shrink-0 items-center justify-center rounded-xl sm:w-32"
-                  style={{ backgroundColor: `${goal.color}1A`, color: goal.color }}
-                >
-                  <Icon className="size-8" />
-                </span>
-              )}
+            <Card key={goal.id} className="group flex flex-col p-5">
+              <div className="flex items-start gap-3">
+                {goal.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={goal.image_url} alt="" className="size-11 shrink-0 rounded-full object-cover" />
+                ) : (
+                  <span
+                    className="flex size-11 shrink-0 items-center justify-center rounded-full"
+                    style={{ backgroundColor: `${goal.color}1F`, color: goal.color }}
+                  >
+                    <Icon className="size-5" />
+                  </span>
+                )}
 
-              <div className="min-w-0 flex-1 space-y-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <p className="text-base font-semibold">{goal.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">{goal.current_amount.formatted}</span> de{" "}
-                      {goal.target_amount.formatted}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-base font-semibold">{goal.name}</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
                     {goal.completed ? <Badge variant="income">Concluída</Badge> : null}
                     {goal.overdue ? <Badge variant="expense">Prazo vencido</Badge> : null}
-                    <span className="text-lg font-semibold tabular-nums">
-                      {formatPercentage(goal.percentage, 0)}
-                    </span>
+                    {!goal.completed && !goal.overdue ? (
+                      <span className="text-xs text-muted-foreground">Em andamento</span>
+                    ) : null}
                   </div>
                 </div>
 
-                <Progress
-                  value={goal.percentage}
-                  color={`linear-gradient(90deg, ${goal.color} 0%, ${goal.color}CC 100%)`}
-                />
+                <div className="flex shrink-0 items-center gap-0.5">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-9"
+                    onClick={() => {
+                      setEditing(goal);
+                      setFormOpen(true);
+                    }}
+                    aria-label={`Editar ${goal.name}`}
+                  >
+                    <Pencil />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-9 text-destructive hover:bg-destructive/10"
+                    onClick={() => setPendingDelete(goal)}
+                    aria-label={`Excluir ${goal.name}`}
+                  >
+                    <Trash2 />
+                  </Button>
+                </div>
+              </div>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-                  {goal.deadline ? (
-                    <span className="flex items-center gap-1.5">
-                      <CalendarClock className="size-3.5" />
-                      {goal.completed
-                        ? `Concluída · prazo ${formatDate(goal.deadline)}`
-                        : goal.months_remaining > 0
+              <div className="mt-4 border-t border-border/70 pt-4">
+                <p className="text-xs text-muted-foreground">Progresso</p>
+                <div className="relative mt-2 h-4 text-[10px] tabular-nums text-muted-foreground">
+                  <span className="absolute left-0">0%</span>
+                  <span
+                    className="absolute -translate-x-1/2 text-xs font-semibold text-foreground"
+                    style={{ left: `${Math.min(Math.max(pct, 8), 88)}%` }}
+                  >
+                    {formatPercentage(goal.percentage, 0)}
+                  </span>
+                  <span className="absolute right-0">100%</span>
+                </div>
+                <Progress value={goal.percentage} size="lg" className="mt-1.5" />
+
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground">Meta</p>
+                    <p className="mt-0.5 truncate text-sm font-semibold tabular-nums">{goal.target_amount.formatted}</p>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground">Guardado</p>
+                    <p className="mt-0.5 truncate text-sm font-semibold tabular-nums">{goal.current_amount.formatted}</p>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground">Prazo</p>
+                    <p className="mt-0.5 truncate text-sm font-semibold tabular-nums">
+                      {goal.deadline ? formatDate(goal.deadline) : "Sem prazo"}
+                    </p>
+                    {goal.deadline && !goal.completed ? (
+                      <p className="flex items-center gap-1 truncate text-[11px] text-muted-foreground">
+                        <CalendarClock className="size-3" />
+                        {goal.months_remaining > 0
                           ? `Restam ${goal.months_remaining} ${goal.months_remaining === 1 ? "mês" : "meses"}`
                           : `Prazo em ${formatDate(goal.deadline)}`}
-                    </span>
-                  ) : null}
-
-                  {!goal.completed ? (
-                    <span className="flex items-center gap-1.5">
-                      <TrendingUp className="size-3.5" />
-                      {goal.suggested_monthly.formatted}/mês
-                    </span>
-                  ) : null}
-
-                  <div className="ml-auto flex items-center gap-1">
-                    {!goal.completed ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setContributing(goal);
-                          setContribution(0);
-                        }}
-                      >
-                        <Plus />
-                        Aportar
-                      </Button>
+                      </p>
                     ) : null}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-8"
-                      onClick={() => {
-                        setEditing(goal);
-                        setFormOpen(true);
-                      }}
-                      aria-label={`Editar ${goal.name}`}
-                    >
-                      <Pencil />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-8 text-destructive hover:bg-destructive/10"
-                      onClick={() => setPendingDelete(goal)}
-                      aria-label={`Excluir ${goal.name}`}
-                    >
-                      <Trash2 />
-                    </Button>
                   </div>
                 </div>
               </div>
+
+              {!goal.completed ? (
+                <div className="mt-4 flex items-center justify-between gap-3 rounded-full border border-border/70 bg-secondary/50 py-1.5 pl-4 pr-1.5">
+                  <span className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
+                    <TrendingUp className="size-3.5 shrink-0" />
+                    <span className="truncate">
+                      <span className="font-semibold text-foreground tabular-nums">{goal.suggested_monthly.formatted}</span>/mês
+                    </span>
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="gradient"
+                    onClick={() => {
+                      setContributing(goal);
+                      setContribution(0);
+                    }}
+                  >
+                    <Plus />
+                    Aportar
+                  </Button>
+                </div>
+              ) : null}
             </Card>
           );
         })}

@@ -22,10 +22,10 @@ export function SettingsView() {
 
   return (
     // Configurações é a única tela sem dado tabular ou gráfico: é formulário
-    // puro. Deixá-la ocupar os 1280px do contêiner produziria campos de texto
-    // com quase mil pixels de largura, que são desconfortáveis de ler e de
-    // preencher. Aqui a largura curta é a decisão certa, e não uma limitação.
-    <div className="max-w-3xl space-y-6">
+    // puro. Deixá-la ocupar os 1400px do contêiner produziria campos de texto
+    // largos demais para ler e preencher; a coluna curta fica centrada sob a
+    // barra superior.
+    <div className="stagger mx-auto max-w-4xl space-y-6">
       <PageHeader title="Configurações" subtitle="Gerencie sua conta e integrações" />
 
       <Tabs defaultValue={initialTab}>

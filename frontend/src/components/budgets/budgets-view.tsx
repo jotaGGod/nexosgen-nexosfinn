@@ -87,13 +87,13 @@ export function BudgetsView() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="stagger space-y-6">
       <PageHeader
         title="Orçamentos"
         subtitle="Defina limites mensais por categoria"
         actions={
           <>
-            <div className="flex items-center gap-1 rounded-xl border border-border bg-card p-1 shadow-sm">
+            <div className="flex items-center gap-1 rounded-full border border-border/80 bg-card p-1">
               <Button variant="ghost" size="icon" className="size-8" onClick={() => shiftMonth(-1)} aria-label="Mês anterior">
                 <ChevronLeft className="size-4" />
               </Button>

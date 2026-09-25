@@ -18,10 +18,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState, ErrorState, RowsSkeleton } from "@/components/ui/states";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { runMutation, useCategories, useDeleteTransaction, useTransactions } from "@/hooks/use-nexosgen-nexosfinn";
 import { formatDate, todayISO } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -87,9 +88,10 @@ export function TransactionsView() {
   const items = data?.items ?? [];
   const pagination = data?.pagination;
   const hasFilters = search.trim() !== "" || type !== ALL || categoryId !== ALL || status !== ALL;
+  const filtrosAtivos = [search.trim() !== "", type !== ALL, categoryId !== ALL, status !== ALL].filter(Boolean).length;
 
   return (
-    <div className="space-y-6">
+    <div className="stagger space-y-5">
       <PageHeader
         title="Transações"
         subtitle="Gerencie todas as suas transações"
@@ -108,82 +110,92 @@ export function TransactionsView() {
       />
 
       {data ? (
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Card className="border-positive/25 bg-positive/8 p-4">
-            <p className="text-xs font-medium text-positive">Total Receitas</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-positive">
+        <Card className="grid grid-cols-1 divide-y divide-border/70 px-6 py-2 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-0 sm:py-6">
+          <div className="py-4 sm:px-7 sm:py-0">
+            <p className="text-sm text-muted-foreground">Total de receitas</p>
+            <p className="mt-1.5 text-[1.75rem] font-medium leading-tight tracking-[-0.03em] tabular-nums text-positive">
               {data.totals.income.formatted}
             </p>
-          </Card>
-          <Card className="border-negative/25 bg-negative/8 p-4">
-            <p className="text-xs font-medium text-negative">Total Despesas</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-negative">
+          </div>
+          <div className="py-4 sm:px-7 sm:py-0">
+            <p className="text-sm text-muted-foreground">Total de despesas</p>
+            <p className="mt-1.5 text-[1.75rem] font-medium leading-tight tracking-[-0.03em] tabular-nums text-negative">
               {data.totals.expense.formatted}
             </p>
-          </Card>
-          <Card className="border-active/25 bg-active/5 p-4">
-            <p className="text-xs font-medium text-active">Total Líquido</p>
-            <p className="mt-1 text-xl font-semibold tabular-nums text-active">
+          </div>
+          <div className="py-4 sm:px-7 sm:py-0">
+            <p className="text-sm text-muted-foreground">Total líquido</p>
+            <p className="mt-1.5 text-[1.75rem] font-medium leading-tight tracking-[-0.03em] tabular-nums text-foreground">
               {data.totals.net.formatted}
             </p>
-          </Card>
-        </div>
+          </div>
+        </Card>
       ) : null}
 
-      <Card>
-        <CardContent className="p-4">
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={search}
-                onChange={(event) => updateFilter(() => setSearch(event.target.value))}
-                placeholder="Buscar transações..."
-                className="pl-9"
-                aria-label="Buscar transações"
-                autoComplete="off"
-              />
-            </div>
-
-            <Select value={categoryId} onValueChange={(value) => updateFilter(() => setCategoryId(value))}>
-              <SelectTrigger className="sm:w-52" aria-label="Filtrar por categoria">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ALL}>Todas as categorias</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={type} onValueChange={(value) => updateFilter(() => setType(value))}>
-              <SelectTrigger className="sm:w-44" aria-label="Filtrar por tipo">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ALL}>Todos os tipos</SelectItem>
-                <SelectItem value="income">Receitas</SelectItem>
-                <SelectItem value="expense">Despesas</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={status} onValueChange={(value) => updateFilter(() => setStatus(value))}>
-              <SelectTrigger className="sm:w-44" aria-label="Filtrar por liquidação">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ALL}>Todos os status</SelectItem>
-                <SelectItem value="settled">Liquidadas</SelectItem>
-                <SelectItem value="pending">Pendentes</SelectItem>
-                <SelectItem value="overdue">Vencidas</SelectItem>
-                <SelectItem value="future">Futuras</SelectItem>
-              </SelectContent>
-            </Select>
+      {/* Barra de filtros em pílulas, como a linha de "filtros ativos" das referências. */}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <p className="flex shrink-0 items-center gap-2 text-sm font-medium">
+          Filtros
+          {filtrosAtivos > 0 ? (
+            <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+              {filtrosAtivos}
+            </span>
+          ) : null}
+        </p>
+        <div className="grid flex-1 gap-2 sm:grid-cols-[1fr_auto_auto]">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(event) => updateFilter(() => setSearch(event.target.value))}
+              placeholder="Buscar transações..."
+              className="pl-11"
+              aria-label="Buscar transações"
+              autoComplete="off"
+            />
           </div>
-        </CardContent>
+
+          <Select value={categoryId} onValueChange={(value) => updateFilter(() => setCategoryId(value))}>
+            <SelectTrigger className="sm:w-56" aria-label="Filtrar por categoria">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>Todas as categorias</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={status} onValueChange={(value) => updateFilter(() => setStatus(value))}>
+            <SelectTrigger className="sm:w-48" aria-label="Filtrar por liquidação">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>Todos os status</SelectItem>
+              <SelectItem value="settled">Liquidadas</SelectItem>
+              <SelectItem value="pending">Pendentes</SelectItem>
+              <SelectItem value="overdue">Vencidas</SelectItem>
+              <SelectItem value="future">Futuras</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <Card className="overflow-hidden">
+        {/* Tipo como abas segmentadas: mesmo filtro que antes era um seletor. */}
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 pb-3 pt-5 sm:px-6">
+          <h2 className="text-base font-semibold tracking-tight">Lançamentos</h2>
+          <Tabs value={type} onValueChange={(value) => updateFilter(() => setType(value))}>
+            <TabsList aria-label="Filtrar por tipo">
+              <TabsTrigger value={ALL}>Todas</TabsTrigger>
+              <TabsTrigger value="income">Receitas</TabsTrigger>
+              <TabsTrigger value="expense">Despesas</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
         {isError ? <ErrorState onRetry={() => void refetch()} /> : null}
         {isPending && !isError ? <RowsSkeleton rows={6} /> : null}
@@ -225,11 +237,11 @@ export function TransactionsView() {
         {items.length > 0 ? (
           <div className={cn("transition-opacity", isPlaceholderData && "opacity-60")}>
             {/* Lista de lançamentos: uma linha por transação, legível em coluna estreita. */}
-            <ul className="divide-y divide-border/70">
+            <ul className="space-y-1 px-3 pb-3 sm:px-4">
               {items.map((transaction) => (
                 <li
                   key={transaction.id}
-                  className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-secondary/40"
+                  className="group flex items-center gap-3 rounded-[22px] px-2.5 py-3 transition-colors hover:bg-secondary/60 sm:px-3"
                 >
                   <IconBadge icon={transaction.category.icon} color={transaction.category.color} />
                   <div className="min-w-0 flex-1">
@@ -237,7 +249,14 @@ export function TransactionsView() {
                     <p className="truncate text-xs text-muted-foreground">
                       {transaction.category.name} · {formatDate(transaction.date)}
                     </p>
-                    <p className={cn("mt-1 text-xs font-medium", transaction.settlement.status === "settled" ? "text-positive" : "text-amber-600 dark:text-amber-400")}>
+                    <p
+                      className={cn(
+                        "mt-1.5 inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium",
+                        transaction.settlement.status === "settled"
+                          ? "border-positive/25 bg-positive/10 text-positive"
+                          : "border-warning/25 bg-warning/10 text-warning",
+                      )}
+                    >
                       {transaction.type === "expense"
                         ? transaction.settlement.status === "settled" ? "Paga" : "Não paga"
                         : transaction.settlement.status === "settled" ? "Recebida" : "Não recebida"}
@@ -267,7 +286,7 @@ export function TransactionsView() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="size-7"
+                        className="size-8"
                         onClick={() => openEdit(transaction)}
                         aria-label={`Editar ${transaction.description}`}
                       >
@@ -276,7 +295,7 @@ export function TransactionsView() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="size-7 text-destructive"
+                        className="size-8 text-destructive"
                         onClick={() => setPendingDelete(transaction)}
                         aria-label={`Excluir ${transaction.description}`}
                       >
@@ -289,7 +308,7 @@ export function TransactionsView() {
             </ul>
 
             {pagination ? (
-              <div className="flex flex-col items-center justify-between gap-3 border-t border-border/70 px-5 py-4 sm:flex-row">
+              <div className="flex flex-col items-center justify-between gap-3 border-t border-border/70 px-5 py-4 sm:flex-row sm:px-6">
                 <p className="text-xs text-muted-foreground">
                   Mostrando {(pagination.page - 1) * pagination.page_size + 1} a{" "}
                   {Math.min(pagination.page * pagination.page_size, pagination.total)} de {pagination.total}{" "}

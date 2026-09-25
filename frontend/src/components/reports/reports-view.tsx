@@ -20,6 +20,7 @@ import {
   IncomeBarChart,
   useChartPreload,
 } from "@/components/dashboard/lazy-charts";
+import { CategoryBars } from "@/components/dashboard/category-bars";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,9 +43,9 @@ function OverviewCard({
   invert?: boolean;
 }) {
   return (
-    <Card className="p-5">
-      <p className="text-sm font-medium text-muted-foreground">{label}</p>
-      <p className="mt-2 text-2xl font-semibold tabular-nums">{value}</p>
+    <Card className="p-5 lg:p-6">
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="mt-2 truncate text-2xl font-medium tracking-[-0.03em] tabular-nums lg:text-[1.75rem]">{value}</p>
       <Variation className="mt-2" value={variation} invert={invert} />
     </Card>
   );
@@ -65,8 +66,8 @@ function InsightCard({
   tint: string;
 }) {
   return (
-    <Card className="flex items-start gap-3 p-4">
-      <span className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${tint}`}>
+    <Card className="flex items-start gap-3 p-5">
+      <span className={`flex size-10 shrink-0 items-center justify-center rounded-full ${tint}`}>
         <Icon className="size-[18px]" />
       </span>
       <div className="min-w-0">
@@ -151,7 +152,7 @@ export function ReportsView() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="stagger space-y-6">
       <PageHeader
         title="Análises"
         subtitle="Análises detalhadas das suas finanças"
@@ -231,7 +232,7 @@ export function ReportsView() {
                   <CardTitle>Distribuição por Categoria</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CategoryDonut distribution={data.category_expenses} />
+                  <CategoryBars distribution={data.category_expenses} limit={6} />
                 </CardContent>
               </Card>
             </div>
@@ -293,7 +294,7 @@ export function ReportsView() {
                     </thead>
                     <tbody className="divide-y divide-border/70">
                       {data.trends.map((point) => (
-                        <tr key={point.month}>
+                        <tr key={point.month} className="transition-colors hover:bg-secondary/50">
                           <td className="py-3 pr-4 font-medium">{point.label}</td>
                           <td className="py-3 pr-4 text-right tabular-nums text-positive">
                             {formatCurrency(point.income)}

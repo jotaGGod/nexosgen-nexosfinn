@@ -1,54 +1,73 @@
-"use client";
-
-import { useId } from "react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
+/*
+ * Assets oficiais da marca, gerados a partir de mídia/logo.png.
+ *
+ * O original tem o "Nexos" em preto, que some sobre o fundo quase preto do
+ * tema escuro. A variante `-dark` é o mesmo arquivo com apenas o preto neutro
+ * do wordmark clareado (e o preto das dobras do símbolo levemente erguido) —
+ * o desenho, o laranja e as proporções são os do asset original.
+ */
+const LOGO_LIGHT = "/brand/nexosfinn-logo.png";
+const LOGO_DARK = "/brand/nexosfinn-logo-dark.png";
+const SYMBOL = "/brand/nexosfinn-symbol.png";
+
+// Proporção do logo completo recortado (largura / altura).
+const LOGO_RATIO = 542 / 160;
+
 /**
- * Marca NexosFinn: um "N" anguloso em degradê do limão de assinatura para o roxo
- * de apoio.
+ * Marca NexosFinn: símbolo + wordmark, a partir do asset oficial.
  *
- * Desenhada em SVG inline — não depende de arquivo externo, não gera
- * requisição e escala sem perda em qualquer tamanho.
- *
- * O identificador do gradiente vem de `useId` porque duas marcas convivem na
- * mesma página desde que existe barra lateral: uma nela e outra no cabeçalho.
- * Com um id fixo, os dois SVGs declaravam o mesmo `NexosFinn-mark`, e o
- * `fill="url(#NexosFinn-mark)"` de ambos resolvia para o primeiro do documento —
- * que é o da barra lateral, oculta com `display: none` no celular. O resultado
- * era o símbolo invisível no mobile, com o texto da marca aparecendo sozinho.
- *
- * É também o motivo de este componente ser de cliente: `useId` é um hook.
+ * Nos dois temas o arquivo certo é escolhido só com CSS (`dark:`), sem
+ * JavaScript: a troca acontece junto com a classe `.dark`, inclusive quando
+ * um trecho da página força o tema escuro localmente, como a landing.
  */
 export function Logo({
   className,
   showWordmark = true,
   size = "md",
+  priority = false,
 }: {
   className?: string;
   showWordmark?: boolean;
   size?: "sm" | "md" | "lg";
+  /** Pré-carrega a imagem; use no logo que aparece na primeira dobra. */
+  priority?: boolean;
 }) {
-  const gradienteId = useId();
+  const height = { sm: 24, md: 30, lg: 38 }[size];
 
-  const markSize = { sm: "size-6", md: "size-7", lg: "size-9" }[size];
-  const textSize = { sm: "text-sm", md: "text-base", lg: "text-xl" }[size];
+  if (!showWordmark) {
+    return (
+      <span className={cn("inline-flex shrink-0", className)}>
+        <Image src={SYMBOL} alt="NexosFinn" width={height} height={height} priority={priority} />
+      </span>
+    );
+  }
+
+  const width = Math.round(height * LOGO_RATIO);
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
-      <svg viewBox="0 0 32 32" className={cn(markSize, "shrink-0")} fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id={gradienteId} x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
-            <stop stopColor="hsl(var(--primary))" />
-            <stop offset="1" stopColor="hsl(var(--accent))" />
-          </linearGradient>
-        </defs>
-        <path d="M5 28V4h5l12 15.5V4h5v24h-5L10 12.5V28H5Z" fill={`url(#${gradienteId})`} />
-      </svg>
-
-      {showWordmark ? (
-        <span className={cn("font-semibold tracking-tight text-foreground", textSize)}>NexosFinn</span>
-      ) : null}
-    </div>
+    <span className={cn("inline-flex shrink-0 items-center", className)}>
+      <Image
+        src={LOGO_DARK}
+        alt="NexosFinn"
+        width={width}
+        height={height}
+        priority={priority}
+        className="hidden dark:block"
+        style={{ width, height }}
+      />
+      <Image
+        src={LOGO_LIGHT}
+        alt="NexosFinn"
+        width={width}
+        height={height}
+        priority={priority}
+        className="block dark:hidden"
+        style={{ width, height }}
+      />
+    </span>
   );
 }
