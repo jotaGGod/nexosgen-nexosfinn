@@ -1,7 +1,6 @@
 "use client";
 
 import { Blocks, LogOut, Menu, SlidersHorizontal, UserRound } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -45,13 +44,11 @@ function ProfileMenu({ pill = false }: { pill?: boolean }) {
           )}
           aria-label="Abrir menu do perfil"
         >
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático; /_next/image dá 404 na Vercel. */}
+          <img
             src="/images/default-user-avatar.svg"
             alt={user ? `Foto de ${user.name}` : "Foto do usuário"}
-            fill
-            sizes="64px"
-            className="object-cover"
-            priority
+            className="absolute inset-0 size-full object-cover"
           />
         </button>
       </DropdownMenuTrigger>
@@ -111,7 +108,8 @@ function ProfileMenu({ pill = false }: { pill?: boolean }) {
  * Desktop (lg+): barra superior em pílulas — logo, os destinos principais com
  * rótulo numa pílula, os de uso ocasional como botões redondos de ícone e, à
  * direita, tema e perfil. Fica grudada no topo, mas sem faixa: só as pílulas
- * têm fundo, o conteúdo passa por trás dos vãos.
+ * têm fundo (opaco, sem backdrop-filter, que custaria um desfoque por quadro
+ * durante a rolagem), e o conteúdo passa por trás dos vãos.
  *
  * Celular: duas pílulas (menu e avatar) que rolam junto com a página. Nada
  * fica fixo em cima nem embaixo — a tela é uma rolagem contínua de ponta a
@@ -146,13 +144,13 @@ export function AppHeader() {
           href="/app/dashboard"
           prefetch={false}
           aria-label="Ir para o início"
-          className="flex h-12 items-center rounded-full border border-border/80 bg-card/85 px-4 backdrop-blur-xl"
+          className="flex h-12 items-center rounded-full border border-border/80 bg-card px-4"
         >
-          <Logo />
+          <Logo priority />
         </Link>
 
         <nav className="flex items-center gap-2" aria-label="Navegação principal">
-          <div className="flex items-center gap-1 rounded-full border border-border/80 bg-card/85 p-1 backdrop-blur-xl">
+          <div className="flex items-center gap-1 rounded-full border border-border/80 bg-card p-1">
             {primaryNavItems.map((item) => {
               const ativo = pathname.startsWith(item.href);
               const Icon = item.icon;
@@ -188,10 +186,10 @@ export function AppHeader() {
                 title={item.label}
                 aria-current={ativo ? "page" : undefined}
                 className={cn(
-                  "flex size-12 items-center justify-center rounded-full border backdrop-blur-xl transition-[background-color,color,border-color] duration-300 ease-out-expo",
+                  "flex size-12 items-center justify-center rounded-full border transition-[background-color,color,border-color] duration-300 ease-out-expo",
                   ativo
                     ? "border-primary/40 bg-primary text-primary-foreground"
-                    : "border-border/80 bg-card/85 text-muted-foreground hover:border-foreground/15 hover:text-foreground",
+                    : "border-border/80 bg-card text-muted-foreground hover:border-foreground/15 hover:text-foreground",
                 )}
               >
                 <Icon className="size-[18px]" />
@@ -200,7 +198,7 @@ export function AppHeader() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2 rounded-full border border-border/80 bg-card/85 p-1 backdrop-blur-xl">
+        <div className="flex items-center gap-2 rounded-full border border-border/80 bg-card p-1">
           <ThemeToggle />
           <ProfileMenu />
         </div>

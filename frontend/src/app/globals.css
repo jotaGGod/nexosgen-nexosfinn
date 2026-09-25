@@ -310,17 +310,21 @@
   }
 
   /*
-   * Topo que sangra até a borda da tela no celular.
+   * Cartão de topo do início no celular: sobe por trás do cabeçalho e ocupa
+   * a largura da tela quase inteira (8px de folga), arredondado nos quatro
+   * cantos — antes ele colava na borda de cima e ficava reto ali, arredondado
+   * só embaixo.
    *
-   * O bloco sobe por trás do cabeçalho e da área segura (relógio, recorte) e
-   * ocupa a largura inteira da tela, mesmo dentro da coluna centrada. Assim
-   * não sobra faixa nenhuma no topo: o degradê é o próprio topo do app.
-   * Os valores espelham o respiro do casco em app/app/layout.tsx.
+   * Ele começa 6px abaixo da área segura (relógio, recorte), então no app
+   * instalado a barra de status fica sobre o fundo do app e o cartão flutua
+   * logo abaixo; no Safari, ele aparece como um cartão inteiro. O conteúdo
+   * continua exatamente onde estava. Os valores espelham o respiro do casco
+   * em app/app/layout.tsx (0.75rem + cabeçalho de 3rem + 1.25rem).
    */
   .bleed-top {
-    margin-top: calc(-1 * (0.75rem + env(safe-area-inset-top, 0px) + 3rem + 1.25rem));
-    padding-top: calc(0.75rem + env(safe-area-inset-top, 0px) + 3rem + 1.25rem);
-    margin-inline: calc(50% - 50vw);
+    margin-top: calc(-1 * (0.75rem + 3rem + 1.25rem - 0.375rem));
+    padding-top: calc(0.75rem + 3rem + 1.25rem - 0.375rem);
+    margin-inline: calc(50% - 50vw + 0.5rem);
   }
 
   /*

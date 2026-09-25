@@ -108,7 +108,7 @@ export function DashboardPreview() {
       <div className="flex items-center justify-between gap-4">
         <span className="flex h-12 items-center gap-2 rounded-full border border-white/[0.08] bg-[#111] px-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/nexosfinn-logo-dark.png" alt="" className="h-[26px] w-auto" />
+          <img src="/brand/nexosfinn-logo-dark.webp" alt="" width={88} height={26} loading="lazy" decoding="async" className="h-[26px] w-auto" />
         </span>
 
         <div className="flex items-center gap-2">

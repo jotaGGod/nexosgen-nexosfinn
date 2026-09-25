@@ -134,31 +134,39 @@ export const BLOCOS = {
   categorias: { top: 790, height: 300 },
 };
 
+/** Topo do cartão em degradê: começa logo abaixo da barra de status. */
+const TOPO_CARTAO = 50;
+
 export function BlocoTopo({ comSaldo = true }: { comSaldo?: boolean }) {
   return (
-    <section
-      className="brand-gradient absolute inset-x-0 rounded-b-[40px] px-5"
-      style={{ top: BLOCOS.topo.top, height: BLOCOS.topo.height }}
-    >
-      <div className="-mx-5">
-        <StatusBar escuro />
+    <>
+      <div className="absolute inset-x-0 top-0">
+        <StatusBar />
       </div>
-      <Pilulas />
-      <h1 className="mt-4 text-[38px] leading-[1.08] tracking-[-0.035em]">
-        <span className="block font-normal">Olá,</span>
-        <span className="block font-bold">{DADOS.nome}!</span>
-      </h1>
-      <Periodo className="mt-3 bg-[#0B0B0B]/90 text-white" />
-      {comSaldo ? <BlocoSaldo /> : null}
-    </section>
+      <section
+        className="brand-gradient absolute inset-x-2 rounded-[34px] px-3 pt-2"
+        style={{ top: TOPO_CARTAO, height: BLOCOS.topo.height - TOPO_CARTAO }}
+      >
+        <Pilulas />
+        <h1 className="mt-4 text-[38px] leading-[1.08] tracking-[-0.035em]">
+          <span className="block font-normal">Olá,</span>
+          <span className="block font-bold">{DADOS.nome}!</span>
+        </h1>
+        <Periodo className="mt-3 bg-[#0B0B0B]/90 text-white" />
+        {comSaldo ? <BlocoSaldo deslocamento={TOPO_CARTAO} /> : null}
+      </section>
+    </>
   );
 }
 
-export function BlocoSaldo() {
+export function BlocoSaldo({ deslocamento = 0 }: { deslocamento?: number }) {
   return (
     <div
-      className="absolute inset-x-5 rounded-[30px] bg-[#0B0B0B] p-5 text-white shadow-[0_24px_50px_-24px_rgba(90,30,0,0.75)]"
-      style={{ top: BLOCOS.saldo.top, height: BLOCOS.saldo.height }}
+      className={cn(
+        "absolute rounded-[30px] bg-[#0B0B0B] p-5 text-white shadow-[0_24px_50px_-24px_rgba(90,30,0,0.75)]",
+        deslocamento ? "inset-x-3" : "inset-x-5",
+      )}
+      style={{ top: BLOCOS.saldo.top - deslocamento, height: BLOCOS.saldo.height }}
     >
       <div className="flex items-center justify-between">
         <span className="text-[14px] text-white/70">Saldo total</span>
@@ -263,7 +271,7 @@ export function BlocoCategorias() {
 export function ScreenDashboard() {
   return (
     <div className="relative h-full overflow-hidden bg-[#050505] text-white">
-      <div data-dash-scroll className="relative" style={{ height: 1180 }}>
+      <div data-dash-scroll className="relative will-change-transform" style={{ height: 1180 }}>
         <BlocoTopo />
         <div className="absolute inset-x-0" style={{ top: BLOCOS.resumo.top }}>
           <BlocoResumo />
@@ -292,7 +300,7 @@ const LANCAMENTOS = [
 export function ScreenTransactions() {
   return (
     <div className="relative h-full overflow-hidden bg-[#050505] text-white">
-      <div data-tx-scroll className="px-5">
+      <div data-tx-scroll className="px-5 will-change-transform">
         <div className="-mx-5">
           <StatusBar />
         </div>

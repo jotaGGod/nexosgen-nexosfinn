@@ -68,7 +68,7 @@ function faixa(cx: number, cy: number, theta: number, largura: number, altura: n
 function montarLateral(): Faixa[] {
   const { W, H, R } = DEVICE;
   const faixas: Faixa[] = [];
-  const PASSOS = 7;
+  const PASSOS = 5; // faixas por canto: suficiente para o arco, menos camadas na GPU
   const delta = Math.PI / 2 / PASSOS;
   const raioCorda = R * Math.cos(delta / 2);
   const corda = 2 * R * Math.sin(delta / 2) + 0.9; // leve sobreposição: sem frestas

@@ -21,6 +21,9 @@ import { cn } from "@/lib/utils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+  // A barra de endereço do iOS/Android muda a altura da janela ao rolar;
+  // recalcular tudo nesse momento causa um tranco no meio do gesto.
+  ScrollTrigger.config({ ignoreMobileResize: true });
 }
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -111,14 +114,33 @@ function CenaTexto({ cena }: { cena: (typeof CENAS)[number] }) {
         cena.lado === "topo" && "lg:left-1/2 lg:top-[11vh] lg:w-[min(680px,60vw)] lg:-translate-x-1/2 lg:text-center",
       )}
     >
+      {/*
+       * Revelação por máscara só com transform: cada linha sobe por trás de um
+       * recorte fixo. Nada de clip-path animado — ele repinta a cada quadro,
+       * enquanto transform e opacidade ficam na GPU (120 Hz sem esforço).
+       */}
       <div data-scene={cena.id} className="opacity-0">
-        <Eyebrow>{cena.eyebrow}</Eyebrow>
-        <h2 className="mt-4 text-balance text-[1.9rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[2.4rem] lg:text-[clamp(2.6rem,4vw,4.2rem)]">
-          {cena.titulo}
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base lg:mx-0 lg:mt-5 lg:text-lg">
-          {cena.texto}
-        </p>
+        <div className="overflow-hidden pb-1">
+          <div data-line>
+            <Eyebrow>{cena.eyebrow}</Eyebrow>
+          </div>
+        </div>
+        <div className="mt-3 overflow-hidden pb-[0.12em]">
+          <h2
+            data-line
+            className="text-balance text-[1.9rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[2.4rem] lg:text-[clamp(2.6rem,4vw,4.2rem)]"
+          >
+            {cena.titulo}
+          </h2>
+        </div>
+        <div className="overflow-hidden">
+          <p
+            data-line
+            className="mx-auto mt-2 max-w-md text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base lg:mx-0 lg:mt-4 lg:text-lg"
+          >
+            {cena.texto}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -132,7 +154,7 @@ function Flutuante({ className, children, longe }: { className?: string; childre
       data-float
       className={cn(
         "pointer-events-none absolute left-1/2 top-1/2 w-[172px] rounded-[24px] border border-white/10 bg-[#111111]/95 p-4 opacity-0 shadow-[0_30px_60px_-24px_rgba(0,0,0,0.9)] lg:w-[228px] lg:p-5",
-        longe && "blur-[2px]",
+        longe && "saturate-50",
         className,
       )}
     >
@@ -220,7 +242,17 @@ export function ScrollStory() {
       palco.style.setProperty("--dscale", Math.min(desktop ? 0.95 : 0.8, porAltura, porLargura).toFixed(3));
     };
     ajustarEscala();
-    window.addEventListener("resize", ajustarEscala);
+    // Só recalcula em mudança real (girar o aparelho, redimensionar a janela),
+    // não quando a barra de endereço do celular aparece ou some ao rolar.
+    let ultimaLargura = window.innerWidth;
+    let ultimaAltura = window.innerHeight;
+    const aoRedimensionar = () => {
+      if (window.innerWidth === ultimaLargura && Math.abs(window.innerHeight - ultimaAltura) < 140) return;
+      ultimaLargura = window.innerWidth;
+      ultimaAltura = window.innerHeight;
+      ajustarEscala();
+    };
+    window.addEventListener("resize", aoRedimensionar);
 
     const mm = gsap.matchMedia();
 
@@ -272,7 +304,8 @@ export function ScrollStory() {
         // Estado inicial (reversível: a timeline volta exatamente para cá).
         gsap.set(rig, { xPercent: -50, yPercent: -50, x: 0, y: vh(d ? 54 : 46), scale: d ? 0.9 : 0.95 });
         gsap.set(device, { rotationX: 8, rotationY: 0, rotation: 0 });
-        gsap.set(q("[data-scene]"), { autoAlpha: 0, y: 40, clipPath: "inset(100% 0% 0% 0%)" });
+        gsap.set(q("[data-scene]"), { autoAlpha: 0 });
+        gsap.set(q("[data-scene] [data-line]"), { yPercent: 110 });
         gsap.set(flutuantes, { xPercent: -50, yPercent: -50, x: 0, y: 0, z: -220, scale: 0.6, autoAlpha: 0 });
         gsap.set([tela("tx"), tela("goals"), tela("an")], { autoAlpha: 0 });
         gsap.set(explodida, { autoAlpha: 0 });
@@ -282,8 +315,21 @@ export function ScrollStory() {
         gsap.set(q("[data-rig] [data-row]"), { autoAlpha: 0, y: 24 });
         pintarSaldo();
 
-        const entra = { autoAlpha: 1, y: 0, clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: "power2.out" };
-        const sai = { autoAlpha: 0, y: -30, clipPath: "inset(0% 0% 100% 0%)", duration: 0.4, ease: "power2.in" };
+        // Entrada e saída das cenas de texto: linhas sobem por trás da máscara.
+        const entra = (id: string, em: number) => {
+          tl.to(cena(id), { autoAlpha: 1, duration: 0.15 }, em).to(
+            q(`[data-scene="${id}"] [data-line]`),
+            { yPercent: 0, stagger: 0.08, duration: 0.5, ease: "power3.out" },
+            em,
+          );
+        };
+        const sai = (id: string, em: number) => {
+          tl.to(q(`[data-scene="${id}"] [data-line]`), { yPercent: -110, stagger: 0.05, duration: 0.35, ease: "power2.in" }, em).to(
+            cena(id),
+            { autoAlpha: 0, duration: 0.1 },
+            em + 0.35,
+          );
+        };
         const troca = (de: string, para: string, em: number) => {
           tl.to(tela(de), { autoAlpha: 0, duration: 0.12 }, em).to(tela(para), { autoAlpha: 1, duration: 0.12 }, em);
         };
@@ -302,7 +348,7 @@ export function ScrollStory() {
         // 0 → 1,4 · o hero sai, o aparelho sobe ao centro e o início "acorda".
         tl.to(heroCopy, { y: -120, autoAlpha: 0, duration: 0.7, ease: "power1.in" }, 0)
           .to(cue, { autoAlpha: 0, duration: 0.2 }, 0)
-          .to(planeta, { y: vh(24), scale: 1.08, autoAlpha: 0.45, duration: 1.2 }, 0)
+          .to(planeta, { y: vh(24), autoAlpha: 0.45, duration: 1.2 }, 0)
           .to(rig, { y: 0, scale: 1, duration: 1 }, 0)
           .to(device, { rotationX: 0, duration: 1 }, 0)
           .to(saldo, { v: DADOS.saldo, duration: 0.9, onUpdate: pintarSaldo }, 0.15)
@@ -312,28 +358,23 @@ export function ScrollStory() {
         // 1,4 → 2,8 · cena A: gira para a direita, texto à esquerda.
         tl.to(rig, { x: vw(d ? 18 : 0), y: d ? 0 : vh(17), scale: d ? 1 : 0.8, duration: 1 }, 1.4)
           .to(device, { rotationY: d ? -22 : -14, rotationX: 6, duration: 1 }, 1.4)
-          .to(glare, { xPercent: 60, duration: 1 }, 1.4)
-          .to(cena("a"), entra, 1.8);
+          .to(glare, { xPercent: 60, duration: 1 }, 1.4);
 
         // 2,8 → 4,2 · cena B: cruza para a esquerda, tela de transações.
-        tl.to(cena("a"), sai, 2.8)
-          .to(rig, { x: vw(d ? -18 : 0), duration: 1 }, 2.9)
+        tl.to(rig, { x: vw(d ? -18 : 0), duration: 1 }, 2.9)
           .to(device, { rotationY: d ? 24 : 14, rotationX: 4, rotation: -2, duration: 1 }, 2.9)
           .to(glare, { xPercent: 180, duration: 1 }, 2.9);
         troca("dash", "tx", 3.2);
         tl.to(q("[data-rig] [data-row]"), { autoAlpha: 1, y: 0, stagger: 0.06, duration: 0.3 }, 3.35)
-          .to(q("[data-rig] [data-tx-scroll]"), { y: -430, duration: 0.8, ease: "power1.inOut" }, 3.7)
-          .to(cena("b"), entra, 3.3);
+          .to(q("[data-rig] [data-tx-scroll]"), { y: -430, duration: 0.8, ease: "power1.inOut" }, 3.7);
 
         // 4,2 → 6 · cena C: de volta ao centro, câmera aproxima, cartões saem da tela.
-        tl.to(cena("b"), sai, 4.2)
-          .to(rig, { x: 0, y: vh(d ? 14 : 19), scale: d ? 0.76 : 0.74, duration: 0.9 }, 4.3)
+        tl.to(rig, { x: 0, y: vh(d ? 14 : 19), scale: d ? 0.76 : 0.74, duration: 0.9 }, 4.3)
           .to(device, { rotationY: 0, rotationX: 0, rotation: 0, duration: 0.9 }, 4.3)
           .to(glare, { xPercent: 0, duration: 0.9 }, 4.3)
           .to(palco, { perspective: d ? 1100 : 900, duration: 1.2 }, 4.3);
         troca("tx", "goals", 4.5);
         tl.to(q("[data-rig] [data-goalbar]"), { scaleX: 1, stagger: 0.1, duration: 0.5 }, 4.7)
-          .to(cena("c"), entra, 4.6)
           .to(
             flutuantes,
             {
@@ -352,21 +393,16 @@ export function ScrollStory() {
 
         // 6 → 8,4 · cena D/E: lateral, traseira (câmeras) e volta com análises.
         tl.to(flutuantes, { x: 0, y: 0, z: -220, scale: 0.6, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 6)
-          .to(cena("c"), sai, 6)
           .to(palco, { perspective: d ? 1400 : 1000, duration: 0.8 }, 6)
           .to(rig, { x: vw(d ? -14 : 0), y: d ? 0 : vh(17), scale: d ? 0.95 : 0.8, duration: 0.8 }, 6.1)
           .to(device, { rotationY: 70, rotationX: -4, duration: 0.6, ease: "power1.inOut" }, 6.1)
-          .to(cena("d"), entra, 6.3)
           .to(device, { rotationY: 180, rotationX: -6, rotation: 3, duration: 0.6, ease: "power1.inOut" }, 6.7);
         troca("goals", "an", 6.95);
         tl.to(device, { rotationY: 348, rotationX: 4, rotation: 0, duration: 0.8, ease: "power1.inOut" }, 7.4)
-          .to(cena("d"), sai, 7.4)
           .to(rig, { x: vw(d ? 18 : 0), duration: 0.8 }, 7.4)
-          .to(q("[data-screen='an'] [data-bar]"), { scaleY: 1, stagger: 0.05, duration: 0.4 }, 7.9)
-          .to(cena("e"), entra, 7.7);
+          .to(q("[data-screen='an'] [data-bar]"), { scaleY: 1, stagger: 0.05, duration: 0.4 }, 7.9);
 
         // 8,5 → 10,4 · cena F: vista explodida — as camadas do início se separam e voltam.
-        tl.to(cena("e"), sai, 8.5);
         troca("an", "dash", 8.55);
         tl.to(q("[data-screen='dash'] [data-dash-scroll]"), { y: 0, duration: 0.1 }, 8.55)
           .to(rig, { x: vw(d ? 12 : 0), y: vh(d ? 4 : 20), scale: d ? 0.8 : 0.7, duration: 0.8 }, 8.5)
@@ -374,11 +410,23 @@ export function ScrollStory() {
           .to(explodida, { autoAlpha: 1, duration: 0.05 }, 9.05)
           .to(telaConteudo, { autoAlpha: 0, duration: 0.05 }, 9.05)
           .to(camadas, { z: (_, el) => Number((el as HTMLElement).dataset.z ?? 0) * (d ? 1 : 0.6), duration: 0.6, ease: "power2.out" }, 9.1)
-          .to(cena("f"), entra, 9.1)
           .to(camadas, { z: 0, duration: 0.5, ease: "power2.in" }, 9.9)
-          .to(cena("f"), sai, 9.9)
           .to(explodida, { autoAlpha: 0, duration: 0.05 }, 10.4)
           .to(telaConteudo, { autoAlpha: 1, duration: 0.05 }, 10.4);
+
+        // Textos das cenas (entrada e saída), na mesma timeline.
+        entra("a", 1.8);
+        sai("a", 2.8);
+        entra("b", 3.3);
+        sai("b", 4.2);
+        entra("c", 4.6);
+        sai("c", 6);
+        entra("d", 6.3);
+        sai("d", 7.4);
+        entra("e", 7.7);
+        sai("e", 8.5);
+        entra("f", 9.1);
+        sai("f", 9.9);
 
         // 10,3 → 11 · o aparelho volta de frente e prepara a próxima seção.
         tl.to(device, { rotationX: 0, rotation: 0, duration: 0.6 }, 10.3)
@@ -392,7 +440,7 @@ export function ScrollStory() {
     );
 
     return () => {
-      window.removeEventListener("resize", ajustarEscala);
+      window.removeEventListener("resize", aoRedimensionar);
       mm.revert();
     };
   }, []);
@@ -417,8 +465,17 @@ export function ScrollStory() {
         </div>
 
         {/* Planeta: a linha do horizonte atrás do aparelho. */}
-        <div className="pointer-events-none absolute left-1/2 top-[64svh] w-[230vw] -translate-x-1/2 motion-reduce:top-[520px] lg:top-[60vh] lg:w-[max(1500px,120vw)]">
-          <div data-planet>
+        {/*
+         * O planeta tem ~1800px, mas só a calota de cima aparece. O contêiner
+         * recorta essa faixa (com folga para o halo, que some num degradê de
+         * máscara em vez de terminar numa linha reta), e é ele que a timeline
+         * move: a camada na GPU fica do tamanho do que se vê.
+         */}
+        <div
+          data-planet
+          className="pointer-events-none absolute inset-x-0 bottom-0 top-[calc(64svh-320px)] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_260px)] motion-reduce:top-[200px] lg:top-[calc(60vh-320px)]"
+        >
+          <div className="absolute left-1/2 top-[320px] w-[230vw] -translate-x-1/2 lg:w-[max(1500px,120vw)]">
             <Planet className="relative w-full" />
           </div>
         </div>
@@ -460,7 +517,7 @@ export function ScrollStory() {
             </Link>
             <a
               href="#recursos"
-              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/10 bg-white/[0.05] px-3 text-[13px] font-semibold sm:px-6 sm:text-sm text-foreground backdrop-blur-md transition-[transform,background-color,border-color] duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.09] sm:flex-none"
+              className="group inline-flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/10 bg-white/[0.05] px-3 text-[13px] font-semibold sm:px-6 sm:text-sm text-foreground transition-[transform,background-color,border-color] duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.09] sm:flex-none"
             >
               Ver como funciona
             </a>
@@ -521,7 +578,7 @@ export function ScrollStory() {
           {/* Sombra de contato. */}
           <div
             aria-hidden="true"
-            className="absolute -bottom-10 left-1/2 h-10 w-[80%] -translate-x-1/2 rounded-[50%] bg-black/70 blur-2xl"
+            className="absolute -bottom-12 left-1/2 h-16 w-[90%] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(0,0,0,0.75),transparent)]"
           />
         </div>
 

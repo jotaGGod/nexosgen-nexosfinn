@@ -36,7 +36,7 @@ export function Eyebrow({ children, className }: { children: React.ReactNode; cl
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md",
+        "inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#101010] px-3.5 py-1.5 text-xs font-medium text-foreground/80",
         className,
       )}
     >

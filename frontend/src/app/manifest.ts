@@ -6,7 +6,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "NexosFinn",
     short_name: "NexosFinn",
     description: "Suas finanças sob controle.",
-    start_url: "/",
+    /*
+     * O app instalado abre direto no aplicativo, e não na página de vendas.
+     * Sem sessão, o casco de /app manda para o login; com sessão, cai no início.
+     */
+    start_url: "/app/dashboard",
     scope: "/",
     /*
      * `standalone`, e não `fullscreen`.

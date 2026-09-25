@@ -5,6 +5,10 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   images: {
+    // Sem otimizador: na Vercel, no modo de "services" (vercel.json), a rota
+    // /_next/image responde 404 e qualquer <Image> vira imagem quebrada. Os
+    // assets do app já são servidos no tamanho certo (ver components/layout/logo.tsx).
+    unoptimized: true,
     // As ilustrações das metas são URLs informadas pelo usuário.
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },

@@ -20,7 +20,7 @@ const ancoras = [
  *
  * Desktop: logo à esquerda, navegação central numa pílula e CTA à direita. A
  * pílula marca a seção visível no momento. Sobre o topo da página o cabeçalho
- * fica transparente; ao rolar ele ganha fundo translúcido, borda e desfoque.
+ * fica transparente; ao rolar ele ganha fundo quase opaco e borda.
  *
  * Celular: logo à esquerda e menu à direita, que abre um painel com entrada
  * escalonada. O painel fecha ao escolher um destino, com Esc ou ao voltar
@@ -86,13 +86,15 @@ export function LandingHeader() {
         className={cn(
           "mx-auto w-full max-w-[1240px] rounded-[22px] border transition-[background-color,border-color,box-shadow] duration-300",
           solido
-            ? "border-white/[0.08] bg-[#0A0A0A]/75 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+            ? // Fundo quase opaco, sem backdrop-filter: o desfoque seria
+              // recalculado a cada quadro sobre o aparelho em movimento.
+              "border-white/[0.08] bg-[#0A0A0A]/[0.94] shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)]"
             : "border-transparent bg-transparent",
         )}
       >
         <div className="flex h-16 items-center justify-between gap-4 pl-4 pr-2.5 sm:pl-5 sm:pr-3">
           <Link href="/" aria-label="NexosFinn, início" className="rounded-lg">
-            <Logo />
+            <Logo priority />
           </Link>
 
           <nav

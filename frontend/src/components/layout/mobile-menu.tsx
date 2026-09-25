@@ -72,7 +72,7 @@ export function MobileMenu({ open, onOpenChange }: { open: boolean; onOpenChange
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md data-[state=open]:animate-in data-[state=open]:fade-in-0 lg:hidden" />
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-background/80 data-[state=open]:animate-in data-[state=open]:fade-in-0 lg:hidden" />
         <DialogPrimitive.Content
           className="no-scrollbar fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(0.75rem+env(safe-area-inset-top,0px))] data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-top-4 data-[state=open]:duration-300 lg:hidden"
           aria-describedby={undefined}
@@ -89,7 +89,7 @@ export function MobileMenu({ open, onOpenChange }: { open: boolean; onOpenChange
             </div>
 
             <div className="mt-7 px-1">
-              <Logo />
+              <Logo priority />
               <DialogPrimitive.Title className="mt-5 text-[2rem] font-medium leading-tight tracking-[-0.03em]">
                 {primeiroNome ? (
                   <>

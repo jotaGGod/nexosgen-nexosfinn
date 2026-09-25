@@ -75,12 +75,12 @@ export function DashboardView() {
   return (
     <div>
       {/*
-       * Topo do celular. Fica fora do bloco escalonado de propósito: ele não
-       * pode se deslocar na entrada, senão abriria uma faixa no alto da tela
-       * durante a animação.
+       * Topo do celular: cartão em degradê, arredondado nos quatro cantos,
+       * que sobe por trás do cabeçalho. Fica fora do bloco escalonado de
+       * propósito — deslocá-lo na entrada abriria um vão no alto da tela.
        */}
-      <section className="bleed-top brand-gradient relative rounded-b-[36px] pb-5 lg:hidden">
-        <div className="mx-auto w-full max-w-md px-4 sm:max-w-2xl sm:px-6 md:max-w-3xl">
+      <section className="bleed-top brand-gradient relative rounded-[34px] pb-2 shadow-[0_24px_60px_-30px_rgba(255,106,26,0.55)] lg:hidden">
+        <div className="mx-auto w-full max-w-md px-2 pb-2 sm:max-w-2xl sm:px-4 md:max-w-3xl">
           <h1 className="text-[2.1rem] leading-[1.1] tracking-[-0.035em]">
             <span className="block font-normal">Olá,</span>
             <span className="block font-bold">{primeiroNome ? `${primeiroNome}!` : "bem-vindo!"}</span>
