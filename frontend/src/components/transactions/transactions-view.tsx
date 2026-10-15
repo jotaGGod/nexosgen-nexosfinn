@@ -110,7 +110,7 @@ export function TransactionsView() {
       />
 
       {data ? (
-        <Card className="grid grid-cols-1 divide-y divide-border/70 px-6 py-2 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-0 sm:py-6">
+        <Card className="mobile-transaction-totals grid grid-cols-1 divide-y divide-border/70 px-6 py-2 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-0 sm:py-6">
           <div className="py-4 sm:px-7 sm:py-0">
             <p className="text-sm text-muted-foreground">Total de receitas</p>
             <p className="mt-1.5 text-[1.75rem] font-medium leading-tight tracking-[-0.03em] tabular-nums text-positive">

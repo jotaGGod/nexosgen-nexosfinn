@@ -74,6 +74,7 @@ export function MobileMenu({ open, onOpenChange }: { open: boolean; onOpenChange
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-background/80 data-[state=open]:animate-in data-[state=open]:fade-in-0 lg:hidden" />
         <DialogPrimitive.Content
+          data-mobile-sheet="menu"
           className="no-scrollbar fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(0.75rem+env(safe-area-inset-top,0px))] data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-top-4 data-[state=open]:duration-300 lg:hidden"
           aria-describedby={undefined}
         >

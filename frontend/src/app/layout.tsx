@@ -8,6 +8,7 @@ import { QueryProvider } from "@/lib/query-provider";
 import { THEME_COLORS, THEME_STORAGE_KEY } from "@/lib/theme";
 
 import "./globals.css";
+import "./mobile-app.css";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],

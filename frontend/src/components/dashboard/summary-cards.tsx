@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, CheckCircle2, MinusCircle, PlusCircle, Wallet } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, ChartNoAxesCombined, CheckCircle2, MinusCircle, PlusCircle, Wallet } from "lucide-react";
 import Link from "next/link";
 
 import { Variation } from "@/components/common/variation";
@@ -9,7 +9,6 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPercentage } from "@/lib/format";
-import { cn } from "@/lib/utils";
 import type { DashboardSummary } from "@/types/api";
 
 /*
@@ -20,30 +19,30 @@ import type { DashboardSummary } from "@/types/api";
  * desktop (painel largo de métricas + cartão de saldo).
  */
 
-/** Cartão escuro do saldo, pousado sobre o degradê do topo no celular. */
+/** Saldo mobile integrado ao fundo contínuo, sem outra moldura no topo. */
 export function BalanceCard({ summary }: { summary?: DashboardSummary }) {
   return (
-    <div className="relative overflow-hidden rounded-[28px] bg-[#0B0B0B] p-5 text-white shadow-[0_24px_50px_-24px_rgba(90,30,0,0.75)]">
+    <div className="mobile-balance">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-white/70">Saldo total</p>
-        <span className="flex size-9 items-center justify-center rounded-full bg-white/[0.08]">
-          <Wallet className="size-4 text-primary" />
-        </span>
+        <p className="text-sm">Saldo total</p>
+        <Link href="/app/contas" aria-label="Ver minhas contas" className="mobile-balance-link flex size-11 items-center justify-center rounded-full">
+          <ArrowUpRight className="size-5" />
+        </Link>
       </div>
 
       {summary ? (
         <>
-          <p className="mt-5 text-right text-[2.1rem] font-semibold leading-none tracking-[-0.03em] tabular-nums">
+          <p className="mobile-balance-amount font-semibold tracking-[-0.045em] tabular-nums">
             {summary.total_balance.formatted}
           </p>
           <Variation
-            className="mt-2.5 justify-end [&>span:last-child]:text-white/55"
+            className="mobile-balance-variation mt-2.5 flex-wrap"
             value={summary.total_balance.variation}
             label="vs mês anterior"
           />
         </>
       ) : (
-        <div className="mt-5 flex flex-col items-end gap-2.5">
+        <div className="mt-2 flex flex-col gap-2.5">
           <Skeleton className="h-8 w-44 bg-white/10" />
           <Skeleton className="h-3 w-28 bg-white/10" />
         </div>
@@ -52,79 +51,74 @@ export function BalanceCard({ summary }: { summary?: DashboardSummary }) {
   );
 }
 
-/** Receitas, despesas e economia em linhas — a lista logo abaixo do topo. */
+/** Métricas reais em cartões azuis; nenhum cartão bancário fictício. */
 export function SummaryList({ summary }: { summary?: DashboardSummary }) {
   const linhas = summary
     ? [
-        { rotulo: "Receitas", metrica: summary.income, invert: false, tom: "text-positive" },
-        { rotulo: "Despesas", metrica: summary.expense, invert: true, tom: "text-negative" },
-        { rotulo: "Economia", metrica: summary.savings, invert: false, tom: "text-foreground" },
+        { rotulo: "Receitas", metrica: summary.income, invert: false, icon: ArrowDownLeft },
+        { rotulo: "Despesas", metrica: summary.expense, invert: true, icon: ArrowUpRight },
+        { rotulo: "Economia", metrica: summary.savings, invert: false, icon: ChartNoAxesCombined },
       ]
     : [];
 
   return (
-    <Card className="px-5 py-2">
+    <div className="mobile-summary">
       {summary ? (
-        <ul className="divide-y divide-border/70">
-          {linhas.map((linha) => (
-            <li key={linha.rotulo} className="flex items-center justify-between gap-3 py-3.5">
-              <div className="min-w-0">
-                <p className="text-sm text-foreground/90">{linha.rotulo}</p>
-                <Variation
-                  className="mt-0.5 [&>span:last-child]:hidden"
-                  value={linha.metrica.variation}
-                  invert={linha.invert}
-                />
-              </div>
-              <p className={cn("shrink-0 text-base font-semibold tabular-nums", linha.tom)}>
-                {linha.metrica.formatted}
-              </p>
-            </li>
-          ))}
+        <ul className="mobile-metric-grid">
+          {linhas.map((linha) => {
+            const Icon = linha.icon;
+            return (
+              <li key={linha.rotulo} className="mobile-metric">
+                <div className="mobile-metric-heading flex items-center justify-between gap-2">
+                  <p className="text-sm font-medium">{linha.rotulo}</p>
+                  <Icon aria-hidden className="size-4 shrink-0" />
+                </div>
+                <p className="mobile-metric-amount font-semibold tabular-nums">{linha.metrica.formatted}</p>
+                <Variation className="mobile-metric-variation mt-1.5 flex-wrap [&>span:last-child]:hidden" value={linha.metrica.variation} invert={linha.invert} />
+              </li>
+            );
+          })}
         </ul>
       ) : (
-        <div className="space-y-4 py-3.5">
+        <div className="mobile-metric-grid" aria-label="Carregando resumo">
           {Array.from({ length: 3 }).map((_, indice) => (
-            <div key={indice} className="flex items-center justify-between">
+            <div key={indice} className="mobile-metric space-y-3">
               <Skeleton className="h-3 w-24" />
-              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-6 w-24" />
             </div>
           ))}
         </div>
       )}
-    </Card>
+    </div>
   );
 }
 
 /** Atalhos do celular: registrar despesa, registrar receita, ver lançamentos. */
 export function QuickActions({ onAdd }: { onAdd: (type: "expense" | "income") => void }) {
-  const base =
-    "flex min-h-[108px] flex-col justify-between rounded-[26px] border border-border/80 bg-card p-4 text-left transition-transform duration-200 ease-out-expo active:scale-[0.96]";
+  const base = "mobile-quick-action flex min-w-0 flex-col items-center gap-2.5 rounded-2xl py-2 text-center active:scale-[0.97]";
 
   return (
-    <div className="grid grid-cols-3 gap-2.5">
+    <section className="surface mobile-quick-actions" aria-label="Ações rápidas">
+      <h2 className="text-sm font-semibold">Ações rápidas</h2>
+      <div className="mt-3 grid grid-cols-4 gap-1">
       <button type="button" onClick={() => onAdd("expense")} className={base}>
-        <MinusCircle className="ml-auto size-6 text-foreground/80" strokeWidth={1.6} />
-        <span>
-          <span className="block text-[11px] text-muted-foreground">Adicionar</span>
-          <span className="block text-base font-semibold tracking-tight">Despesa</span>
-        </span>
+        <span className="mobile-action-icon"><MinusCircle strokeWidth={1.7} /></span>
+        <span className="text-xs font-medium">Despesa</span>
       </button>
       <button type="button" onClick={() => onAdd("income")} className={base}>
-        <PlusCircle className="ml-auto size-6 text-primary" strokeWidth={1.6} />
-        <span>
-          <span className="block text-[11px] text-muted-foreground">Adicionar</span>
-          <span className="block text-base font-semibold tracking-tight text-primary">Receita</span>
-        </span>
+        <span className="mobile-action-icon"><PlusCircle strokeWidth={1.7} /></span>
+        <span className="text-xs font-medium">Receita</span>
       </button>
       <Link href="/app/transacoes" className={base}>
-        <CheckCircle2 className="ml-auto size-6 text-foreground/80" strokeWidth={1.6} />
-        <span>
-          <span className="block text-[11px] text-muted-foreground">Ver</span>
-          <span className="block text-base font-semibold tracking-tight">Transações</span>
-        </span>
+        <span className="mobile-action-icon"><CheckCircle2 strokeWidth={1.7} /></span>
+        <span className="text-xs font-medium">Transações</span>
       </Link>
-    </div>
+      <Link href="/app/contas" className={base}>
+        <span className="mobile-action-icon"><Wallet strokeWidth={1.7} /></span>
+        <span className="text-xs font-medium">Contas</span>
+      </Link>
+      </div>
+    </section>
   );
 }
 

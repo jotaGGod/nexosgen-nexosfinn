@@ -54,7 +54,7 @@ export function CategoryBars({ distribution, limit = 5, className }: CategoryBar
 
   return (
     <div className={cn("space-y-5", className)}>
-      <div className="flex h-44 items-end gap-2 sm:gap-2.5">
+      <div className="mobile-category-columns flex h-44 items-end gap-2 sm:gap-2.5">
         {colunas.map((fatia, indice) => (
           <div
             key={fatia.category_id}
@@ -76,12 +76,15 @@ export function CategoryBars({ distribution, limit = 5, className }: CategoryBar
         ))}
       </div>
 
-      <ul className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+      <ul className="mobile-category-legend grid grid-cols-2 gap-x-4 gap-y-2.5">
         {colunas.map((fatia) => (
           <li key={fatia.category_id} className="flex min-w-0 items-center gap-2 text-xs">
             <span className="size-2.5 shrink-0 rounded-[4px]" style={{ background: fatia.color }} />
             <span className="min-w-0 flex-1 truncate text-foreground/90">{fatia.name}</span>
             <span className="shrink-0 tabular-nums text-muted-foreground">{fatia.total.formatted}</span>
+            <span className="mobile-category-track lg:hidden" aria-hidden="true">
+              <span style={{ width: `${Math.min(100, Math.max(0, fatia.percentage))}%`, background: fatia.color }} />
+            </span>
           </li>
         ))}
       </ul>

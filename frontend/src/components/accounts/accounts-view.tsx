@@ -172,7 +172,7 @@ export function AccountsView() {
       ) : null}
 
       {accounts.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="mobile-accounts-grid grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {accounts.map((account) => (
             <Card key={account.id} className="group p-5">
               <div className="flex items-start justify-between gap-3">

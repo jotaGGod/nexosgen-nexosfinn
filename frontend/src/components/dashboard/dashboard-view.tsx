@@ -74,34 +74,26 @@ export function DashboardView() {
 
   return (
     <div>
-      {/*
-       * Topo do celular: cartão em degradê, arredondado nos quatro cantos,
-       * que sobe por trás do cabeçalho. Fica fora do bloco escalonado de
-       * propósito — deslocá-lo na entrada abriria um vão no alto da tela.
-       */}
-      <section className="bleed-top brand-gradient relative rounded-[34px] pb-2 shadow-[0_24px_60px_-30px_rgba(255,106,26,0.55)] lg:hidden">
-        <div className="mx-auto w-full max-w-md px-2 pb-2 sm:max-w-2xl sm:px-4 md:max-w-3xl">
-          <h1 className="text-[2.1rem] leading-[1.1] tracking-[-0.035em]">
-            <span className="block font-normal">Olá,</span>
-            <span className="block font-bold">{primeiroNome ? `${primeiroNome}!` : "bem-vindo!"}</span>
-          </h1>
-
+      {/* O fundo contínuo pertence ao layout; o saldo não cria uma faixa própria. */}
+      <section className="mobile-dashboard-hero lg:hidden" aria-label="Resumo financeiro">
+        <h1 className="sr-only">Visão geral das suas finanças</h1>
+        <div>
           <PeriodPicker
             mode="advanced"
             value={period}
             onChange={setPeriod}
-            className="mt-4 border-transparent bg-[#0B0B0B]/90 text-white hover:border-transparent hover:bg-[#0B0B0B]"
+            className="mobile-period"
           />
 
           {preferences.summary ? (
-            <div className="mt-4">
+            <div className="mt-5">
               <BalanceCard summary={data?.summary} />
             </div>
           ) : null}
         </div>
       </section>
 
-      <div className="stagger mt-4 space-y-4 lg:mt-0 lg:space-y-5">
+      <div className="dashboard-sections stagger mt-4 space-y-4 lg:mt-0 lg:space-y-5">
         <PageHeader
           className="hidden lg:flex"
           title={
@@ -155,7 +147,7 @@ export function DashboardView() {
         </div>
 
         {showPrimaryAnalytics ? (
-          <div className="grid gap-4 lg:grid-cols-12 lg:gap-5">
+          <div className="dashboard-charts grid gap-4 lg:grid-cols-12 lg:gap-5">
             {preferences.categories ? (
               <Card className={cn("lg:order-2", preferences.cashflow ? "lg:col-span-4" : "lg:col-span-12")}>
                 <CardHeader>
@@ -184,7 +176,7 @@ export function DashboardView() {
         ) : null}
 
         {showSecondaryAnalytics ? (
-          <div className="grid gap-4 lg:grid-cols-12 lg:gap-5">
+          <div className="dashboard-activity grid gap-4 lg:grid-cols-12 lg:gap-5">
             {preferences.transactions ? (
               <Card className={preferences.goals ? "lg:col-span-8" : "lg:col-span-12"}>
                 <CardHeader className="flex-row items-center justify-between space-y-0">

@@ -33,6 +33,7 @@ const DialogContent = React.forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      data-mobile-sheet="form"
       className={cn(
         "no-scrollbar fixed inset-0 z-50 grid h-[100dvh] max-h-[100dvh] w-full min-w-0 max-w-none content-start gap-4 overflow-x-hidden overflow-y-auto overscroll-contain rounded-none border-0 bg-card px-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] pt-[calc(1rem+env(safe-area-inset-top,0px))] shadow-xl duration-200",
         "sm:bottom-auto sm:left-1/2 sm:right-auto sm:top-1/2 sm:h-auto sm:max-h-[92dvh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:gap-5 sm:rounded-[32px] sm:border sm:p-7",

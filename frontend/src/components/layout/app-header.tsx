@@ -117,23 +117,29 @@ function ProfileMenu({ pill = false }: { pill?: boolean }) {
  */
 export function AppHeader() {
   const pathname = usePathname();
+  const { data: user } = useProfile();
   const [menuAberto, setMenuAberto] = useState(false);
 
   return (
     <>
       {/* Celular e tablet */}
-      <header className="relative z-40 flex h-12 items-center justify-between lg:hidden">
+      <header className="mobile-app-header relative z-40 flex h-12 items-center justify-between lg:hidden">
+        <div className="flex min-w-0 items-center gap-3">
+          <ProfileMenu />
+          <div className="min-w-0">
+            <p className="truncate text-base font-semibold">Olá, {user?.name?.split(" ")[0] ?? "bem-vindo"}!</p>
+            <p className="mobile-header-caption text-xs">Suas finanças, com clareza.</p>
+          </div>
+        </div>
         <button
           type="button"
           onClick={() => setMenuAberto(true)}
           aria-label="Abrir menu"
           aria-expanded={menuAberto}
-          className="flex h-11 w-16 items-center justify-center rounded-full border border-border/80 bg-card text-foreground shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)] transition-transform active:scale-95"
+          className="mobile-menu-trigger flex size-11 shrink-0 items-center justify-center rounded-full border border-border/80 bg-card text-foreground transition-transform active:scale-95"
         >
           <Menu className="size-5" />
         </button>
-
-        <ProfileMenu pill />
       </header>
 
       <MobileMenu open={menuAberto} onOpenChange={setMenuAberto} />

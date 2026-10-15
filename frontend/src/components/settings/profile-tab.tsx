@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -33,8 +33,15 @@ const passwordSchema = z
 type ProfileValues = z.infer<typeof profileSchema>;
 type PasswordValues = z.infer<typeof passwordSchema>;
 
+const subscribeToHydration = () => () => {};
+const clientHydrated = () => true;
+const serverHydrated = () => false;
+
 /** Aba de perfil: dados cadastrais e troca de senha. */
 export function ProfileTab() {
+  // O perfil pode chegar pelo cabeçalho antes de esta boundary de Suspense
+  // hidratar. A primeira renderização precisa coincidir com o skeleton SSR.
+  const hydrated = useSyncExternalStore(subscribeToHydration, clientHydrated, serverHydrated);
   const { data: user, isPending } = useProfile();
   const updateProfile = useUpdateProfile();
   const changePassword = useChangePassword();
@@ -53,7 +60,7 @@ export function ProfileTab() {
     if (user) profileForm.reset({ name: user.name, email: user.email });
   }, [user, profileForm]);
 
-  if (isPending) {
+  if (!hydrated || isPending) {
     return (
       <Card>
         <RowsSkeleton rows={4} />

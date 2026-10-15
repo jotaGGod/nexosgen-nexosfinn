@@ -1,0 +1,281 @@
+/*
+ * Identidade exclusiva do app mobile/tablet. :has mantém os mesmos tokens
+ * nos portais do Radix e os remove ao sair do app, antes da hidratação.
+ * Desktop (1024px+) e páginas públicas não recebem nenhuma destas regras.
+ */
+@media (max-width: 1023px) {
+  :root:has(.app-shell) {
+    --background: 218 71% 97%;
+    --foreground: 221 48% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 221 48% 16%;
+    --popover: 220 60% 99%;
+    --popover-foreground: 221 48% 16%;
+    --primary: 220 70% 47%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 218 70% 43%;
+    --accent-foreground: 0 0% 100%;
+    --active: 221 68% 40%;
+    --active-foreground: 0 0% 100%;
+    --muted: 220 42% 93%;
+    --muted-foreground: 219 22% 40%;
+    --secondary: 220 46% 93%;
+    --secondary-foreground: 221 48% 16%;
+    --border: 220 38% 87%;
+    --input: 220 34% 78%;
+    --ring: 220 70% 47%;
+    --positive: 158 76% 26%;
+    --negative: 0 72% 42%;
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --chart-income: #245dcc;
+    --chart-accent: #6588cf;
+    --chart-neutral: #8298bb;
+    --chart-grid: #dce4f1;
+    --chart-muted: #52627e;
+    --chart-cursor: #d6e2f4;
+    --chart-hover: #e8effb;
+    --chart-track: #e9eff9;
+    --shadow-card: inset 0 1px 0 #ffffffa3, 0 5px 20px -12px #213b6d26;
+    --shadow-card-hover: var(--shadow-card);
+    --shadow-glow: 0 4px 14px -8px #245dcc66;
+    --shadow-lift-primary: 0 4px 14px -8px #245dcc66;
+    --mobile-wash: radial-gradient(ellipse 110% 330px at 20% 0%, #bdd4ff 0%, #dbe8fc 55%, transparent 100%);
+    background-color: hsl(var(--background)) !important;
+    overscroll-behavior: none;
+  }
+
+  :root.dark:has(.app-shell) {
+    --background: 224 60% 8%;
+    --foreground: 224 100% 98%;
+    --card: 226 45% 15%;
+    --card-foreground: 224 100% 98%;
+    --popover: 226 42% 16%;
+    --popover-foreground: 224 100% 98%;
+    --primary: 219 70% 48%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 215 100% 78%;
+    --accent-foreground: 224 60% 8%;
+    --active: 219 100% 82%;
+    --active-foreground: 224 60% 8%;
+    --muted: 224 34% 21%;
+    --muted-foreground: 221 34% 77%;
+    --secondary: 225 37% 21%;
+    --secondary-foreground: 224 100% 98%;
+    --border: 224 32% 26%;
+    --input: 223 30% 35%;
+    --ring: 217 100% 75%;
+    --positive: 158 72% 69%;
+    --negative: 0 95% 77%;
+    --destructive: 0 95% 77%;
+    --destructive-foreground: 224 60% 8%;
+    --chart-income: #80aaff;
+    --chart-accent: #afc8ff;
+    --chart-neutral: #7583aa;
+    --chart-grid: #2b3554;
+    --chart-muted: #b1bdd8;
+    --chart-cursor: #283858;
+    --chart-hover: #202c4a;
+    --chart-track: #26324f;
+    --shadow-card: inset 0 1px 0 #ffffff07;
+    --shadow-glow: 0 4px 16px -10px #14347480;
+    --shadow-lift-primary: 0 4px 16px -10px #14347480;
+    --mobile-wash: radial-gradient(ellipse 120% 400px at 15% 0%, #416db8 0%, #2b4c88 43%, #13213e 75%, transparent 100%);
+  }
+
+  html:has(.app-shell) body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: -0.015em;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  .app-shell {
+    background-image: var(--mobile-wash);
+    background-repeat: no-repeat;
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .app-ambient { display: none; }
+  .app-container {
+    padding-left: max(1.125rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.125rem, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .app-container > main { margin-top: 1.5rem; }
+  .mobile-app-header { gap: 1rem; }
+  .mobile-header-caption { color: hsl(var(--foreground) / 0.85); margin-top: 2px; }
+  .mobile-menu-trigger {
+    background: hsl(var(--foreground) / 0.07);
+    border-color: hsl(var(--foreground) / 0.12);
+    box-shadow: none;
+  }
+
+  .mobile-dashboard-hero { padding: 0 2px 8px; }
+  .mobile-period {
+    width: auto;
+    max-width: 100%;
+    min-height: 44px;
+    background: hsl(var(--background) / 0.36);
+    border-color: hsl(var(--foreground) / 0.13);
+    color: hsl(var(--foreground));
+    box-shadow: none;
+  }
+  .mobile-period svg { color: inherit; }
+  .mobile-balance { min-width: 0; }
+  .mobile-balance > div:first-child { color: hsl(var(--foreground) / 0.88); }
+  .mobile-balance-link { background: hsl(var(--foreground) / 0.08); }
+  .mobile-balance-amount {
+    font-size: clamp(2rem, 9.8vw, 3rem);
+    line-height: 1.16;
+    overflow-wrap: anywhere;
+  }
+  .mobile-balance-variation { font-size: 12px; }
+  .mobile-balance-variation > span:last-child { color: hsl(var(--foreground) / 0.8); }
+
+  .mobile-metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .mobile-metric {
+    position: relative;
+    min-width: 0;
+    padding: 18px 16px;
+    border: 1px solid #ffffff35;
+    border-radius: 24px;
+    background: radial-gradient(ellipse at 0% 0%, #ffffffd9, transparent 65%), linear-gradient(135deg, #d6e4fc, #b8cfee);
+    color: #172b50;
+    box-shadow: inset 0 1px 0 #ffffff55;
+  }
+  .mobile-metric:nth-child(2) {
+    background: radial-gradient(ellipse at 90% 0%, #ffffffd9, transparent 65%), linear-gradient(135deg, #c8d9f8, #e1eafa);
+  }
+  .mobile-metric-heading { color: #304b76; }
+  .mobile-metric-amount { margin-top: 22px; font-size: clamp(1.125rem, 5.5vw, 1.7rem); line-height: 1.2; letter-spacing: -0.035em; overflow-wrap: anywhere; }
+  .mobile-metric-variation { font-size: 11px; }
+  .mobile-metric .text-positive { color: #135c44; }
+  .mobile-metric .text-negative { color: #a12036; }
+  .mobile-metric:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 16px 18px;
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--border) / 0.65);
+  }
+  .mobile-metric:last-child .mobile-metric-heading { justify-content: flex-start; color: hsl(var(--muted-foreground)); }
+  .mobile-metric:last-child .mobile-metric-heading svg { order: -1; }
+  .mobile-metric:last-child .mobile-metric-amount { margin: 0; text-align: right; font-size: 1.125rem; }
+  .mobile-metric:last-child .mobile-metric-variation { grid-column: 1 / -1; margin: 0; }
+  .dark .mobile-metric:last-child .text-positive { color: hsl(var(--positive)); }
+  .dark .mobile-metric:last-child .text-negative { color: hsl(var(--negative)); }
+  .dark .mobile-metric:not(:last-child) {
+    background: radial-gradient(ellipse at 5% 0%, #9dbfff5e, transparent 62%), linear-gradient(135deg, #26497d, #16294c);
+    color: #f4f7ff;
+    border-color: #9cbbf02b;
+    box-shadow: inset 0 1px 0 #cbdcff26;
+  }
+  .dark .mobile-metric:nth-child(2) { background: radial-gradient(ellipse at 95% 5%, #b4cfff47, transparent 70%), linear-gradient(135deg, #2e4271, #202b4a); }
+  .dark .mobile-metric:not(:last-child) .mobile-metric-heading { color: #dce8ff; }
+  .dark .mobile-metric:not(:last-child) .text-positive { color: #94efd2; }
+  .dark .mobile-metric:not(:last-child) .text-negative { color: #ffb8c0; }
+
+  .mobile-quick-actions { padding: 18px 14px 12px; }
+  .mobile-quick-actions h2 { padding-inline: 4px; }
+  .mobile-action-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 16px; background: hsl(var(--primary) / 0.1); color: hsl(var(--active)); }
+  .mobile-action-icon svg { width: 21px; height: 21px; }
+  .dark .mobile-action-icon { background: #263b68; color: #c1d7ff; }
+  .mobile-quick-action:first-child .mobile-action-icon { background: hsl(var(--primary)); color: white; }
+  .app-shell .surface { border-radius: 24px; border-color: hsl(var(--border) / 0.6); }
+  .app-shell .brand-gradient {
+    background: radial-gradient(ellipse at top right, #d3e3ff, transparent 70%), linear-gradient(135deg, #3f71c6, #a8c8ff);
+    color: #122344;
+    box-shadow: none;
+  }
+  .app-shell .font-display { font-family: inherit; font-style: normal; font-weight: 600; }
+
+  /* O uso diário vem antes dos gráficos no celular; desktop mantém sua ordem. */
+  .dashboard-sections { display: flex; flex-direction: column; gap: 16px; }
+  .dashboard-sections > * { margin-block: 0 !important; }
+  .dashboard-activity { order: 1; }
+  .dashboard-charts { order: 2; }
+  .mobile-category-columns { display: none; }
+  .mobile-category-legend { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .mobile-category-legend li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 8px; }
+  .mobile-category-track { grid-column: 2 / -1; height: 5px; overflow: hidden; border-radius: 6px; background: var(--chart-track); }
+  .mobile-category-track > span { display: block; height: 100%; border-radius: inherit; }
+
+  .app-shell .tabular-nums.truncate {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+  }
+  .mobile-report-metric { min-width: 0; padding: 16px; }
+  .mobile-report-metric > .tabular-nums { font-size: clamp(1.125rem, 5vw, 1.5rem); }
+  .mobile-insight { flex-direction: column; padding: 16px; }
+  .mobile-insight .truncate { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+  .app-shell [role="tablist"].no-scrollbar { flex-wrap: wrap; overflow: visible; border-radius: 20px; }
+  .app-shell [role="tablist"].no-scrollbar > [role="tab"] { min-height: 44px; padding-inline: 12px; }
+  .app-shell .mobile-report-tabs { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mobile-accounts-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .mobile-accounts-grid .tabular-nums { white-space: normal; overflow-wrap: anywhere; }
+
+  .mobile-transaction-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 16px; gap: 16px; }
+  .mobile-transaction-totals > div { min-width: 0; padding: 0; border: 0; }
+  .mobile-transaction-totals > div > p:first-child { font-size: 12px; }
+  .mobile-transaction-totals .tabular-nums { font-size: clamp(1.125rem, 5vw, 1.5rem); overflow-wrap: anywhere; }
+  .mobile-transaction-totals > div:last-child { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid hsl(var(--border)); padding-top: 14px; }
+  .mobile-transaction-totals > div:last-child .tabular-nums { margin-top: 0; font-size: 1.125rem; }
+  .mobile-trends { min-width: 0; }
+  .mobile-trends thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .mobile-trends tbody { display: grid; gap: 12px; }
+  .mobile-trends tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-block: 14px; }
+  .mobile-trends td { padding: 0; text-align: left; overflow-wrap: anywhere; }
+  .mobile-trends td:first-child { grid-column: 1 / -1; font-weight: 600; }
+  .mobile-trends td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 4px; font-size: 11px; font-weight: 400; color: hsl(var(--muted-foreground)); }
+
+  /* Evita esconder blocos por centenas de ms a cada volta para uma tela. */
+  .app-container > main > div,
+  .app-shell .stagger > * { animation: none; }
+  .app-shell .grow-y,
+  .app-shell .grow-x { animation-duration: 250ms; animation-delay: 0ms !important; }
+
+  /* Portais herdam tokens do html; o formulário continua com uma única rolagem. */
+  html:has(.app-shell) [role="dialog"] { font-family: inherit; }
+  html:has(.app-shell) [data-mobile-sheet] { animation: none; }
+  html:has(.app-shell) [data-mobile-sheet="menu"] {
+    top: var(--app-viewport-top, 0px);
+    bottom: auto;
+    height: var(--app-viewport-height, 100dvh);
+  }
+  html:has(.app-shell) input,
+  html:has(.app-shell) textarea,
+  html:has(.app-shell) select { font-size: 16px !important; scroll-margin-block: 5rem; }
+  html:has(.app-shell) input[type="date"] { min-width: 0; max-width: 100%; }
+  html:has(.app-shell) input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+  html:has(.app-shell) [data-sonner-toaster] { --offset-top: calc(16px + env(safe-area-inset-top, 0px)); --offset-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+
+  @media (max-width: 639px) {
+    html:has(.app-shell) [data-mobile-sheet] {
+      background-image: radial-gradient(ellipse 120% 260px at 10% 0%, hsl(var(--primary) / 0.14), transparent);
+      padding-left: max(18px, env(safe-area-inset-left, 0px));
+      padding-right: max(18px, env(safe-area-inset-right, 0px));
+    }
+    html:has(.app-shell) [data-mobile-sheet="form"] {
+      top: var(--app-viewport-top, 0px);
+      bottom: auto;
+      height: var(--app-viewport-height, 100dvh);
+      max-height: var(--app-viewport-height, 100dvh);
+    }
+    .app-shell .surface > .p-6 { padding-left: 18px; padding-right: 18px; }
+  }
+  @media (min-width: 640px) {
+    html:has(.app-shell) [data-mobile-sheet="form"] {
+      top: calc(var(--app-viewport-top, 0px) + var(--app-viewport-height, 100dvh) / 2);
+      max-height: calc(var(--app-viewport-height, 100dvh) - 2rem);
+    }
+  }
+}

@@ -1,6 +1,43 @@
 {
   "schemaVersion": 1,
   "targets": {
+    "mobile-app-blue": {
+      "targetKind": "existing-ui",
+      "projectId": "d25ee149-2a7f-4f3e-9bdb-9d899431f8ff",
+      "activeDraftId": "16dd796b-3479-42e7-b4c2-7c446baff038",
+      "designSystemPath": ".superdesign/design-system.md",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/mobile-blue.md",
+        "frontend/src/app/globals.css",
+        "frontend/src/app/mobile-app.css",
+        "frontend/src/components/dashboard/dashboard-view.tsx",
+        "frontend/src/components/dashboard/summary-cards.tsx",
+        "frontend/src/components/layout/app-header.tsx",
+        "frontend/src/components/ui/card.tsx",
+        "frontend/src/components/ui/button.tsx"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "c4ec2e463ca98b615e4e0181573639d03962e9432e65e6679261454ca2b1455c",
+        ".superdesign/mobile-blue.md": "c212e62f03f0830a405bbca14cec037cabdb058901f5169d466ed1f12c15798e",
+        "frontend/src/app/globals.css": "63bc983468445cb06376886455ab112923458524a0e99b6c4a080eb470012b04",
+        "frontend/src/app/mobile-app.css": "82172776764e8b9fe29b41135c3dd087e43f243232c58e2041fb2a4e692e1b26",
+        "frontend/src/components/dashboard/dashboard-view.tsx": "741518b85808bc145ea7c7ae3c637a59479c7a86ac8c1ed3c4f68f1baedfba76",
+        "frontend/src/components/dashboard/summary-cards.tsx": "9da5d3eb12c503b7b752387b79da47910d26c1b0c10d45444c815cd0db9d61bf",
+        "frontend/src/components/layout/app-header.tsx": "14575501af14d987111e890c8e8e6a641d3ff42b5d2a608740269a15e185198b",
+        "frontend/src/components/ui/card.tsx": "62004cd716dd47441238bd30db05544595adab40fa8ec917c660ceb32925d720",
+        "frontend/src/components/ui/button.tsx": "270a5c3962f59b5bd3050ec14da5df64b346a27bb6750eb7818d30fdc2b73956"
+      },
+      "referenceIds": ["4b8230e3-abb5-4f3f-8f6a-043e7dc893ee"],
+      "drafts": {
+        "16dd796b-3479-42e7-b4c2-7c446baff038": {
+          "title": "NexosFinn Mobile - Blue Theme",
+          "visualDirection": "Mobile com azul luminoso, cartões navy e fundo contínuo; desktop preservado. Implementação mantém zoom acessível, usa dados reais e dispensa blur decorativo do draft.",
+          "currentVersion": 2
+        }
+      },
+      "updatedAt": "2026-10-15T03:20:00.000Z"
+    },
     "settings-integrations": {
       "targetKind": "existing-ui",
       "projectId": "d25ee149-2a7f-4f3e-9bdb-9d899431f8ff",

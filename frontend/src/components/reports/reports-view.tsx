@@ -43,7 +43,7 @@ function OverviewCard({
   invert?: boolean;
 }) {
   return (
-    <Card className="p-5 lg:p-6">
+    <Card className="mobile-report-metric p-5 lg:p-6">
       <p className="text-sm text-muted-foreground">{label}</p>
       <p className="mt-2 truncate text-2xl font-medium tracking-[-0.03em] tabular-nums lg:text-[1.75rem]">{value}</p>
       <Variation className="mt-2" value={variation} invert={invert} />
@@ -66,7 +66,7 @@ function InsightCard({
   tint: string;
 }) {
   return (
-    <Card className="flex items-start gap-3 p-5">
+    <Card className="mobile-insight flex items-start gap-3 p-5">
       <span className={`flex size-10 shrink-0 items-center justify-center rounded-full ${tint}`}>
         <Icon className="size-[18px]" />
       </span>
@@ -184,7 +184,7 @@ export function ReportsView() {
 
       {data ? (
         <Tabs defaultValue="overview">
-          <TabsList>
+          <TabsList className="mobile-report-tabs">
             <TabsTrigger value="overview">Visão Geral</TabsTrigger>
             <TabsTrigger value="cashflow">Fluxo de Caixa</TabsTrigger>
             <TabsTrigger value="categories">Categorias</TabsTrigger>
@@ -282,7 +282,7 @@ export function ReportsView() {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[520px] text-sm">
+                  <table className="mobile-trends w-full min-w-[520px] text-sm">
                     <thead>
                       <tr className="border-b border-border/70 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
                         <th scope="col" className="py-3 pr-4">Mês</th>
@@ -296,16 +296,16 @@ export function ReportsView() {
                       {data.trends.map((point) => (
                         <tr key={point.month} className="transition-colors hover:bg-secondary/50">
                           <td className="py-3 pr-4 font-medium">{point.label}</td>
-                          <td className="py-3 pr-4 text-right tabular-nums text-positive">
+                          <td data-label="Receitas" className="py-3 pr-4 text-right tabular-nums text-positive">
                             {formatCurrency(point.income)}
                           </td>
-                          <td className="py-3 pr-4 text-right tabular-nums text-negative">
+                          <td data-label="Despesas" className="py-3 pr-4 text-right tabular-nums text-negative">
                             {formatCurrency(point.expense)}
                           </td>
-                          <td className="py-3 pr-4 text-right font-medium tabular-nums">
+                          <td data-label="Saldo" className="py-3 pr-4 text-right font-medium tabular-nums">
                             {formatCurrency(point.net)}
                           </td>
-                          <td className="py-3 text-right tabular-nums">
+                          <td data-label="Poupança" className="py-3 text-right tabular-nums">
                             {formatPercentage(point.savings_rate)}
                           </td>
                         </tr>
