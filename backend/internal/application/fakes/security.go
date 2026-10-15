@@ -2,6 +2,7 @@ package fakes
 
 import (
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,23 +20,25 @@ func (PasswordHasher) Compare(hash, plain string) bool { return hash == "hashed:
 
 // TokenProvider emite tokens deterministicos para testes.
 type TokenProvider struct {
-	counter int
+	counter atomic.Int64
 }
 
 // GenerateAccessToken devolve um access token de teste.
 func (t *TokenProvider) GenerateAccessToken(userID uuid.UUID) (string, int, error) {
-	t.counter++
+	t.counter.Add(1)
 	return "access:" + userID.String(), 900, nil
 }
 
 // GenerateRefreshToken devolve um refresh token de teste unico.
 func (t *TokenProvider) GenerateRefreshToken() (string, time.Time, error) {
-	t.counter++
+	t.counter.Add(1)
 	return "refresh:" + uuid.NewString(), time.Now().UTC().Add(24 * time.Hour), nil
 }
 
 // HashRefreshToken deriva o hash do refresh token.
 func (t *TokenProvider) HashRefreshToken(token string) string { return "hashed:" + token }
+
+func (t *TokenProvider) SuccessorRefreshToken(previous string) string { return "next:" + previous }
 
 // APIKeyGenerator produz chaves de API deterministicas para testes.
 type APIKeyGenerator struct {

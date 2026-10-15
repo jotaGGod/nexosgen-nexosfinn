@@ -24,6 +24,13 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-store, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+      {
         // O HTML nunca é cacheado pelo navegador.
         //
         // Os arquivos JavaScript têm hash no nome e mudam a cada build. Se o

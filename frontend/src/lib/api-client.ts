@@ -43,6 +43,12 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   const payload = text ? JSON.parse(text) : null;
 
   if (!response.ok) {
+    // Sessão realmente encerrada: o proxy já removeu os cookies inválidos.
+    // Não deixe todas as abas financeiras presas em um erro genérico.
+    if (response.status === 401 && typeof window !== "undefined" && window.location.pathname.startsWith("/app")) {
+      const destination = window.location.pathname + window.location.search;
+      window.location.replace(`/login?redirect=${encodeURIComponent(destination)}`);
+    }
     const body = payload as ApiErrorBody | null;
     throw new ApiError(
       response.status,

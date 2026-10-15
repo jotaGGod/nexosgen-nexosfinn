@@ -26,6 +26,9 @@ type TokenProvider interface {
 	// GenerateRefreshToken devolve o segredo opaco e o instante de expiracao.
 	GenerateRefreshToken() (token string, expiresAt time.Time, err error)
 
+	// SuccessorRefreshToken deriva o mesmo sucessor para renovações concorrentes.
+	SuccessorRefreshToken(previous string) string
+
 	// HashRefreshToken deriva o hash persistido do refresh token.
 	HashRefreshToken(token string) string
 }

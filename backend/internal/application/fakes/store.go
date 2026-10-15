@@ -825,13 +825,65 @@ func (r *refreshTokenRepo) FindByHash(ctx context.Context, tokenHash string) (*e
 
 	for _, existing := range r.store.RefreshTokens {
 		if existing.TokenHash == tokenHash {
-			return existing, nil
+			copy := *existing
+			return &copy, nil
 		}
 	}
 	return nil, domainerr.NotFound("refresh_token_not_found", "token nao encontrado")
 }
 
-func (r *refreshTokenRepo) Revoke(ctx context.Context, token *entity.RefreshToken) error { return nil }
+func (r *refreshTokenRepo) Rotate(ctx context.Context, previousHash string, next *entity.RefreshToken, now time.Time, grace time.Duration) (*entity.RefreshToken, error) {
+	r.store.mu.Lock()
+	defer r.store.mu.Unlock()
+	now = time.Now().UTC()
+	invalid := domainerr.Unauthorized("invalid_refresh_token", "sessao expirada, entre novamente")
+	for _, previous := range r.store.RefreshTokens {
+		if previous.TokenHash != previousHash {
+			continue
+		}
+		if !previous.ExpiresAt.After(now) || previous.UserID != next.UserID {
+			return nil, invalid
+		}
+		if previous.RevokedAt != nil {
+			if previous.ReplacedBy == nil || now.Before(*previous.RevokedAt) || now.Sub(*previous.RevokedAt) > grace {
+				return nil, invalid
+			}
+			for _, successor := range r.store.RefreshTokens {
+				if successor.ID == *previous.ReplacedBy && successor.UserID == previous.UserID && successor.TokenHash == next.TokenHash && successor.IsUsable(now) {
+					copy := *successor
+					return &copy, nil
+				}
+			}
+			return nil, invalid
+		}
+		previous.Revoke(now)
+		previous.ReplacedBy = &next.ID
+		r.store.RefreshTokens = append(r.store.RefreshTokens, next)
+		return next, nil
+	}
+	return nil, invalid
+}
+
+func (r *refreshTokenRepo) Revoke(ctx context.Context, token *entity.RefreshToken) error {
+	r.store.mu.Lock()
+	defer r.store.mu.Unlock()
+	id := token.ID
+	for {
+		var next *uuid.UUID
+		for _, existing := range r.store.RefreshTokens {
+			if existing.ID == id {
+				next = existing.ReplacedBy
+				existing.RevokedAt = token.RevokedAt
+				existing.ReplacedBy = nil
+				break
+			}
+		}
+		if next == nil {
+			return nil
+		}
+		id = *next
+	}
+}
 
 func (r *refreshTokenRepo) RevokeAllForUser(ctx context.Context, userID uuid.UUID) error {
 	r.store.mu.Lock()
@@ -841,6 +893,7 @@ func (r *refreshTokenRepo) RevokeAllForUser(ctx context.Context, userID uuid.UUI
 	for _, existing := range r.store.RefreshTokens {
 		if existing.UserID == userID {
 			existing.Revoke(now)
+			existing.ReplacedBy = nil
 		}
 	}
 	return nil

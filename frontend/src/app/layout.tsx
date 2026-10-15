@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 
 import { DomGuard } from "@/components/common/dom-guard";
+import { PwaRuntime } from "@/components/common/pwa-runtime";
 import { ThemeProvider } from "@/components/common/theme-provider";
 import { QueryProvider } from "@/lib/query-provider";
 import { THEME_COLORS, THEME_STORAGE_KEY } from "@/lib/theme";
@@ -27,7 +28,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexosfinn.nexosgen.com.br"),
+  metadataBase: new URL("https://nexosfinn.vercel.app"),
   applicationName: "NexosFinn",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -117,6 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
          * Android, o Next já emite sozinho.
          */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </head>
       <body className="min-h-dvh bg-background font-sans">
@@ -134,6 +136,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
          */}
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-background" />
         <DomGuard />
+        <PwaRuntime />
         <ThemeProvider>
           <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>

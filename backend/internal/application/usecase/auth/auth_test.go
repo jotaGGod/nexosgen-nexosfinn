@@ -4,7 +4,9 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/fakes"
@@ -126,10 +128,71 @@ func TestRefreshRotacionaOToken(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotEqual(t, session.RefreshToken, renewed.RefreshToken)
 
-	// O token antigo foi revogado no ato da rotacao e nao serve mais.
+	// Requisições simultâneas reutilizam o mesmo sucessor sem criar sessões extras.
+	concurrent, err := s.refresh.Execute(ctx, dto.RefreshInput{RefreshToken: session.RefreshToken})
+	require.NoError(t, err)
+	assert.Equal(t, renewed.RefreshToken, concurrent.RefreshToken)
+	assert.Len(t, s.store.RefreshTokens, 2)
+
+	// A janela de concorrência é curta e não permite reuso indefinido.
+	old := time.Now().UTC().Add(-time.Minute)
+	s.store.RefreshTokens[0].RevokedAt = &old
 	_, err = s.refresh.Execute(ctx, dto.RefreshInput{RefreshToken: session.RefreshToken})
 	require.Error(t, err)
 	assert.Equal(t, domainerr.KindUnauthorized, domainerr.KindOf(err))
+}
+
+func TestRefreshConcorrenteMantemUmaUnicaSessaoSucessora(t *testing.T) {
+	s := newSuite()
+	ctx := context.Background()
+	session, err := s.register.Execute(ctx, validRegistration())
+	require.NoError(t, err)
+	const requests = 12
+	results := make(chan *dto.AuthOutput, requests)
+	errors := make(chan error, requests)
+	var group sync.WaitGroup
+	for i := 0; i < requests; i++ {
+		group.Add(1)
+		go func() {
+			defer group.Done()
+			result, err := s.refresh.Execute(ctx, dto.RefreshInput{RefreshToken: session.RefreshToken})
+			results <- result
+			errors <- err
+		}()
+	}
+	group.Wait()
+	close(results)
+	close(errors)
+	for err := range errors {
+		require.NoError(t, err)
+	}
+	var successor string
+	for result := range results {
+		if successor == "" {
+			successor = result.RefreshToken
+		}
+		assert.Equal(t, successor, result.RefreshToken)
+	}
+	assert.Len(t, s.store.RefreshTokens, 2)
+}
+
+func TestLogoutInvalidaSucessorSemAfetarOutroDispositivo(t *testing.T) {
+	s := newSuite()
+	ctx := context.Background()
+	first, err := s.register.Execute(ctx, validRegistration())
+	require.NoError(t, err)
+	second, err := s.login.Execute(ctx, dto.LoginInput{Email: validRegistration().Email, Password: validRegistration().Password})
+	require.NoError(t, err)
+	renewed, err := s.refresh.Execute(ctx, dto.RefreshInput{RefreshToken: first.RefreshToken})
+	require.NoError(t, err)
+	require.NoError(t, s.logout.Execute(ctx, dto.RefreshInput{RefreshToken: first.RefreshToken}))
+	for _, token := range []string{first.RefreshToken, renewed.RefreshToken} {
+		_, err := s.refresh.Execute(ctx, dto.RefreshInput{RefreshToken: token})
+		require.Error(t, err)
+		assert.Equal(t, domainerr.KindUnauthorized, domainerr.KindOf(err))
+	}
+	_, err = s.refresh.Execute(ctx, dto.RefreshInput{RefreshToken: second.RefreshToken})
+	require.NoError(t, err)
 }
 
 func TestLogoutComTokenDesconhecidoNaoFalha(t *testing.T) {

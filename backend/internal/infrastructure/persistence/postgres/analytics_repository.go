@@ -223,7 +223,7 @@ func (r *AnalyticsRepository) extreme(
 	direction string,
 ) (*entity.Transaction, error) {
 	query := `
-		SELECT id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, created_at, updated_at
+		SELECT id, user_id, account_id, category_id, type, amount, description, notes, occurred_on, is_settled, settled_at, created_at, updated_at
 		FROM transactions
 		WHERE user_id = $1 AND type = $2 AND occurred_on >= $3 AND occurred_on <= $4
 		ORDER BY amount ` + direction + `

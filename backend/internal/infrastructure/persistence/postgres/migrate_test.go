@@ -75,5 +75,5 @@ func TestLatestEmbeddedVersionTracksMigrationFiles(t *testing.T) {
 	version, err := latestEmbeddedVersion()
 
 	require.NoError(t, err)
-	assert.Equal(t, uint(10), version)
+	assert.Equal(t, uint(11), version)
 }

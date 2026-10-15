@@ -3,6 +3,7 @@
 package auth
 
 import (
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
@@ -110,4 +111,12 @@ func (p *JWTProvider) GenerateRefreshToken() (string, time.Time, error) {
 func (p *JWTProvider) HashRefreshToken(token string) string {
 	sum := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(sum[:])
+}
+
+// A chave secreta e a separação de domínio impedem prever o sucessor a partir
+// do token ou do hash armazenado. Nenhum segredo de sessão é salvo em texto puro.
+func (p *JWTProvider) SuccessorRefreshToken(previous string) string {
+	mac := hmac.New(sha256.New, p.secret)
+	mac.Write([]byte("nexosfinn:refresh-successor:v1\x00" + previous))
+	return base64.RawURLEncoding.EncodeToString(mac.Sum(nil))
 }

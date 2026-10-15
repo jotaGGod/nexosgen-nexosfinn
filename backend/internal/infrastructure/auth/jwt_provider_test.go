@@ -79,3 +79,16 @@ func TestBcryptHasher(t *testing.T) {
 	assert.True(t, hasher.Compare(hash, "senha-segura"))
 	assert.False(t, hasher.Compare(hash, "senha-errada"))
 }
+
+func TestRefreshSuccessorEhEstavelEProtegidoPeloSegredo(t *testing.T) {
+	first := auth.NewJWTProvider(testSecret, time.Minute, time.Hour)
+	second := auth.NewJWTProvider("outro-segredo-de-teste-com-mais-de-32-caracteres", time.Minute, time.Hour)
+	previous, _, err := first.GenerateRefreshToken()
+	require.NoError(t, err)
+	next := first.SuccessorRefreshToken(previous)
+	assert.Equal(t, next, first.SuccessorRefreshToken(previous))
+	assert.NotEqual(t, previous, next)
+	assert.NotEqual(t, next, first.HashRefreshToken(previous))
+	assert.NotEqual(t, next, second.SuccessorRefreshToken(previous))
+	assert.NotEqual(t, next, first.SuccessorRefreshToken(next))
+}

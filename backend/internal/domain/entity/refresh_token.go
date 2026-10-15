@@ -12,12 +12,13 @@ import (
 // Apenas o hash e persistido; o token em si vive somente no cookie httpOnly
 // do cliente.
 type RefreshToken struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	TokenHash string
-	ExpiresAt time.Time
-	RevokedAt *time.Time
-	CreatedAt time.Time
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	TokenHash  string
+	ExpiresAt  time.Time
+	RevokedAt  *time.Time
+	ReplacedBy *uuid.UUID
+	CreatedAt  time.Time
 }
 
 // NewRefreshToken cria um refresh token validado.

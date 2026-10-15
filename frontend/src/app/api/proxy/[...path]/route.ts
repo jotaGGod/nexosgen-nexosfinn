@@ -51,7 +51,9 @@ async function renewSession(refreshToken: string): Promise<AuthResponse | null> 
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
 
-    if (!upstream.ok) return null;
+    if (upstream.status === 401 || upstream.status === 403) return null;
+    // Uma indisponibilidade temporária não encerra a sessão do usuário.
+    if (!upstream.ok) throw new Error("session_refresh_unavailable");
     return (await upstream.json()) as AuthResponse;
   })();
 

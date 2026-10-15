@@ -10,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
      * O app instalado abre direto no aplicativo, e não na página de vendas.
      * Sem sessão, o casco de /app manda para o login; com sessão, cai no início.
      */
-    start_url: "/app/dashboard",
+    start_url: "/app/dashboard?source=homescreen",
     scope: "/",
     /*
      * `standalone`, e não `fullscreen`.
@@ -22,6 +22,8 @@ export default function manifest(): MetadataRoute.Manifest {
      * `apple-mobile-web-app-status-bar-style: black-translucent`.
      */
     display: "standalone",
+    display_override: ["standalone"],
+    prefer_related_applications: false,
     orientation: "portrait-primary",
     /* Cor da tela de abertura, antes do primeiro quadro da aplicação. */
     background_color: "#050505",

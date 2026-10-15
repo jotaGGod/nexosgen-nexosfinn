@@ -2,17 +2,19 @@ package auth
 
 import (
 	"context"
+	"math"
 	"time"
 
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/application/dto"
+	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/entity"
 	domainerr "github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/errors"
 	"github.com/jotaGGod/nexosgen-nexosfinn/backend/internal/domain/repository"
 )
 
 // RefreshUseCase troca um refresh token valido por uma nova sessao.
 //
-// A rotacao e obrigatoria: o token apresentado e revogado no mesmo ato em que
-// o novo e emitido, de modo que um token vazado so serve uma vez.
+// A rotação é atômica. Chamadas concorrentes recebem o mesmo sucessor durante
+// 30 segundos; depois disso o token anterior é definitivamente rejeitado.
 type RefreshUseCase struct {
 	users         repository.UserRepository
 	refreshTokens repository.RefreshTokenRepository
@@ -44,7 +46,8 @@ func (uc *RefreshUseCase) Execute(ctx context.Context, input dto.RefreshInput) (
 		return nil, err
 	}
 
-	if !stored.IsUsable(time.Now().UTC()) {
+	now := time.Now().UTC()
+	if !stored.ExpiresAt.After(now) {
 		return nil, invalidToken
 	}
 
@@ -56,10 +59,26 @@ func (uc *RefreshUseCase) Execute(ctx context.Context, input dto.RefreshInput) (
 		return nil, err
 	}
 
-	stored.Revoke(time.Now().UTC())
-	if err := uc.refreshTokens.Revoke(ctx, stored); err != nil {
+	accessToken, expiresIn, err := uc.tokens.GenerateAccessToken(user.ID)
+	if err != nil {
+		return nil, domainerr.Internal("falha ao gerar o token de acesso", err)
+	}
+	_, expiresAt, err := uc.tokens.GenerateRefreshToken()
+	if err != nil {
+		return nil, domainerr.Internal("falha ao gerar o token de renovacao", err)
+	}
+	refreshToken := uc.tokens.SuccessorRefreshToken(input.RefreshToken)
+	next, err := entity.NewRefreshToken(user.ID, uc.tokens.HashRefreshToken(refreshToken), expiresAt)
+	if err != nil {
 		return nil, err
 	}
-
-	return issueSession(ctx, user, uc.tokens, uc.refreshTokens)
+	rotated, err := uc.refreshTokens.Rotate(ctx, stored.TokenHash, next, now, 30*time.Second)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.AuthOutput{
+		AccessToken: accessToken, RefreshToken: refreshToken, ExpiresIn: expiresIn,
+		RefreshTokenExpiresIn: int(math.Max(0, time.Until(rotated.ExpiresAt).Seconds())),
+		User:                  dto.ToUserOutput(user),
+	}, nil
 }
