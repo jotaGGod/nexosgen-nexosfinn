@@ -48,9 +48,8 @@ function Bloco({ item, ativo, indice }: { item: NavItem; ativo: boolean; indice:
 /**
  * Menu do celular em tela cheia.
  *
- * Substitui a antiga barra fixa na base: no celular não há faixa fixa em cima
- * nem embaixo, a página rola de ponta a ponta. Os oito destinos viram blocos
- * grandes, fáceis de tocar, com a mesma linguagem dos atalhos do início.
+ * Abre pelo "Mais" da pílula flutuante. Os oito destinos viram blocos grandes,
+ * fáceis de tocar, com a mesma linguagem dos atalhos do início.
  *
  * Feito sobre o Dialog do Radix para ganhar de graça o foco preso, o Esc e o
  * bloqueio de rolagem do fundo. Só há animação de entrada — a de saída deixa

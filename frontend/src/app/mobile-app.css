@@ -5,82 +5,13 @@
  */
 @media (max-width: 1023px) {
   :root:has(.app-shell) {
-    --background: 218 71% 97%;
-    --foreground: 221 48% 16%;
-    --card: 0 0% 100%;
-    --card-foreground: 221 48% 16%;
-    --popover: 220 60% 99%;
-    --popover-foreground: 221 48% 16%;
-    --primary: 220 70% 47%;
-    --primary-foreground: 0 0% 100%;
-    --accent: 218 70% 43%;
-    --accent-foreground: 0 0% 100%;
-    --active: 221 68% 40%;
-    --active-foreground: 0 0% 100%;
-    --muted: 220 42% 93%;
-    --muted-foreground: 219 22% 40%;
-    --secondary: 220 46% 93%;
-    --secondary-foreground: 221 48% 16%;
-    --border: 220 38% 87%;
-    --input: 220 34% 78%;
-    --ring: 220 70% 47%;
-    --positive: 158 76% 26%;
-    --negative: 0 72% 42%;
-    --destructive: 0 72% 42%;
-    --destructive-foreground: 0 0% 100%;
-    --chart-income: #245dcc;
-    --chart-accent: #6588cf;
-    --chart-neutral: #8298bb;
-    --chart-grid: #dce4f1;
-    --chart-muted: #52627e;
-    --chart-cursor: #d6e2f4;
-    --chart-hover: #e8effb;
-    --chart-track: #e9eff9;
-    --shadow-card: inset 0 1px 0 #ffffffa3, 0 5px 20px -12px #213b6d26;
-    --shadow-card-hover: var(--shadow-card);
-    --shadow-glow: 0 4px 14px -8px #245dcc66;
-    --shadow-lift-primary: 0 4px 14px -8px #245dcc66;
-    --mobile-wash: radial-gradient(ellipse 110% 330px at 20% 0%, #bdd4ff 0%, #dbe8fc 55%, transparent 100%);
     background-color: hsl(var(--background)) !important;
     overscroll-behavior: none;
   }
 
-  :root.dark:has(.app-shell) {
-    --background: 224 60% 8%;
-    --foreground: 224 100% 98%;
-    --card: 226 45% 15%;
-    --card-foreground: 224 100% 98%;
-    --popover: 226 42% 16%;
-    --popover-foreground: 224 100% 98%;
-    --primary: 219 70% 48%;
-    --primary-foreground: 0 0% 100%;
-    --accent: 215 100% 78%;
-    --accent-foreground: 224 60% 8%;
-    --active: 219 100% 82%;
-    --active-foreground: 224 60% 8%;
-    --muted: 224 34% 21%;
-    --muted-foreground: 221 34% 77%;
-    --secondary: 225 37% 21%;
-    --secondary-foreground: 224 100% 98%;
-    --border: 224 32% 26%;
-    --input: 223 30% 35%;
-    --ring: 217 100% 75%;
-    --positive: 158 72% 69%;
-    --negative: 0 95% 77%;
-    --destructive: 0 95% 77%;
-    --destructive-foreground: 224 60% 8%;
-    --chart-income: #80aaff;
-    --chart-accent: #afc8ff;
-    --chart-neutral: #7583aa;
-    --chart-grid: #2b3554;
-    --chart-muted: #b1bdd8;
-    --chart-cursor: #283858;
-    --chart-hover: #202c4a;
-    --chart-track: #26324f;
-    --shadow-card: inset 0 1px 0 #ffffff07;
-    --shadow-glow: 0 4px 16px -10px #14347480;
-    --shadow-lift-primary: 0 4px 16px -10px #14347480;
-    --mobile-wash: radial-gradient(ellipse 120% 400px at 15% 0%, #416db8 0%, #2b4c88 43%, #13213e 75%, transparent 100%);
+  :root:not(.dark):has(.app-shell) {
+    --positive: 158 76% 26%;
+    --negative: 0 72% 42%;
   }
 
   html:has(.app-shell) body {
@@ -91,8 +22,7 @@
   }
 
   .app-shell {
-    background-image: var(--mobile-wash);
-    background-repeat: no-repeat;
+    background-image: none;
     min-height: 100svh;
     min-height: 100dvh;
   }
@@ -101,17 +31,12 @@
   .app-container {
     padding-left: max(1.125rem, env(safe-area-inset-left, 0px));
     padding-right: max(1.125rem, env(safe-area-inset-right, 0px));
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .app-container > main { margin-top: 1.5rem; }
   .mobile-app-header { gap: 1rem; }
   .mobile-header-caption { color: hsl(var(--foreground) / 0.85); margin-top: 2px; }
-  .mobile-menu-trigger {
-    background: hsl(var(--foreground) / 0.07);
-    border-color: hsl(var(--foreground) / 0.12);
-    box-shadow: none;
-  }
 
   .mobile-dashboard-hero { padding: 0 2px 8px; }
   .mobile-period {
@@ -140,20 +65,15 @@
     position: relative;
     min-width: 0;
     padding: 18px 16px;
-    border: 1px solid #ffffff35;
+    border: 1px solid hsl(var(--border) / 0.8);
     border-radius: 24px;
-    background: radial-gradient(ellipse at 0% 0%, #ffffffd9, transparent 65%), linear-gradient(135deg, #d6e4fc, #b8cfee);
-    color: #172b50;
-    box-shadow: inset 0 1px 0 #ffffff55;
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    box-shadow: none;
   }
-  .mobile-metric:nth-child(2) {
-    background: radial-gradient(ellipse at 90% 0%, #ffffffd9, transparent 65%), linear-gradient(135deg, #c8d9f8, #e1eafa);
-  }
-  .mobile-metric-heading { color: #304b76; }
+  .mobile-metric-heading { color: hsl(var(--muted-foreground)); }
   .mobile-metric-amount { margin-top: 22px; font-size: clamp(1.125rem, 5.5vw, 1.7rem); line-height: 1.2; letter-spacing: -0.035em; overflow-wrap: anywhere; }
   .mobile-metric-variation { font-size: 11px; }
-  .mobile-metric .text-positive { color: #135c44; }
-  .mobile-metric .text-negative { color: #a12036; }
   .mobile-metric:last-child {
     grid-column: 1 / -1;
     display: grid;
@@ -169,31 +89,14 @@
   .mobile-metric:last-child .mobile-metric-heading svg { order: -1; }
   .mobile-metric:last-child .mobile-metric-amount { margin: 0; text-align: right; font-size: 1.125rem; }
   .mobile-metric:last-child .mobile-metric-variation { grid-column: 1 / -1; margin: 0; }
-  .dark .mobile-metric:last-child .text-positive { color: hsl(var(--positive)); }
-  .dark .mobile-metric:last-child .text-negative { color: hsl(var(--negative)); }
-  .dark .mobile-metric:not(:last-child) {
-    background: radial-gradient(ellipse at 5% 0%, #9dbfff5e, transparent 62%), linear-gradient(135deg, #26497d, #16294c);
-    color: #f4f7ff;
-    border-color: #9cbbf02b;
-    box-shadow: inset 0 1px 0 #cbdcff26;
-  }
-  .dark .mobile-metric:nth-child(2) { background: radial-gradient(ellipse at 95% 5%, #b4cfff47, transparent 70%), linear-gradient(135deg, #2e4271, #202b4a); }
-  .dark .mobile-metric:not(:last-child) .mobile-metric-heading { color: #dce8ff; }
-  .dark .mobile-metric:not(:last-child) .text-positive { color: #94efd2; }
-  .dark .mobile-metric:not(:last-child) .text-negative { color: #ffb8c0; }
 
   .mobile-quick-actions { padding: 18px 14px 12px; }
   .mobile-quick-actions h2 { padding-inline: 4px; }
   .mobile-action-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 16px; background: hsl(var(--primary) / 0.1); color: hsl(var(--active)); }
   .mobile-action-icon svg { width: 21px; height: 21px; }
-  .dark .mobile-action-icon { background: #263b68; color: #c1d7ff; }
-  .mobile-quick-action:first-child .mobile-action-icon { background: hsl(var(--primary)); color: white; }
+  .mobile-quick-action:first-child .mobile-action-icon { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
   .app-shell .surface { border-radius: 24px; border-color: hsl(var(--border) / 0.6); }
-  .app-shell .brand-gradient {
-    background: radial-gradient(ellipse at top right, #d3e3ff, transparent 70%), linear-gradient(135deg, #3f71c6, #a8c8ff);
-    color: #122344;
-    box-shadow: none;
-  }
+  .app-shell .glass-panel { backdrop-filter: none; -webkit-backdrop-filter: none; background-color: hsl(var(--card)); }
   .app-shell .font-display { font-family: inherit; font-style: normal; font-weight: 600; }
 
   /* O uso diário vem antes dos gráficos no celular; desktop mantém sua ordem. */
@@ -243,6 +146,77 @@
   .app-shell .grow-y,
   .app-shell .grow-x { animation-duration: 250ms; animation-delay: 0ms !important; }
 
+  /* Só a pílula tem superfície. As margens e a área segura ficam transparentes. */
+  .mobile-bottom-nav {
+    position: fixed;
+    z-index: 40;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    left: max(16px, env(safe-area-inset-left, 0px));
+    right: max(16px, env(safe-area-inset-right, 0px));
+    margin-inline: auto;
+    max-width: 460px;
+    height: 70px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 6px;
+    border: 1px solid hsl(var(--border));
+    border-radius: 999px;
+    background: hsl(var(--card));
+    box-shadow: 0 8px 24px -8px hsl(var(--foreground) / 0.18);
+    isolation: isolate;
+  }
+  .dark .mobile-bottom-nav { background: hsl(var(--secondary)); box-shadow: 0 10px 28px -8px #0008; }
+  .mobile-nav-indicator {
+    position: absolute;
+    top: -12px;
+    left: 6px;
+    width: calc((100% - 12px) / 5);
+    height: 48px;
+    display: grid;
+    place-items: center;
+    transform: translateX(calc(var(--mobile-nav-index) * 100%));
+    transition: transform 320ms var(--ease-out-expo);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .mobile-nav-indicator::before {
+    content: "";
+    width: 48px;
+    height: 48px;
+    box-sizing: border-box;
+    border: 4px solid hsl(var(--background));
+    border-radius: 50%;
+    background: hsl(var(--primary));
+    box-shadow: 0 5px 12px -5px hsl(var(--primary) / 0.65);
+  }
+  .mobile-nav-item {
+    min-width: 0;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border-radius: 999px;
+    color: hsl(var(--muted-foreground));
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.2;
+    outline-offset: 3px;
+    transition: color 180ms ease;
+  }
+  .mobile-nav-item:focus-visible { outline: 2px solid hsl(var(--ring)); }
+  .mobile-nav-icon { width: 30px; height: 30px; display: grid; place-items: center; transition: transform 320ms var(--ease-out-expo), color 180ms ease; }
+  .mobile-nav-icon svg { width: 21px; height: 21px; stroke-width: 1.8; }
+  .mobile-nav-item[data-active="true"] { color: hsl(var(--active)); font-weight: 600; }
+  .mobile-nav-item[data-active="true"] .mobile-nav-icon { transform: translateY(-14px); color: hsl(var(--primary-foreground)); }
+  html:has([data-mobile-sheet][data-state="open"]) .mobile-bottom-nav,
+  html:has(.app-shell input:focus, .app-shell textarea:focus, .app-shell [contenteditable="true"]:focus) .mobile-bottom-nav { visibility: hidden; pointer-events: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-nav-indicator, .mobile-nav-icon, .mobile-nav-item { transition: none; }
+  }
+
   /* Portais herdam tokens do html; o formulário continua com uma única rolagem. */
   html:has(.app-shell) [role="dialog"] { font-family: inherit; }
   html:has(.app-shell) [data-mobile-sheet] { animation: none; }
@@ -260,7 +234,6 @@
 
   @media (max-width: 639px) {
     html:has(.app-shell) [data-mobile-sheet] {
-      background-image: radial-gradient(ellipse 120% 260px at 10% 0%, hsl(var(--primary) / 0.14), transparent);
       padding-left: max(18px, env(safe-area-inset-left, 0px));
       padding-right: max(18px, env(safe-area-inset-right, 0px));
     }

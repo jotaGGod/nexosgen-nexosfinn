@@ -1,43 +1,6 @@
 {
   "schemaVersion": 1,
   "targets": {
-    "mobile-app-blue": {
-      "targetKind": "existing-ui",
-      "projectId": "d25ee149-2a7f-4f3e-9bdb-9d899431f8ff",
-      "activeDraftId": "16dd796b-3479-42e7-b4c2-7c446baff038",
-      "designSystemPath": ".superdesign/design-system.md",
-      "contextFiles": [
-        ".superdesign/design-system.md",
-        ".superdesign/mobile-blue.md",
-        "frontend/src/app/globals.css",
-        "frontend/src/app/mobile-app.css",
-        "frontend/src/components/dashboard/dashboard-view.tsx",
-        "frontend/src/components/dashboard/summary-cards.tsx",
-        "frontend/src/components/layout/app-header.tsx",
-        "frontend/src/components/ui/card.tsx",
-        "frontend/src/components/ui/button.tsx"
-      ],
-      "fingerprints": {
-        ".superdesign/design-system.md": "c4ec2e463ca98b615e4e0181573639d03962e9432e65e6679261454ca2b1455c",
-        ".superdesign/mobile-blue.md": "c212e62f03f0830a405bbca14cec037cabdb058901f5169d466ed1f12c15798e",
-        "frontend/src/app/globals.css": "63bc983468445cb06376886455ab112923458524a0e99b6c4a080eb470012b04",
-        "frontend/src/app/mobile-app.css": "82172776764e8b9fe29b41135c3dd087e43f243232c58e2041fb2a4e692e1b26",
-        "frontend/src/components/dashboard/dashboard-view.tsx": "741518b85808bc145ea7c7ae3c637a59479c7a86ac8c1ed3c4f68f1baedfba76",
-        "frontend/src/components/dashboard/summary-cards.tsx": "9da5d3eb12c503b7b752387b79da47910d26c1b0c10d45444c815cd0db9d61bf",
-        "frontend/src/components/layout/app-header.tsx": "14575501af14d987111e890c8e8e6a641d3ff42b5d2a608740269a15e185198b",
-        "frontend/src/components/ui/card.tsx": "62004cd716dd47441238bd30db05544595adab40fa8ec917c660ceb32925d720",
-        "frontend/src/components/ui/button.tsx": "270a5c3962f59b5bd3050ec14da5df64b346a27bb6750eb7818d30fdc2b73956"
-      },
-      "referenceIds": ["4b8230e3-abb5-4f3f-8f6a-043e7dc893ee"],
-      "drafts": {
-        "16dd796b-3479-42e7-b4c2-7c446baff038": {
-          "title": "NexosFinn Mobile - Blue Theme",
-          "visualDirection": "Mobile com azul luminoso, cartões navy e fundo contínuo; desktop preservado. Implementação mantém zoom acessível, usa dados reais e dispensa blur decorativo do draft.",
-          "currentVersion": 2
-        }
-      },
-      "updatedAt": "2026-10-15T03:20:00.000Z"
-    },
     "settings-integrations": {
       "targetKind": "existing-ui",
       "projectId": "d25ee149-2a7f-4f3e-9bdb-9d899431f8ff",
@@ -73,6 +36,49 @@
         }
       },
       "updatedAt": "2026-09-03T23:45:00.000Z"
+    },
+    "mobile-app": {
+      "targetKind": "existing-ui",
+      "projectId": "d25ee149-2a7f-4f3e-9bdb-9d899431f8ff",
+      "activeDraftId": "16dd796b-3479-42e7-b4c2-7c446baff038",
+      "designSystemPath": ".superdesign/design-system.md",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/mobile-orange.md",
+        "frontend/src/app/globals.css",
+        "frontend/src/app/mobile-app.css",
+        "frontend/src/components/dashboard/dashboard-view.tsx",
+        "frontend/src/components/dashboard/summary-cards.tsx",
+        "frontend/src/components/layout/app-header.tsx",
+        "frontend/src/components/ui/card.tsx",
+        "frontend/src/components/ui/button.tsx",
+        "frontend/src/components/layout/mobile-bottom-nav.tsx",
+        "frontend/src/components/layout/mobile-menu.tsx",
+        "frontend/src/app/app/layout.tsx"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "c4ec2e463ca98b615e4e0181573639d03962e9432e65e6679261454ca2b1455c",
+        ".superdesign/mobile-orange.md": "943d503d0ab95994837ebecb9ace3388b9559f330c67f40a3350bbd9ff66b5f8",
+        "frontend/src/app/globals.css": "63bc983468445cb06376886455ab112923458524a0e99b6c4a080eb470012b04",
+        "frontend/src/app/mobile-app.css": "0d5339ec0e0b69b99551fe5bc4606a68fc3dadc613a0a7ee2aaae80e05c00933",
+        "frontend/src/components/dashboard/dashboard-view.tsx": "741518b85808bc145ea7c7ae3c637a59479c7a86ac8c1ed3c4f68f1baedfba76",
+        "frontend/src/components/dashboard/summary-cards.tsx": "9da5d3eb12c503b7b752387b79da47910d26c1b0c10d45444c815cd0db9d61bf",
+        "frontend/src/components/layout/app-header.tsx": "15ad526489e7e6228babfb023c74da66cc9dcb8f6581f2010def16a38a9c3388",
+        "frontend/src/components/ui/card.tsx": "62004cd716dd47441238bd30db05544595adab40fa8ec917c660ceb32925d720",
+        "frontend/src/components/ui/button.tsx": "270a5c3962f59b5bd3050ec14da5df64b346a27bb6750eb7818d30fdc2b73956",
+        "frontend/src/components/layout/mobile-bottom-nav.tsx": "cfd8d60202868c9566b49c9b75c6eac97e43e02e6458d8a1aae0bfacc75da775",
+        "frontend/src/components/layout/mobile-menu.tsx": "d2f5fed270a8fa5ff402da4da841a15bbe9a839aafa217e9f8c3cf76634e875d",
+        "frontend/src/app/app/layout.tsx": "0385b81bfdaebbe1a146a34893b09df9f1fbfbb7ec2c7d4e9b93639544044f62"
+      },
+      "referenceIds": [],
+      "drafts": {
+        "16dd796b-3479-42e7-b4c2-7c446baff038": {
+          "title": "NexosFinn Mobile — Laranja e navegação flutuante",
+          "visualDirection": "Laranja/âmbar original, fundo neutro sem degradê no topo, navegação inferior em pílula com círculo elevado; desktop preservado.",
+          "currentVersion": 3
+        }
+      },
+      "updatedAt": "2026-10-17T18:00:00.000Z"
     }
   }
 }

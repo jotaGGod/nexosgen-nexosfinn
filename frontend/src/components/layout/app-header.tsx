@@ -1,13 +1,12 @@
 "use client";
 
-import { Blocks, LogOut, Menu, SlidersHorizontal, UserRound } from "lucide-react";
+import { Blocks, LogOut, SlidersHorizontal, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Logo } from "@/components/layout/logo";
 import { sairDaConta } from "@/components/layout/logout";
-import { MobileMenu } from "@/components/layout/mobile-menu";
 import { primaryNavItems, secondaryNavItems } from "@/components/layout/nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import {
@@ -111,14 +110,12 @@ function ProfileMenu({ pill = false }: { pill?: boolean }) {
  * têm fundo (opaco, sem backdrop-filter, que custaria um desfoque por quadro
  * durante a rolagem), e o conteúdo passa por trás dos vãos.
  *
- * Celular: duas pílulas (menu e avatar) que rolam junto com a página. Nada
- * fica fixo em cima nem embaixo — a tela é uma rolagem contínua de ponta a
- * ponta, e toda a navegação abre pelo botão de menu.
+ * Celular: perfil e tema rolam junto com a página; os destinos ficam na
+ * pílula flutuante da base, sem criar uma faixa de fundo na tela.
  */
 export function AppHeader() {
   const pathname = usePathname();
   const { data: user } = useProfile();
-  const [menuAberto, setMenuAberto] = useState(false);
 
   return (
     <>
@@ -131,18 +128,8 @@ export function AppHeader() {
             <p className="mobile-header-caption text-xs">Suas finanças, com clareza.</p>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={() => setMenuAberto(true)}
-          aria-label="Abrir menu"
-          aria-expanded={menuAberto}
-          className="mobile-menu-trigger flex size-11 shrink-0 items-center justify-center rounded-full border border-border/80 bg-card text-foreground transition-transform active:scale-95"
-        >
-          <Menu className="size-5" />
-        </button>
+        <ThemeToggle />
       </header>
-
-      <MobileMenu open={menuAberto} onOpenChange={setMenuAberto} />
 
       {/* Desktop */}
       <header className="sticky top-4 z-40 hidden items-center justify-between gap-4 lg:flex">

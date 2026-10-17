@@ -3,16 +3,16 @@ import { redirect } from "next/navigation";
 
 import { MobileViewport } from "@/components/common/mobile-viewport";
 import { AppHeader } from "@/components/layout/app-header";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { PageTransition } from "@/components/layout/page-transition";
 import { REFRESH_TOKEN_COOKIE } from "@/lib/session";
 
 /**
  * Casca das telas autenticadas.
  *
- * - Celular: coluna única, sem nenhuma faixa fixa. O cabeçalho (menu e
- *   avatar) rola junto com o conteúdo e a página vai de ponta a ponta — o
- *   fundo azul pinta atrás da área segura (ver mobile-app.css),
- *   e a base termina com o respiro do indicador de início, sem barra.
+ * - Celular: coluna única com fundo contínuo, inclusive nas áreas seguras.
+ *   Cabeçalho no fluxo e navegação em pílula flutuante na base, com espaço
+ *   reservado depois do conteúdo para não cobrir os últimos itens.
  * - Desktop: barra superior em pílulas e conteúdo largo até 1400px; a partir
  *   daí centraliza, porque tabela financeira fica ruim de ler esticada num
  *   monitor ultrawide.
@@ -45,6 +45,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <PageTransition>{children}</PageTransition>
         </main>
       </div>
+      <MobileBottomNav />
     </div>
   );
 }
