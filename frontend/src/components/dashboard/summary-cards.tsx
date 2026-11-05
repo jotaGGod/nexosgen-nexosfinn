@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownLeft, ArrowUpRight, ChartNoAxesCombined, CheckCircle2, MinusCircle, PlusCircle, Wallet } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, ChartNoAxesCombined, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
 import { Variation } from "@/components/common/variation";
@@ -90,35 +90,6 @@ export function SummaryList({ summary }: { summary?: DashboardSummary }) {
         </div>
       )}
     </div>
-  );
-}
-
-/** Atalhos do celular: registrar despesa, registrar receita, ver lançamentos. */
-export function QuickActions({ onAdd }: { onAdd: (type: "expense" | "income") => void }) {
-  const base = "mobile-quick-action flex min-w-0 flex-col items-center gap-2.5 rounded-2xl py-2 text-center active:scale-[0.97]";
-
-  return (
-    <section className="surface mobile-quick-actions" aria-label="Ações rápidas">
-      <h2 className="text-sm font-semibold">Ações rápidas</h2>
-      <div className="mt-3 grid grid-cols-4 gap-1">
-      <button type="button" onClick={() => onAdd("expense")} className={base}>
-        <span className="mobile-action-icon"><MinusCircle strokeWidth={1.7} /></span>
-        <span className="text-xs font-medium">Despesa</span>
-      </button>
-      <button type="button" onClick={() => onAdd("income")} className={base}>
-        <span className="mobile-action-icon"><PlusCircle strokeWidth={1.7} /></span>
-        <span className="text-xs font-medium">Receita</span>
-      </button>
-      <Link href="/app/transacoes" className={base}>
-        <span className="mobile-action-icon"><CheckCircle2 strokeWidth={1.7} /></span>
-        <span className="text-xs font-medium">Transações</span>
-      </Link>
-      <Link href="/app/contas" className={base}>
-        <span className="mobile-action-icon"><Wallet strokeWidth={1.7} /></span>
-        <span className="text-xs font-medium">Contas</span>
-      </Link>
-      </div>
-    </section>
   );
 }
 

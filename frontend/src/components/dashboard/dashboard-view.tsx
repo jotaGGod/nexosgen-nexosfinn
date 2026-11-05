@@ -14,7 +14,6 @@ import {
   BalanceCard,
   DesktopSummary,
   DesktopSummarySkeleton,
-  QuickActions,
   SummaryList,
 } from "@/components/dashboard/summary-cards";
 import { PageHeader } from "@/components/layout/page-header";
@@ -148,10 +147,6 @@ export function DashboardView() {
             </div>
           </>
         ) : null}
-
-        <div className="lg:hidden">
-          <QuickActions onAdd={novaTransacao} />
-        </div>
 
         {showPrimaryAnalytics ? (
           <div className="dashboard-charts grid gap-4 lg:grid-cols-12 lg:gap-5">
