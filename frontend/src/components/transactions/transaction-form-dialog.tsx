@@ -99,7 +99,7 @@ export function TransactionFormDialog({ open, onOpenChange, transaction, default
             is_settled: transaction.settlement?.status === "settled",
             settled_at: transaction.settlement?.settled_at ?? "",
           }
-        : { ...emptyValues, type: defaultType ?? emptyValues.type },
+        : { ...emptyValues, date: todayISO(), type: defaultType ?? emptyValues.type },
     );
   }, [open, transaction, defaultType, reset]);
 

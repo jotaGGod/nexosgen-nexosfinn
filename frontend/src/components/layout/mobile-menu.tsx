@@ -20,7 +20,7 @@ function Bloco({ item, ativo, indice }: { item: NavItem; ativo: boolean; indice:
     <DialogPrimitive.Close asChild>
       <Link
         href={item.href}
-        prefetch={false}
+        prefetch={true}
         aria-current={ativo ? "page" : undefined}
         className={cn(
           "flex min-h-[104px] flex-col justify-between rounded-[26px] border p-4 transition-[transform,background-color,border-color] duration-300 ease-out-expo active:scale-[0.97]",

@@ -36,7 +36,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       {/* Luz laranja discreta no alto da tela; rola junto, não é faixa fixa. */}
       <div
         aria-hidden="true"
-        className="app-ambient pointer-events-none absolute inset-x-0 top-0 h-[560px] bg-[radial-gradient(55%_60%_at_85%_0%,hsl(var(--primary)/0.10),transparent_70%)]"
+        className="app-ambient pointer-events-none absolute inset-x-0 top-0 hidden h-[560px] bg-[radial-gradient(55%_60%_at_85%_0%,hsl(var(--primary)/0.10),transparent_70%)] lg:block"
       />
 
       <div className="app-container relative mx-auto w-full max-w-md px-[max(1rem,env(safe-area-inset-left,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:max-w-2xl sm:px-6 md:max-w-3xl lg:max-w-[1400px] lg:px-8 lg:pb-14 lg:pt-5">

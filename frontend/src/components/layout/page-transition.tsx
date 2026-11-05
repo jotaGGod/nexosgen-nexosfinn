@@ -18,7 +18,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div key={pathname} className="animate-[nf-fade_420ms_ease-out_both]">
+    <div key={pathname} className="mobile-page-transition animate-[nf-fade_420ms_ease-out_both]">
       {children}
     </div>
   );

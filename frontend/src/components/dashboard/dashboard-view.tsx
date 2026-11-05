@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Plus, SlidersHorizontal } from "lucide-react";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { PeriodPicker, monthPeriod, type PeriodValue } from "@/components/common/period-picker";
 import { CategoryBars } from "@/components/dashboard/category-bars";
@@ -26,6 +26,10 @@ import { useDashboard, useProfile } from "@/hooks/use-nexosgen-nexosfinn";
 import { todayISO } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+const subscribeToHydration = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
+
 /**
  * Tela inicial.
  *
@@ -42,6 +46,9 @@ import { cn } from "@/lib/utils";
  */
 export function DashboardView() {
   useChartPreload();
+  // O cabeçalho pode preencher o cache de perfil antes da hidratação desta
+  // seção. Preserve o texto do servidor no primeiro render, sem refazer a árvore.
+  const hydrated = useSyncExternalStore(subscribeToHydration, clientSnapshot, serverSnapshot);
 
   const [period, setPeriod] = useState<PeriodValue>(() => monthPeriod(todayISO()));
   const [novoTipo, setNovoTipo] = useState<"expense" | "income" | null>(null);
@@ -70,7 +77,7 @@ export function DashboardView() {
   const showPrimaryAnalytics = preferences.cashflow || preferences.categories;
   const showSecondaryAnalytics = preferences.transactions || preferences.goals;
   const hasVisibleSection = preferences.summary || showPrimaryAnalytics || showSecondaryAnalytics;
-  const primeiroNome = user?.name?.split(" ")[0];
+  const primeiroNome = hydrated ? user?.name?.split(" ")[0] : undefined;
 
   return (
     <div>
